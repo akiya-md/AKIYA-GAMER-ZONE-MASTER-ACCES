@@ -31,15 +31,12 @@
         const storage = getStorage(app);
         const provider = new GoogleAuthProvider();
 
-        // GitHub Token Parts
         const tokenPart1 = "ghp_qSXVkzrXFxMU7hwk3uoG";
         const tokenPart2 = "nHuO90dTK12GGFvP";
         
-        // 🔑 ADMIN PASSWORD
         const SECRET_ADMIN_PASSWORD = "Akiya@123"; 
         let GLOBAL_GITHUB_TOKEN = "";
 
-        // 👤 Google Login
         window.adminLogin = function() {
             const inputPassword = document.getElementById('hqPasswordInput').value;
             
@@ -75,14 +72,12 @@
             }
         });
 
-        // Live Visitors Count
         onValue(ref(database, 'status/usersOnline'), (snapshot) => {
             const count = snapshot.val() || 0;
             const element = document.getElementById('liveVisitorsCount');
             if (element) element.innerText = count;
         });
 
-        // Users Log List
         onValue(ref(database, 'usersLog'), (snapshot) => {
             const listContainer = document.getElementById('activeUsersList');
             if(!listContainer) return;
@@ -105,8 +100,8 @@
             initAnalyticsChart(gmailCount);
         });
 
-        // Deployed Games List
-        onValue(ref(database, 'gamesRegistry'), (snapshot) => {
+        // Sync and Fetch from 'games' node to avoid separation
+        onValue(ref(database, 'games'), (snapshot) => {
             const managementContainer = document.getElementById('deployedGamesManagementList');
             if(!managementContainer) return;
             managementContainer.innerHTML = "";
@@ -119,9 +114,9 @@
 
             Object.keys(data).forEach((key) => {
                 const game = data[key];
-                const gTitle = game.title || game.name || 'Unknown Game';
-                const gSize = game.size || game.gameSize || 'N/A';
-                const thumb = game.cardImage || game.thumbnailUrl || 'https://via.placeholder.com/50';
+                const gTitle = game.name || game.title || 'Unknown Game';
+                const gSize = game.size || 'N/A';
+                const thumb = game.image || 'https://via.placeholder.com/50';
 
                 managementContainer.innerHTML += `
                     <div class="manage-game-card">
@@ -140,7 +135,7 @@
 
         window.deleteGameNode = function(gameId, gameTitle) {
             if (confirm(`⚠️ Delete "${gameTitle}"?`)) {
-                set(ref(database, 'gamesRegistry/' + gameId), null).then(() => {
+                set(ref(database, 'games/' + gameId), null).then(() => {
                     alert("✅ Deleted successfully.");
                 });
             }
@@ -211,18 +206,22 @@
             const ss5 = await handleFileUpload('gSs5File', 'pBarS5') || document.getElementById('gSs5Url').value;
 
             const gameData = {
+                name: document.getElementById('gTitle').value,
                 title: document.getElementById('gTitle').value,
                 size: document.getElementById('gSize').value,
                 category: document.getElementById('gCategory').value,
                 views: 0,
                 downloadsCount: 0,
+                status: "ACTIVE",
                 specialNotice: document.getElementById('gNotice').value,
                 description: document.getElementById('gDescription').value,
+                image: cardImg,
                 cardImage: cardImg,
                 mainImage: mainImg,
                 bgBanner: bgBanner,
                 rotations: [rot1, rot2, rot3],
                 screenshots: [ss1, ss2, ss3, ss4, ss5],
+                downloadLink: document.getElementById('d_links').value || document.getElementById('t_links').value || document.getElementById('m_links').value,
                 links: {
                     torrent: document.getElementById('t_links').value,
                     direct: document.getElementById('d_links').value,
@@ -230,7 +229,7 @@
                 }
             };
 
-            const newGameRef = push(ref(database, 'gamesRegistry'));
+            const newGameRef = push(ref(database, 'games'));
             set(newGameRef, gameData).then(() => {
                 btn.innerText = "Deploy Game to Live System";
                 alert("🚀 Game Node Deployed Instantly!");
@@ -333,7 +332,6 @@
 </head>
 <body>
 
-    <!-- 🔐 ලොගින් ස්ක්‍රීන් එක (දැන් මේක උඩින්ම පේනවා කාටවත් මගහරින්න බැහැ) -->
     <div class="gate-container" id="loginGate">
         <div class="gate-card">
             <h2 style="letter-spacing:1.5px; font-weight:900;">HQ ACCESS SYSTEM</h2>
@@ -344,7 +342,6 @@
         </div>
     </div>
 
-    <!-- 🖥️ ප්‍රධාන ඇඩ්මින් පැනල් ව්‍යුහය -->
     <div class="admin-wrapper" id="adminPanelCore" style="display:none;">
         <sidebar>
             <div>
@@ -373,7 +370,6 @@
                 </div>
             </div>
 
-            <!-- 🎯 සෙක්ෂන් 01: Trending Slider -->
             <div class="section-panel" data-aos="fade-up">
                 <div class="section-title">1. Trending Slider Content Relational Matrix</div>
                 <div class="form-grid">
@@ -409,7 +405,6 @@
                 <button class="action-submit-btn" id="btnBannerSync" onclick="saveTrendingBanners()">Sync Trending Banner</button>
             </div>
 
-            <!-- 🎮 සෙක්ෂන් 02: Main Registry Engine -->
             <div class="section-panel" data-aos="fade-up">
                 <div class="section-title">2. Main Registry Database Engine</div>
                 <div class="form-grid">
@@ -424,8 +419,8 @@
                     <div class="form-group">
                         <label>Database Routing Category Group</label>
                         <select id="gCategory">
-                            <option value="openworld">Open World Architecture</option>
                             <option value="action">High Adrenaline Action</option>
+                            <option value="openworld">Open World Architecture</option>
                             <option value="sports">Athletics / Sports Field</option>
                             <option value="horror">Dark Atmosphere Horror</option>
                         </select>
@@ -487,7 +482,6 @@
                 <button class="action-submit-btn" id="btnGameDeploy" onclick="publishGameCard()">Deploy Game to Live System</button>
             </div>
 
-            <!-- 📂 සෙක්ෂන් 03: Management -->
             <div class="section-panel" data-aos="fade-up">
                 <div class="section-title" style="color:var(--primary); border-left-color:var(--primary);">3. Live Deployed Games Management Matrix</div>
                 <div id="deployedGamesManagementList" style="max-height: 500px; overflow-y: auto;"></div>
