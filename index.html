@@ -5,16 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Akiya Control HQ - Central Command</title>
     
+    <!-- බාහිර Plugins (Animation සහ Charts සඳහා) -->
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
+    <!-- ==========================================
+         JAVASCRIPT ENGINE (FIREBASE & ANALYTICS)
+         ========================================== -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
         import { getDatabase, ref, set, onValue, push } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
         import { getStorage, ref as sRef, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-storage.js";
 
+        // Firebase Configuration (ඩේටාබේස් සම්බන්ධතාවය)
         const firebaseConfig = {
             apiKey: "AIzaSyD1SRJ0O2OcZRYafgJ0uABolb9TgBiAA3I",
             authDomain: "akiya-gamer-zone.firebaseapp.com",
@@ -31,16 +36,26 @@
         const storage = getStorage(app);
         const provider = new GoogleAuthProvider();
 
+        // 🔐 GitHub Token සහ Repository විස්තර (කේස් එකක් නොවෙන්න මෙතන සෙට් කර ඇත)
+        const GITHUB_CONFIG = {
+            token: "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",
+            username: "akiya-md",
+            repo: "AKIYA-GAMER-ZONE"
+        };
+
+        // 👤 ගූගල් ලොගින් ෆන්ක්ෂන් එක
         window.adminLogin = function() {
             signInWithPopup(auth, provider).catch(err => console.error(err));
         }
 
+        // 🔒 ලොග් අවුට් ෆන්ක්ෂන් එක
         window.adminLogout = function() {
             signOut(auth).then(() => {
                 alert("🔒 Terminal Session Terminated.");
             }).catch(err => console.error(err));
         }
 
+        // 🔄 පරිශීලකයා ලොග් වී ඇත්දැයි පරීක්ෂා කිරීම සහ පැනලය පෙන්වීම
         onAuthStateChanged(auth, (user) => {
             if (user) {
                 document.getElementById('loginGate').style.display = 'none';
@@ -53,11 +68,13 @@
             }
         });
 
+        // 🟢 සජීවීව වෙබ්සයිට් එකේ ඉන්න පිරිස (Live Visitors Count) ගණනය කිරීම
         onValue(ref(database, 'status/usersOnline'), (snapshot) => {
             const count = snapshot.val() || 0;
             document.getElementById('liveVisitorsCount').innerText = count;
         });
 
+        // 📋 දැනට ලොග් වී සිටින පරිශීලකයින්ගේ ලැයිස්තුව සහ ප්‍රස්ථාරය යාවත්කාලීන කිරීම
         onValue(ref(database, 'usersLog'), (snapshot) => {
             const listContainer = document.getElementById('activeUsersList');
             listContainer.innerHTML = "";
@@ -79,6 +96,7 @@
             initAnalyticsChart(gmailCount);
         });
 
+        // 🎮 දැනට පද්ධතියට දමා ඇති ගේම්ස් කළමනාකරණ ලැයිස්තුව (Games Deployed List)
         onValue(ref(database, 'gamesRegistry'), (snapshot) => {
             const managementContainer = document.getElementById('deployedGamesManagementList');
             managementContainer.innerHTML = "";
@@ -110,6 +128,7 @@
             });
         });
 
+        // 🗑️ ගේම් එකක් ඩේටාබේස් එකෙන් සම්පූර්ණයෙන්ම ඉවත් කිරීමේ ෆන්ක්ෂන් එක
         window.deleteGameNode = function(gameId, gameTitle) {
             if (confirm(`⚠️ Are you sure you want to permanently delete "${gameTitle}" from the live system?`)) {
                 set(ref(database, 'gamesRegistry/' + gameId), null)
@@ -122,6 +141,7 @@
             }
         };
 
+        // ☁️ Firebase Storage එකට පින්තූර අප්ලෝඩ් කරන ෆන්ක්ෂන් එක
         async function handleFileUpload(fileInputId, progressBarId) {
             const fileInput = document.getElementById(fileInputId);
             const progressBar = document.getElementById(progressBarId);
@@ -145,6 +165,7 @@
             }
         }
 
+        // 🎯 උඩ තියෙන Trending Banner (Slider) එක ඩේටාබේස් එකට සේව් කිරීම
         window.saveTrendingBanners = async function() {
             const btn = document.getElementById('btnBannerSync');
             btn.innerText = "Uploading Media...";
@@ -165,10 +186,12 @@
             });
         }
 
+        // 🚀 අලුත් ගේම් එකක් පද්ධතියට ඇතුළත් කිරීම (Deploy Game Node)
         window.publishGameCard = async function() {
             const btn = document.getElementById('btnGameDeploy');
             btn.innerText = "Compiling Assets...";
 
+            // සියලුම පින්තූර අප්ලෝඩ් කර ලින්ක් ලබා ගැනීම
             const cardImg = await handleFileUpload('gCardImgFile', 'pBarCard') || document.getElementById('gCardImgUrl').value;
             const mainImg = await handleFileUpload('gMainImgFile', 'pBarMain') || document.getElementById('gMainImgUrl').value;
             const bgBanner = await handleFileUpload('gBgBannerFile', 'pBarBg') || document.getElementById('gBgBannerUrl').value;
@@ -183,6 +206,7 @@
             const ss4 = await handleFileUpload('gSs4File', 'pBarS4') || document.getElementById('gSs4Url').value;
             const ss5 = await handleFileUpload('gSs5File', 'pBarS5') || document.getElementById('gSs5Url').value;
 
+            // ගේම් එකේ සම්පූර්ණ ඩේටා ව්‍යුහය
             const gameData = {
                 title: document.getElementById('gTitle').value,
                 size: document.getElementById('gSize').value,
@@ -203,6 +227,7 @@
                 }
             };
 
+            // Firebase එකට Data Push කිරීම
             const newGameRef = push(ref(database, 'gamesRegistry'));
             set(newGameRef, gameData).then(() => {
                 btn.innerText = "Deploy Game to Live System";
@@ -210,6 +235,7 @@
             });
         }
 
+        // 📊 ඇනලිටික්ස් ප්‍රස්ථාරය (Charts) ක්‍රියාත්මක කිරීමේ ෆන්ක්ෂන් එක
         let myChart = null;
         function initAnalyticsChart(registeredUsers) {
             const ctx = document.getElementById('userAnalyticsChart').getContext('2d');
@@ -218,7 +244,7 @@
             myChart = new Chart(ctx, {
                 type: 'bar',
                 data: {
-                    labels: ['Live Sync Now', 'Registered Accounts Accounts', 'Traffic Limit'],
+                    labels: ['Live Sync Now', 'Registered Accounts', 'Traffic Limit'],
                     datasets: [{
                         label: 'Core Metrics Data Stream',
                         data: [parseInt(document.getElementById('liveVisitorsCount').innerText) || 5, registeredUsers, 100],
@@ -236,6 +262,9 @@
         }
     </script>
 
+    <!-- ==========================================
+         VISUAL STYLE MATRIX (CSS STYLE CODE)
+         ========================================== -->
     <style>
         :root {
             --primary: #ff003c;
@@ -303,6 +332,7 @@
 </head>
 <body>
 
+    <!-- 🔐 ලොගින් ගේට්ටුව (Authentication Screen) -->
     <div class="gate-container" id="loginGate">
         <div class="gate-card">
             <h2 style="letter-spacing:1.5px; font-weight:900;">AKIYA CONTROL TERMINAL</h2>
@@ -311,11 +341,15 @@
         </div>
     </div>
 
+    <!-- 🖥️ ප්‍රධාන ඇඩ්මින් පැනල් ව්‍යුහය -->
     <div class="admin-wrapper" id="adminPanelCore" style="display:none;">
+        
+        <!-- වම් පැත්තේ මෙනුව (Sidebar) -->
         <sidebar>
             <div>
                 <div class="panel-brand">Akiya Core <span>HQ</span></div>
                 
+                <!-- ලොග් වී සිටින Operator ගේ විස්තර -->
                 <div class="operator-card">
                     <img src="" id="adminAvatar" alt="avatar">
                     <div style="overflow:hidden;">
@@ -324,14 +358,19 @@
                     </div>
                 </div>
 
+                <!-- ලොග් වී සිටින පරිශීලකයින්ගේ ලිස්ට් එක -->
                 <div style="font-size:0.7rem; font-weight:800; text-transform:uppercase; color:#333444; margin-bottom:12px;">Active Platform User Database</div>
                 <div id="activeUsersList" style="max-height: 320px; overflow-y: auto;"></div>
             </div>
 
+            <!-- පැනලයෙන් ඉවත් වීමේ බොත්තම -->
             <button class="logout-trigger-btn" onclick="adminLogout()">Disconnect Core</button>
         </sidebar>
 
+        <!-- දකුණු පැත්තේ ප්‍රධාන කොටස (Main Dashboard) -->
         <main>
+            
+            <!-- 📊 ලයිව් විසිටර්ස් සහ ප්‍රස්ථාර කොටස (Analytics) -->
             <div class="analytics-matrix-grid" data-aos="fade-up">
                 <div class="counter-neon-box">
                     <div style="font-size:0.75rem; font-weight:800; color:#888999; text-transform:uppercase; margin-bottom:5px;">Live Visitors Stream</div>
@@ -342,6 +381,7 @@
                 </div>
             </div>
 
+            <!-- 🎯 සෙක්ෂන් 01: උඩ ස්ලයිඩර් එක වෙනස් කරන තැන (Trending Slider Matrix) -->
             <div class="section-panel" data-aos="fade-up">
                 <div class="section-title">1. Trending Slider Content Relational Matrix</div>
                 <div class="form-grid">
@@ -377,9 +417,11 @@
                 <button class="action-submit-btn" id="btnBannerSync" onclick="saveTrendingBanners()">Sync Trending Banner</button>
             </div>
 
+            <!-- 🎮 සෙක්ෂන් 02: අලුත් ගේම්ස් ඇතුළත් කරන තැන (Main Registry Constructor) -->
             <div class="section-panel" data-aos="fade-up">
                 <div class="section-title">2. Main Registry Database Engine (Node Constructor)</div>
                 
+                <!-- A. ගේම් එකේ මූලික විස්තර -->
                 <h3 style="font-size:0.8rem; color:#fff; text-transform:uppercase; margin-bottom:15px; opacity:0.5; letter-spacing:0.5px;">A. Architectural Metadata</h3>
                 <div class="form-grid">
                     <div class="form-group">
@@ -409,6 +451,7 @@
                     </div>
                 </div>
 
+                <!-- B. පින්තූර සහ Screenshots ඇතුළත් කිරීම් -->
                 <h3 style="font-size:0.8rem; color:#fff; text-transform:uppercase; margin:30px 0 15px 0; opacity:0.5; letter-spacing:0.5px;">B. Image Resource Pipelines</h3>
                 <div class="form-grid">
                     <div class="form-group">
@@ -437,6 +480,7 @@
                     </div>
                 </div>
 
+                <!-- 3D කැරකෙන පින්තූර (Rotators) -->
                 <div class="link-cluster-title" style="margin-top:20px; color:var(--primary)">3D Orbital Perspective Rotators</div>
                 <div class="form-grid">
                     <div class="media-input-wrapper"><input type="file" id="gRot1File" accept="image/*"><div class="upload-progress-micro-bar" id="pBarR1"></div><input type="text" id="gRot1Url" placeholder="Link 1"></div>
@@ -444,6 +488,7 @@
                     <div class="media-input-wrapper"><input type="file" id="gRot3File" accept="image/*"><div class="upload-progress-micro-bar" id="pBarR3"></div><input type="text" id="gRot3Url" placeholder="Link 3"></div>
                 </div>
 
+                <!-- 4K Screenshots එකතුව -->
                 <div class="link-cluster-title" style="margin-top:20px; color:var(--secondary)">Game 4K Visual Screenshot Matrix Array</div>
                 <div class="form-grid">
                     <div class="media-input-wrapper"><input type="file" id="gSs1File" accept="image/*"><div class="upload-progress-micro-bar" id="pBarS1"></div><input type="text" id="gSs1Url" placeholder="Screenshot 1"></div>
@@ -453,6 +498,7 @@
                     <div class="media-input-wrapper"><input type="file" id="gSs5File" accept="image/*"><div class="upload-progress-micro-bar" id="pBarS5"></div><input type="text" id="gSs5Url" placeholder="Screenshot 5"></div>
                 </div>
 
+                <!-- C. ඩවුන්ලෝඩ් සර්වර් ලින්ක්ස් ඇතුළත් කිරීම් -->
                 <h3 style="font-size:0.8rem; color:#fff; text-transform:uppercase; margin:30px 0 15px 0; opacity:0.5; letter-spacing:0.5px;">C. Multi-Download Server Mirror Arrays (Supports 200+ Lines)</h3>
                 <p style="font-size: 0.75rem; color: var(--muted); margin-bottom: 10px;">Format: <code>Part Name | Link URL</code> (One pair per line)</p>
                 
@@ -471,9 +517,11 @@
                     <textarea id="m_links" rows="6" style="width: 100%;" placeholder="Part 1 | https://...&#10;Part 2 | https://..."></textarea>
                 </div>
 
+                <!-- ඩෙප්ලෝයි බොත්තම -->
                 <button class="action-submit-btn" id="btnGameDeploy" onclick="publishGameCard()">Deploy Game to Live System</button>
             </div>
 
+            <!-- 📂 සෙක්ෂන් 03: දැනට දාලා තියෙන ගේම්ස් ලිස්ට් එක (Delete කරන්න පුළුවන් තැන) -->
             <div class="section-panel" data-aos="fade-up">
                 <div class="section-title" style="color:var(--primary); border-left-color:var(--primary);">3. Live Deployed Games Management Matrix</div>
                 <div id="deployedGamesManagementList" style="max-height: 500px; overflow-y: auto; padding-right: 5px;"></div>
@@ -481,6 +529,7 @@
         </main>
     </div>
 
+    <!-- Scroll Animations සක්‍රීය කිරීම -->
     <script>AOS.init({ once: true });</script>
 </body>
 </html>
