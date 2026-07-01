@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Akiya Gamer Zone - Central Admin Terminal</title>
+    
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getDatabase, ref, set, onValue, push } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyD1SRJ0O2OcZRYafgJ0uABolb9TgBiAA3I",
+            authDomain: "akiya-gamer-zone.firebaseapp.com",
+            projectId: "akiya-gamer-zone",
+            storageBucket: "akiya-gamer-zone.firebasestorage.app",
+            messagingSenderId: "392261776362",
+            appId: "1:392261776362:web:e0b5bbfe267465af70f893",
+            databaseURL: "https://akiya-gamer-zone-default-rtdb.asia-southeast1.firebasedatabase.app/"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const database = getDatabase(app);
+        const provider = new GoogleAuthProvider();
+
+        // Security Area: Admin Gmail Validation
+        const ALLOWED_ADMINS = ["kaviakiya@gmail.com"]; // 👈 උඹේ Gmail එක මෙතනට දාපන් මචං!
+
+        window.adminLogin = function() {
+            signInWithPopup(auth, provider).catch(err => console.error(err));
+        }
+
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                document.getElementById('loginGate').style.display = 'none';
+                document.getElementById('adminPanelCore').style.display = 'block';
+                document.getElementById('adminName').innerText = user.displayName;
+                logUserSession(user);
+            } else {
+                document.getElementById('loginGate').style.display = 'flex';
+                document.getElementById('adminPanelCore').style.display = 'none';
+            }
+        });
+
+        // Log Active Users
+        function logUserSession(user) {
+            const userRef = ref(database, 'usersLog/' + user.uid);
+            set(userRef, {
+                name: user.displayName,
+                email: user.email,
+                photo: user.photoURL,
+                lastActive: new Date().toLocaleString()
+            });
+        }
+
+        // Fetch Logged In Gmail Accounts
+        onValue(ref(database, 'usersLog'), (snapshot) => {
+            const listContainer = document.getElementById('activeUsersList');
+            listContainer.innerHTML = "";
+            snapshot.forEach((child) => {
+                const userData = child.val();
+                listContainer.innerHTML += `
+                    <div class="user-log-card">
+                        <img src="${userData.photo}" alt="dp">
+                        <div>
+                            <div style="font-weight:700;">${userData.name}</div>
+                            <div style="font-size:0.75rem; color:#888;">${userData.email}</div>
+                            <div style="font-size:0.65rem; color:var(--secondary);">${userData.lastActive}</div>
+                        </div>
+                    </div>
+                `;
+            });
+        });
+
+        // 1. UPDATE TRENDING BANNERS LOGIC
+        window.saveTrendingBanners = function() {
+            const bannerId = document.getElementById('bannerSlotSelect').value;
+            set(ref(database, 'trendingBanners/' + bannerId), {
+                title: document.getElementById('bTitle').value,
+                downloads: document.getElementById('bDownloads').value,
+                desc: document.getElementById('bDesc').value,
+                image: document.getElementById('bImg').value
+            }).then(() => alert("🎯 Banner Updated Successfully!"));
+        }
+
+        // 2. ADD / UPDATE GAME CARD LOGIC
+        window.publishGameCard = function() {
+            const gameData = {
+                title: document.getElementById('gTitle').value,
+                size: document.getElementById('gSize').value,
+                category: document.getElementById('gCategory').value,
+                views: 0,
+                downloadsCount: 0,
+                specialNotice: document.getElementById('gNotice').value,
+                description: document.getElementById('gDescription').value,
+                cardImage: document.getElementById('gCardImg').value,
+                mainImage: document.getElementById('gMainImg').value,
+                bgBanner: document.getElementById('gBgBanner').value,
+                rotations: [
+                    document.getElementById('gRot1').value,
+                    document.getElementById('gRot2').value,
+                    document.getElementById('gRot3').value
+                ],
+                screenshots: [
+                    document.getElementById('gSs1').value,
+                    document.getElementById('gSs2').value,
+                    document.getElementById('gSs3').value,
+                    document.getElementById('gSs4').value,
+                    document.getElementById('gSs5').value
+                ],
+                links: {
+                    torrent: [document.getElementById('t1').value, document.getElementById('t2').value, document.getElementById('t3').value],
+                    direct: [document.getElementById('d1').value, document.getElementById('d2').value, document.getElementById('d3').value],
+                    mirror: [document.getElementById('m1').value, document.getElementById('m2').value, document.getElementById('m3').value]
+                }
+            };
+
+            const newGameRef = push(ref(database, 'gamesRegistry'));
+            set(newGameRef, gameData).then(() => alert("🚀 Game Card Payload Deployed Successfully!"));
+        }
+    </script>
+
+    <style>
+        :root {
+            --primary: #ff003c;
+            --secondary: #00ff66;
+            --bg-dark: #06060a;
+            --glass-bg: rgba(12, 12, 20, 0.6);
+            --glass-border: rgba(255, 255, 255, 0.05);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+        body { background-color: var(--bg-dark); color: #fff; overflow-x: hidden; }
+
+        /* Gatekeeper Style */
+        .gate-container { height: 100vh; display: flex; justify-content: center; align-items: center; background: #000; }
+        .gate-card { background: #0c0c14; padding: 40px; border-radius: 12px; border: 1px solid var(--primary); text-align: center; box-shadow: 0 0 30px rgba(255,0,60,0.2); }
+        .gate-btn { background: var(--primary); color: #fff; border: none; padding: 12px 30px; font-weight: 700; border-radius: 6px; cursor: pointer; transition: 0.3s; margin-top: 20px;}
+        .gate-btn:hover { box-shadow: 0 0 20px var(--primary); }
+
+        /* Core Layout */
+        .admin-wrapper { display: grid; grid-template-columns: 280px 1fr; min-height: 100vh; }
+        sidebar { background: #09090f; border-right: 1px solid var(--glass-border); padding: 30px 20px; }
+        .panel-title { font-size: 1.1rem; font-weight: 800; color: var(--primary); letter-spacing: 1px; margin-bottom: 30px; text-transform: uppercase; }
+        
+        main { padding: 40px; max-width: 1200px; width: 100%; }
+        .section-panel { background: var(--glass-bg); border: 1px solid var(--glass-border); padding: 30px; border-radius: 12px; margin-bottom: 35px; backdrop-filter: blur(10px); }
+        .section-title { font-size: 1rem; font-weight: 800; text-transform: uppercase; color: var(--secondary); margin-bottom: 20px; border-left: 4px solid var(--secondary); padding-left: 10px; }
+
+        /* Form Controls */
+        .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 18px; margin-bottom: 15px; }
+        .form-group { display: flex; flex-direction: column; gap: 6px; }
+        .form-group.full-width { grid-column: 1 / -1; }
+        label { font-size: 0.75rem; color: #888899; text-transform: uppercase; font-weight: 700; }
+        input, select, textarea { background: rgba(0,0,0,0.4); border: 1px solid var(--glass-border); padding: 11px; border-radius: 6px; color: #fff; font-size: 0.85rem; outline: none; transition: 0.3s; }
+        input:focus, select:focus, textarea:focus { border-color: var(--secondary); }
+        
+        .action-submit-btn { background: var(--secondary); color: #000; border: none; padding: 12px 25px; font-weight: 700; border-radius: 6px; cursor: pointer; text-transform: uppercase; font-size: 0.8rem; transition: 0.3s; margin-top: 15px; }
+        .action-submit-btn:hover { box-shadow: 0 0 15px var(--secondary); }
+
+        /* Multi Link Blocks */
+        .link-cluster-box { background: rgba(255,255,255,0.02); padding: 15px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.04); margin-top: 10px; }
+        .link-cluster-title { font-size: 0.8rem; font-weight: 700; color: #fff; margin-bottom: 10px; text-transform: uppercase; }
+
+        /* User Log Stream */
+        .user-log-card { display: flex; align-items: center; gap: 12px; background: rgba(0,0,0,0.3); padding: 10px; border-radius: 6px; margin-bottom: 10px; border: 1px solid var(--glass-border); }
+        .user-log-card img { width: 32px; height: 32px; border-radius: 50%; }
+    </style>
+</head>
+<body>
+
+    <!-- 🔐 GOOGLE SIGN-IN SECURITY GATE -->
+    <div class="gate-container" id="loginGate">
+        <div class="gate-card">
+            <h2 style="color:#fff; font-weight:800; letter-spacing:1px;">CENTRAL CORE TERMINAL</h2>
+            <p style="color:#666; font-size:0.85rem; margin-top:5px;">Authorized Personnel Only</p>
+            <button class="gate-btn" onclick="adminLogin()">Authenticate via Google</button>
+        </div>
+    </div>
+
+    <!-- 🌌 CORE ADMIN PANEL INTERFACE -->
+    <div class="admin-wrapper" id="adminPanelCore" style="display:none;">
+        <sidebar>
+            <div class="panel-title">Akiya Control <span>HQ</span></div>
+            <div style="margin-bottom: 30px;">
+                <div style="font-size:0.75rem; color:#555;">OPERATOR</div>
+                <div id="adminName" style="font-weight:700; color:var(--secondary);">---</div>
+            </div>
+            
+            <div style="font-size:0.8rem; font-weight:700; text-transform:uppercase; color:#444; margin-bottom:15px;">Active Platform Users</div>
+            <div id="activeUsersList">
+                <!-- Realtime User Logs Inject Here -->
+            </div>
+        </sidebar>
+
+        <main>
+            <!-- 🎬 SECTION 1: TRENDING BANNER CONFIGURATION -->
+            <div class="section-panel" data-aos="fade-up">
+                <div class="section-title">1. Trending Games Banner Management</div>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Select Banner Slot Location</label>
+                        <select id="bannerSlotSelect">
+                            <option value="slide_01">Slot 1 (Main Feature)</option>
+                            <option value="slide_02">Slot 2</option>
+                            <option value="slide_03">Slot 3</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Game Title</label>
+                        <input type="text" id="bTitle" placeholder="e.g. Grand Theft Auto VI">
+                    </div>
+                    <div class="form-group">
+                        <label>Worldwide Downloader Stats Count</label>
+                        <input type="text" id="bDownloads" placeholder="e.g. 📥 2.5M+ Downloads">
+                    </div>
+                    <div class="form-group full-width">
+                        <label>Any Location Image Payload URL (Banner Image)</label>
+                        <input type="text" id="bImg" placeholder="https://any-location-image-path.jpg">
+                    </div>
+                    <div class="form-group full-width">
+                        <label>Short Game Overview Info</label>
+                        <textarea id="bDesc" rows="2" placeholder="Write a short description to appear on the trending slider..."></textarea>
+                    </div>
+                </div>
+                <button class="action-submit-btn" onclick="saveTrendingBanners()">Sync Trending Banner</button>
+            </div>
+
+            <!-- 🃏 SECTION 2: DYNAMIC GAME CARDS ENGINE -->
+            <div class="section-panel" data-aos="fade-up">
+                <div class="section-title">2. Main Game Database Deployer (Advanced Node Builder)</div>
+                
+                <h3 style="font-size:0.85rem; color:#fff; text-transform:uppercase; margin-bottom:15px; opacity:0.7;">A. Metadata & Architecture</h3>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Game Title</label>
+                        <input type="text" id="gTitle" placeholder="e.g. Grand Theft Auto V">
+                    </div>
+                    <div class="form-group">
+                        <label>Data Compression Size</label>
+                        <input type="text" id="gSize" placeholder="e.g. 70 GB">
+                    </div>
+                    <div class="form-group">
+                        <label>Genre/Category Group</label>
+                        <select id="gCategory">
+                            <option value="openworld">Open World</option>
+                            <option value="action">Action Games</option>
+                            <option value="sports">Sports</option>
+                            <option value="horror">Horror (New Category)</option>
+                        </select>
+                    </div>
+                    <div class="form-group full-width">
+                        <label>Special Core Notice Terminal (Alert Box Inside details)</label>
+                        <input type="text" id="gNotice" placeholder="e.g. CRACK FIX V3 INCLUDED. DISABLE ANTIVIRUS BEFORE LAUNCH.">
+                    </div>
+                    <div class="form-group full-width">
+                        <label>In-depth System Analysis & Lore Dossier Description</label>
+                        <textarea id="gDescription" rows="4" placeholder="Explore the stunning world of Los Santos... (Full length details)"></textarea>
+                    </div>
+                </div>
+
+                <h3 style="font-size:0.85rem; color:#fff; text-transform:uppercase; margin:25px 0 15px 0; opacity:0.7;">B. Multi-Location Imagery Vectors</h3>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Outer Grid Card Image URL</label>
+                        <input type="text" id="gCardImg" placeholder="https://.../card-view.jpg">
+                    </div>
+                    <div class="form-group">
+                        <label>Internal Main Detail Left Image URL</label>
+                        <input type="text" id="gMainImg" placeholder="https://.../main-thumbnail.jpg">
+                    </div>
+                    <div class="form-group">
+                        <label>Internal Background Blur Banner URL</label>
+                        <input type="text" id="gBgBanner" placeholder="https://.../background-banner.jpg">
+                    </div>
+                </div>
+
+                <div class="link-cluster-title" style="margin-top:15px; color:var(--primary)">3D Rotating Carousel Vectors (3 Locations)</div>
+                <div class="form-grid">
+                    <input type="text" id="gRot1" placeholder="3D Photo Location 1 Link">
+                    <input type="text" id="gRot2" placeholder="3D Photo Location 2 Link">
+                    <input type="text" id="gRot3" placeholder="3D Photo Location 3 Link">
+                </div>
+
+                <div class="link-cluster-title" style="margin-top:15px; color:var(--secondary)">Game 4K Screenshots Streams (5 Locations)</div>
+                <div class="form-grid">
+                    <input type="text" id="gSs1" placeholder="Screenshot Link 1">
+                    <input type="text" id="gSs2" placeholder="Screenshot Link 2">
+                    <input type="text" id="gSs3" placeholder="Screenshot Link 3">
+                    <input type="text" id="gSs4" placeholder="Screenshot Link 4">
+                    <input type="text" id="gSs5" placeholder="Screenshot Link 5">
+                </div>
+
+                <h3 style="font-size:0.85rem; color:#fff; text-transform:uppercase; margin:25px 0 15px 0; opacity:0.7;">C. High-Speed Download Payload Matrix</h3>
+                
+                <div class="link-cluster-box">
+                    <div class="link-cluster-title">🔗 Torrent Download Mirrors</div>
+                    <div class="form-grid">
+                        <input type="text" id="t1" placeholder="Torrent Link 1 (Primary Node)">
+                        <input type="text" id="t2" placeholder="Torrent Link 2">
+                        <input type="text" id="t3" placeholder="Torrent Link 3">
+                    </div>
+                </div>
+
+                <div class="link-cluster-box">
+                    <div class="link-cluster-title">🔗 Direct Download Mirrors</div>
+                    <div class="form-grid">
+                        <input type="text" id="d1" placeholder="Direct Link 1 (High Speed Node)">
+                        <input type="text" id="d2" placeholder="Direct Link 2">
+                        <input type="text" id="d3" placeholder="Direct Link 3">
+                    </div>
+                </div>
+
+                <div class="link-cluster-box">
+                    <div class="link-cluster-title">🔗 Cloud Mirror Download Links</div>
+                    <div class="form-grid">
+                        <input type="text" id="m1" placeholder="Mirror Link 1">
+                        <input type="text" id="m2" placeholder="Mirror Link 2">
+                        <input type="text" id="m3" placeholder="Mirror Link 3">
+                    </div>
+                </div>
+
+                <button class="action-submit-btn" onclick="publishGameCard()">Deploy Game to Live System</button>
+            </div>
+        </main>
+    </div>
+
+    <script>AOS.init({ once: true });</script>
+</body>
+</html>
