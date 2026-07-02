@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Akiya Gamer Zone | Admin Control Panel</title>
+    <title>Akiya Gamer Zone | Master Admin Panel v2.0</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
@@ -16,90 +16,148 @@
             --neon-shadow: 0 0 15px rgba(255, 0, 60, 0.4);
         }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
-        body { background-color: var(--bg-dark); color: #fff; padding: 30px 20px; }
-        .admin-container { max-width: 800px; margin: 0 auto; background: var(--glass-bg); border: 1px solid var(--glass-border); padding: 30px; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-        h2 { font-size: 2rem; font-weight: 900; margin-bottom: 25px; border-left: 5px solid var(--primary); padding-left: 15px; text-transform: uppercase; }
+        body { background-color: var(--bg-dark); color: #fff; padding: 40px 20px; }
+        .admin-container { max-width: 1000px; margin: 0 auto; }
+        
+        /* Navigation Tabs */
+        .tabs { display: flex; gap: 15px; margin-bottom: 30px; border-bottom: 1px solid var(--glass-border); padding-bottom: 15px; }
+        .tab-btn { background: transparent; border: 1px solid var(--glass-border); color: #aaa; padding: 12px 24px; border-radius: 8px; cursor: pointer; font-weight: 700; transition: 0.3s; text-transform: uppercase; }
+        .tab-btn.active, .tab-btn:hover { background: var(--primary); color: #fff; border-color: var(--primary); box-shadow: var(--neon-shadow); }
+        
+        .panel-section { background: var(--glass-bg); border: 1px solid var(--glass-border); padding: 30px; border-radius: 16px; display: none; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .panel-section.active { display: block; }
+        
+        h2 { font-size: 1.8rem; font-weight: 900; margin-bottom: 25px; border-left: 5px solid var(--primary); padding-left: 15px; text-transform: uppercase; }
         h2 span { color: var(--primary); }
+        
         .form-group { margin-bottom: 20px; }
         label { display: block; font-size: 0.85rem; font-weight: 700; color: #aaa; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px; }
-        input[type="text"], input[type="datetime-local"], textarea, select { width: 100%; background: rgba(0,0,0,0.3); border: 1px solid var(--glass-border); padding: 12px; border-radius: 8px; color: #fff; outline: none; transition: 0.3s; }
+        input[type="text"], input[type="datetime-local"], textarea, select { width: 100%; background: rgba(0,0,0,0.4); border: 1px solid var(--glass-border); padding: 12px; border-radius: 8px; color: #fff; outline: none; transition: 0.3s; }
         input:focus, textarea:focus, select:focus { border-color: var(--primary); box-shadow: var(--neon-shadow); }
         .row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-        .file-box { background: rgba(255,255,255,0.02); border: 1px dashed var(--glass-border); padding: 15px; border-radius: 8px; text-align: center; cursor: pointer; position: relative; }
+        
+        /* Auto Upload Box */
+        .file-box { background: rgba(255,255,255,0.01); border: 2px dashed var(--glass-border); padding: 20px; border-radius: 8px; text-align: center; cursor: pointer; position: relative; transition: 0.3s; }
+        .file-box:hover { border-color: var(--secondary); }
         .file-box input[type="file"] { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; }
-        .file-box i { font-size: 1.5rem; color: var(--primary); margin-bottom: 8px; display: block; }
-        .file-box span { font-size: 0.8rem; color: #777; }
-        .or-text { text-align: center; margin: 10px 0; color: #555; font-weight: bold; font-size: 0.8rem; }
-        .btn-submit { width: 100%; background: var(--primary); border: none; color: #fff; padding: 15px; border-radius: 8px; font-weight: 700; font-size: 1rem; cursor: pointer; transition: 0.3s; box-shadow: var(--neon-shadow); text-transform: uppercase; letter-spacing: 1px; margin-top: 15px; }
+        .file-box i { font-size: 2rem; color: var(--secondary); margin-bottom: 10px; display: block; }
+        
+        .btn-submit { width: 100%; background: var(--primary); border: none; color: #fff; padding: 15px; border-radius: 8px; font-weight: 700; font-size: 1rem; cursor: pointer; transition: 0.3s; box-shadow: var(--neon-shadow); text-transform: uppercase; margin-top: 15px; }
         .btn-submit:hover { filter: brightness(1.2); transform: translateY(-2px); }
-        .status-msg { text-align: center; margin-top: 15px; font-weight: 600; font-size: 0.9rem; display: none; }
+        
+        /* Games Management List */
+        .item-list { display: grid; grid-template-columns: 1fr; gap: 15px; margin-top: 20px; }
+        .list-item { background: rgba(0,0,0,0.3); border: 1px solid var(--glass-border); padding: 15px; border-radius: 10px; display: flex; justify-content: space-between; align-items: center; }
+        .item-info { display: flex; align-items: center; gap: 15px; }
+        .item-info img { width: 50px; height: 60px; object-fit: cover; border-radius: 6px; border: 1px solid var(--glass-border); }
+        .item-details h4 { font-size: 1rem; font-weight: 700; }
+        .item-details p { font-size: 0.8rem; color: #777; }
+        .btn-delete { background: #ff3333; border: none; color: #fff; padding: 8px 16px; border-radius: 6px; font-weight: 700; cursor: pointer; transition: 0.3s; }
+        .btn-delete:hover { background: #ff0000; box-shadow: 0 0 10px rgba(255,0,0,0.5); }
+        
+        .status-msg { text-align: center; margin-top: 15px; font-weight: 600; font-size: 0.9rem; }
     </style>
 </head>
 <body>
 
     <div class="admin-container">
-        <h2>Akiya Control <span>Portal</span></h2>
-        
-        <form id="gameUploadForm">
-            <!-- Game Title & Category -->
-            <div class="row">
-                <div class="form-group">
-                    <label>Game Title / Name</label>
-                    <input type="text" id="gameName" placeholder="e.g., GTA V Premium Edition" required>
-                </div>
-                <div class="form-group">
-                    <label>Category</label>
-                    <select id="gameCategory">
-                        <option value="Action">Action</option>
-                        <option value="Adventure">Adventure</option>
-                        <option value="Open World">Open World</option>
-                        <option value="Racing">Racing</option>
-                        <option value="Shooter">Shooter</option>
-                    </select>
-                </div>
-            </div>
+        <!-- Control Tabs -->
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchTab('addGameSection', this)"><i class="fa-solid fa-gamepad"></i> Add Game</button>
+            <button class="tab-btn" onclick="switchTab('manageGamesSection', this); loadGamesList();"><i class="fa-solid fa-list-check"></i> Manage Games</button>
+            <button class="tab-btn" onclick="switchTab('sliderSection', this)"><i class="fa-solid fa-images"></i> Slider Banners</button>
+        </div>
 
-            <!-- Size & Expiry Limit -->
-            <div class="row">
-                <div class="form-group">
-                    <label>Game Size</label>
-                    <input type="text" id="gameSize" placeholder="e.g., 45 GB" required>
+        <!-- SECTION 1: ADD GAME -->
+        <div class="panel-section active" id="addGameSection">
+            <h2>Deploy New <span>Game Title</span></h2>
+            <form id="gameForm">
+                <div class="row">
+                    <div class="form-group">
+                        <label>Game Title</label>
+                        <input type="text" id="gameName" placeholder="e.g., Forza Horizon 4" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Category</label>
+                        <select id="gameCategory">
+                            <option value="Action">Action</option>
+                            <option value="Racing">Racing</option>
+                            <option value="Open World">Open World</option>
+                            <option value="Adventure">Adventure</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group">
+                        <label>Game Size</label>
+                        <input type="text" id="gameSize" placeholder="e.g., 66.6 GB" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Auto-Hide Date/Time (Optional)</label>
+                        <input type="datetime-local" id="expiryTime">
+                    </div>
                 </div>
                 <div class="form-group">
-                    <label>Expiry Limit (Optional Time Limit to Auto-Hide)</label>
-                    <input type="datetime-local" id="expiryTime">
+                    <label>Description</label>
+                    <textarea id="gameDesc" rows="3" placeholder="Game features and info..."></textarea>
                 </div>
-            </div>
-
-            <!-- Description -->
-            <div class="form-group">
-                <label>Full Game Description</label>
-                <textarea id="gameDesc" rows="4" placeholder="Explore the world and complete high-octane missions..."></textarea>
-            </div>
-
-            <!-- Image Upload & Input Box -->
-            <div class="form-group">
-                <label>Main Grid Thumbnail Card</label>
-                <div class="file-box">
-                    <i class="fa-solid fa-cloud-arrow-up"></i>
-                    <span id="fileLabel">Choose Image File (JPG/PNG)</span>
-                    <input type="file" id="gameFile" accept="image/*" onchange="handleFileSelect(this, 'gameUrl')">
+                <div class="form-group">
+                    <label>Game Thumbnail Poster</label>
+                    <div class="file-box">
+                        <i class="fa-solid fa-cloud-arrow-up"></i>
+                        <span id="gameFileLabel">Drop or Click to Upload Image Instantly</span>
+                        <input type="file" accept="image/*" onchange="uploadToCloud(this, 'gameUrl', 'gameFileLabel')">
+                    </div>
+                    <input type="text" id="gameUrl" placeholder="Image URL will appear here automatically..." style="margin-top:10px;" readonly required>
                 </div>
-                <div class="or-text">OR PASTE DIRECT URL BELOW</div>
-                <input type="text" id="gameUrl" placeholder="https://example.com/poster.jpg">
-            </div>
+                <button type="submit" class="btn-submit" id="gameSubBtn"><i class="fa-solid fa-bolt"></i> Deploy Game</button>
+                <div class="status-msg" id="gameStatus"></div>
+            </form>
+        </div>
 
-            <!-- Submit Button -->
-            <button type="submit" class="btn-submit" id="submitBtn"><i class="fa-solid fa-bolt"></i> Deploy Title</button>
-            <div class="status-msg" id="statusMsg"></div>
-        </form>
+        <!-- SECTION 2: MANAGE & DELETE GAMES -->
+        <div class="panel-section" id="manageGamesSection">
+            <h2>Active Deployed <span>Titles</span></h2>
+            <div class="item-list" id="activeGamesList">
+                <p style="color:#555;">Loading deployed core clusters...</p>
+            </div>
+        </div>
+
+        <!-- SECTION 3: SLIDER BANNERS -->
+        <div class="panel-section" id="sliderSection">
+            <h2>Add Slider <span>Trending Banners</span></h2>
+            <form id="sliderForm">
+                <div class="form-group">
+                    <label>Banner Big Title</label>
+                    <input type="text" id="slideTitle" placeholder="e.g., GTA VI COMING SOON" required>
+                </div>
+                <div class="form-group">
+                    <label>Short Description</label>
+                    <input type="text" id="slideDesc" placeholder="e.g., Pre-deployments and high-speed packages available now.">
+                </div>
+                <div class="form-group">
+                    <label>Download Meta Text</label>
+                    <input type="text" id="slideMeta" placeholder="e.g., 📥 Fast Download" value="📥 Fast Download">
+                </div>
+                <div class="form-group">
+                    <label>Banner Wallpaper Image</label>
+                    <div class="file-box">
+                        <i class="fa-solid fa-image"></i>
+                        <span id="slideFileLabel">Upload High Quality Landscape Wallpaper</span>
+                        <input type="file" accept="image/*" onchange="uploadToCloud(this, 'slideUrl', 'slideFileLabel')">
+                    </div>
+                    <input type="text" id="slideUrl" placeholder="Wallpaper URL will appear here..." style="margin-top:10px;" readonly required>
+                </div>
+                <button type="submit" class="btn-submit" id="slideSubBtn"><i class="fa-solid fa-fire"></i> Add to Slider</button>
+                <div class="status-msg" id="slideStatus"></div>
+            </form>
+        </div>
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getDatabase, ref, push, set } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+        import { getDatabase, ref, push, set, onValue, remove } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
-        // Firebase Configuration
         const firebaseConfig = {
             apiKey: "AIzaSyD1SRJ0O2OcZRYafgJ0uABolb9TgBiAA3I",
             authDomain: "akiya-gamer-zone.firebaseapp.com",
@@ -113,66 +171,126 @@
         const app = initializeApp(firebaseConfig);
         const database = getDatabase(app);
 
-        // File to Base64 String converter logic (No Storage Required!)
-        window.handleFileSelect = function(input, targetInputId) {
-            const file = input.files[0];
-            if (!file) return;
-            
-            document.getElementById('fileLabel').innerText = file.name;
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                // කෙලින්ම image එක text string එකක් බවට හරවා text box එකට දානවා
-                document.getElementById(targetInputId).value = e.target.result;
-            };
-            reader.readAsDataURL(file);
+        // --- Tab Switcher ---
+        window.switchTab = function(sectionId, btn) {
+            document.querySelectorAll('.panel-section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(sectionId).classList.add('active');
+            btn.classList.add('active');
         }
 
-        // Form Submit Configuration
-        document.getElementById('gameUploadForm').addEventListener('submit', function(e) {
+        // --- Instant Free Cloud Image Upload (Imgur Anonymous API) ---
+        window.uploadToCloud = function(fileInput, targetInputId, labelId) {
+            const file = fileInput.files[0];
+            if (!file) return;
+
+            const label = document.getElementById(labelId);
+            label.innerHTML = `<i class="fa-solid fa-spinner fa-spin" style="color:var(--primary)"></i> Uploading to Cloud...`;
+
+            const formData = new FormData();
+            formData.append("image", file);
+
+            // Anonymous Client ID (No login required, handles clean global CDN URLs)
+            fetch("https://api.imgur.com/3/image", {
+                method: "POST",
+                headers: { Authorization: "Client-ID 7e732ff7cc59b86" },
+                body: formData
+            })
+            .then(res => res.json())
+            .then(json => {
+                if(json.success) {
+                    document.getElementById(targetInputId).value = json.data.link;
+                    label.innerHTML = `<i class="fa-solid fa-circle-check" style="color:var(--secondary)"></i> Upload Completed!`;
+                } else {
+                    alert("Cloud Upload Failed!");
+                    label.innerText = "Try again";
+                }
+            })
+            .catch(() => {
+                alert("Upload connection lost!");
+                label.innerText = "Try again";
+            });
+        }
+
+        // --- SUBMIT GAME ---
+        document.getElementById('gameForm').addEventListener('submit', function(e) {
             e.preventDefault();
-            
-            const submitBtn = document.getElementById('submitBtn');
-            const statusMsg = document.getElementById('statusMsg');
-            
-            submitBtn.disabled = true;
-            submitBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Deploying...`;
-            
+            const btn = document.getElementById('gameSubBtn');
+            const status = document.getElementById('gameStatus');
+            btn.disabled = true;
+
             const name = document.getElementById('gameName').value;
             const category = document.getElementById('gameCategory').value;
             const size = document.getElementById('gameSize').value;
             const expiryTime = document.getElementById('expiryTime').value;
             const desc = document.getElementById('gameDesc').value;
-            const imageUrl = document.getElementById('gameUrl').value || 'https://via.placeholder.com/300x400';
+            const imgUrl = document.getElementById('gameUrl').value;
 
-            // Firebase Database Object Creation
-            const gamesRef = ref(database, 'games');
-            const newGameRef = push(gamesRef);
-            
-            set(newGameRef, {
-                name: name,
-                title: name, // Home page එකේ fields දෙකම check කරන නිසා දෙකටම දැම්මා
-                category: category,
-                size: size,
+            const newRef = push(ref(database, 'games'));
+            set(newRef, {
+                name, title: name, category, size,
                 expiryTime: expiryTime ? expiryTime : null,
-                desc: desc,
-                image: imageUrl,
-                cardImage: imageUrl
+                desc, image: imgUrl, cardImage: imgUrl
             }).then(() => {
-                statusMsg.style.display = "block";
-                statusMsg.style.color = "var(--secondary)";
-                statusMsg.innerHTML = `<i class="fa-solid fa-circle-check"></i> Title Successfully Deployed!`;
-                
-                // Form එක Reset කිරීම
-                document.getElementById('gameUploadForm').reset();
-                document.getElementById('fileLabel').innerText = "Choose Image File (JPG/PNG)";
-            }).catch((error) => {
-                statusMsg.style.display = "block";
-                statusMsg.style.color = "var(--primary)";
-                statusMsg.innerHTML = `<i class="fa-solid fa-circle-xmark"></i> Deployment Failed: ` + error.message;
-            }).finally(() => {
-                submitBtn.disabled = false;
-                submitBtn.innerHTML = `<i class="fa-solid fa-bolt"></i> Deploy Title`;
+                status.innerHTML = `<span style="color:var(--secondary)">Game Deployed Successfully!</span>`;
+                document.getElementById('gameForm').reset();
+                document.getElementById('gameFileLabel').innerText = "Drop or Click to Upload Image Instantly";
+            }).finally(() => btn.disabled = false);
+        });
+
+        // --- LOAD & DELETE GAMES MANAGEMENT ---
+        window.loadGamesList = function() {
+            const listDiv = document.getElementById('activeGamesList');
+            onValue(ref(database, 'games'), (snapshot) => {
+                listDiv.innerHTML = "";
+                if(!snapshot.exists()) {
+                    listDiv.innerHTML = "<p>No active games found inside core clusters.</p>";
+                    return;
+                }
+                snapshot.forEach(child => {
+                    const id = child.key;
+                    const game = child.val();
+                    listDiv.innerHTML += `
+                        <div class="list-item">
+                            <div class="item-info">
+                                <img src="${game.image}">
+                                <div class="item-details">
+                                    <h4>${game.name || game.title}</h4>
+                                    <p>${game.category} | ${game.size}</p>
+                                </div>
+                            </div>
+                            <button class="btn-delete" onclick="deleteGame('${id}')"><i class="fa-solid fa-trash"></i> Delete</button>
+                        </div>
+                    `;
+                });
             });
+        }
+
+        window.deleteGame = function(id) {
+            if(confirm("Are you sure you want to completely wipe this title?")) {
+                remove(ref(database, `games/${id}`));
+            }
+        }
+
+        // --- SUBMIT SLIDER BANNER ---
+        document.getElementById('sliderForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const btn = document.getElementById('slideSubBtn');
+            const status = document.getElementById('slideStatus');
+            btn.disabled = true;
+
+            const title = document.getElementById('slideTitle').value;
+            const desc = document.getElementById('slideDesc').value;
+            const downloads = document.getElementById('slideMeta').value;
+            const image = document.getElementById('slideUrl').value;
+
+            const newRef = push(ref(database, 'trendingBanners'));
+            set(newRef, { title, desc, downloads, image })
+            .then(() => {
+                status.innerHTML = `<span style="color:var(--secondary)">Banner Added to Home Slider!</span>`;
+                document.getElementById('sliderForm').reset();
+                document.getElementById('slideFileLabel').innerText = "Upload High Quality Landscape Wallpaper";
+            }).finally(() => btn.disabled = false);
         });
     </script>
 </body>
