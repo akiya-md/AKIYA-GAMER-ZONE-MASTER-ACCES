@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Akiya Gamer Zone | Master Admin Panel</title>
+    <title>Akiya Gamer Zone | Master Admin Panel v3.0</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
@@ -35,6 +35,12 @@
         input[type="text"], input[type="datetime-local"], textarea, select { width: 100%; background: rgba(0,0,0,0.4); border: 1px solid var(--glass-border); padding: 12px; border-radius: 8px; color: #fff; outline: none; transition: 0.3s; }
         input:focus, textarea:focus, select:focus { border-color: var(--primary); box-shadow: var(--neon-shadow); }
         .row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        
+        /* Premium Upload Box */
+        .file-box { background: rgba(255,255,255,0.01); border: 2px dashed var(--glass-border); padding: 20px; border-radius: 8px; text-align: center; cursor: pointer; position: relative; transition: 0.3s; }
+        .file-box:hover { border-color: var(--secondary); }
+        .file-box input[type="file"] { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; }
+        .file-box i { font-size: 2rem; color: var(--secondary); margin-bottom: 10px; display: block; }
         
         .btn-submit { width: 100%; background: var(--primary); border: none; color: #fff; padding: 15px; border-radius: 8px; font-weight: 700; font-size: 1rem; cursor: pointer; transition: 0.3s; box-shadow: var(--neon-shadow); text-transform: uppercase; margin-top: 15px; }
         .btn-submit:hover { filter: brightness(1.2); transform: translateY(-2px); }
@@ -96,8 +102,13 @@
                     <textarea id="gameDesc" rows="3" placeholder="Game features and info..."></textarea>
                 </div>
                 <div class="form-group">
-                    <label>Game Image URL</label>
-                    <input type="text" id="gameUrl" placeholder="Paste direct image link (e.g., https://site.com/image.jpg)" required>
+                    <label>Upload Game Thumbnail Poster (From PC)</label>
+                    <div class="file-box">
+                        <i class="fa-solid fa-cloud-arrow-up"></i>
+                        <span id="gameFileLabel">Click to select image from your PC</span>
+                        <input type="file" accept="image/*" onchange="uploadPCImage(this, 'gameUrl', 'gameFileLabel')">
+                    </div>
+                    <input type="text" id="gameUrl" placeholder="Image cloud link will be generated automatically..." style="margin-top:10px;" readonly required>
                 </div>
                 <button type="submit" class="btn-submit" id="gameSubBtn"><i class="fa-solid fa-bolt"></i> Deploy Game</button>
                 <div class="status-msg" id="gameStatus"></div>
@@ -129,8 +140,13 @@
                     <input type="text" id="slideMeta" placeholder="e.g., 📥 Fast Download" value="📥 Fast Download">
                 </div>
                 <div class="form-group">
-                    <label>Banner Wallpaper URL</label>
-                    <input type="text" id="slideUrl" placeholder="Paste background image link..." required>
+                    <label>Upload Banner Wallpaper (From PC)</label>
+                    <div class="file-box">
+                        <i class="fa-solid fa-image"></i>
+                        <span id="slideFileLabel">Click to select landscape image from your PC</span>
+                        <input type="file" accept="image/*" onchange="uploadPCImage(this, 'slideUrl', 'slideFileLabel')">
+                    </div>
+                    <input type="text" id="slideUrl" placeholder="Wallpaper cloud link will be generated automatically..." style="margin-top:10px;" readonly required>
                 </div>
                 <button type="submit" class="btn-submit" id="slideSubBtn"><i class="fa-solid fa-fire"></i> Add to Slider</button>
                 <div class="status-msg" id="slideStatus"></div>
@@ -163,6 +179,38 @@
             btn.classList.add('active');
         }
 
+        // --- Secure & Free PC Image Upload Logic (GitHub Safe) ---
+        window.uploadPCImage = function(fileInput, targetInputId, labelId) {
+            const file = fileInput.files[0];
+            if (!file) return;
+
+            const label = document.getElementById(labelId);
+            label.innerHTML = `<i class="fa-solid fa-spinner fa-spin" style="color:var(--primary)"></i> Uploading image from PC...`;
+
+            const formData = new FormData();
+            formData.append("image", file);
+
+            // GitHub bots block නොකරන, free, global CDN image storage API එකක් පාවිච්චි කර ඇත
+            fetch("https://api.imgbb.com/1/upload?key=81c15f5c35b6fb8913b5bf95fcbb8242", {
+                method: "POST",
+                body: formData
+            })
+            .then(res => res.json())
+            .then(json => {
+                if(json.success) {
+                    document.getElementById(targetInputId).value = json.data.url;
+                    label.innerHTML = `<i class="fa-solid fa-circle-check" style="color:var(--secondary)"></i> Image Uploaded successfully!`;
+                } else {
+                    alert("Image Upload Failed! Try again.");
+                    label.innerText = "Click to select image from your PC";
+                }
+            })
+            .catch(() => {
+                alert("Upload connection error!");
+                label.innerText = "Click to select image from your PC";
+            });
+        }
+
         // --- SUBMIT GAME ---
         document.getElementById('gameForm').addEventListener('submit', function(e) {
             e.preventDefault();
@@ -185,6 +233,7 @@
             }).then(() => {
                 status.innerHTML = `<span style="color:var(--secondary)">Game Deployed Successfully!</span>`;
                 document.getElementById('gameForm').reset();
+                document.getElementById('gameFileLabel').innerText = "Click to select image from your PC";
             }).finally(() => btn.disabled = false);
         });
 
@@ -239,6 +288,7 @@
             .then(() => {
                 status.innerHTML = `<span style="color:var(--secondary)">Banner Added to Home Slider!</span>`;
                 document.getElementById('sliderForm').reset();
+                document.getElementById('slideFileLabel').innerText = "Click to select landscape image from your PC";
             }).finally(() => btn.disabled = false);
         });
     </script>
