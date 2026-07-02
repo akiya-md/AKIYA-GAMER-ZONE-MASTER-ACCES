@@ -32,6 +32,7 @@
         const provider = new GoogleAuthProvider();
 
         const SECRET_ADMIN_PASSWORD = "Akiya@123"; 
+        let currentEditingGameId = null; // Track if we are editing an existing game
 
         window.adminLogin = function() {
             const inputPassword = document.getElementById('hqPasswordInput').value;
@@ -89,19 +90,21 @@
             initAnalyticsChart(userCount);
         });
 
+        // Load Games to Manager List
+        let allLoadedGames = {};
         onValue(ref(database, 'games'), (snapshot) => {
             const managementContainer = document.getElementById('deployedGamesManagementList');
             if(!managementContainer) return;
             managementContainer.innerHTML = "";
-            const data = snapshot.val();
+            allLoadedGames = snapshot.val();
             
-            if (!data) {
+            if (!allLoadedGames) {
                 managementContainer.innerHTML = `<div style="color:var(--muted); font-size:0.85rem; padding:10px;">No games added yet.</div>`;
                 return;
             }
 
-            Object.keys(data).forEach((key) => {
-                const game = data[key];
+            Object.keys(allLoadedGames).forEach((key) => {
+                const game = allLoadedGames[key];
                 const gTitle = game.name || game.title || 'Unknown Game';
                 const gSize = game.size || 'N/A';
                 managementContainer.innerHTML += `
@@ -113,11 +116,39 @@
                                 <div style="font-size:0.75rem; color:var(--secondary);">Size: ${gSize}</div>
                             </div>
                         </div>
-                        <button class="delete-node-btn" onclick="deleteGameNode('${key}', '${gTitle.replace(/'/g, "\\'")}')">Remove Game</button>
+                        <div style="display:flex; gap:10px;">
+                            <button class="edit-node-btn" onclick="populateGameForEdit('${key}')"><i class="fa-solid fa-pen-to-square"></i> Edit</button>
+                            <button class="delete-node-btn" onclick="deleteGameNode('${key}', '${gTitle.replace(/'/g, "\\'")}')">Remove</button>
+                        </div>
                     </div>
                 `;
             });
         });
+
+        // Trigger Edit Mode and Populate Fields
+        window.populateGameForEdit = function(gameId) {
+            currentEditingGameId = gameId;
+            const game = allLoadedGames[gameId];
+            
+            document.getElementById('gTitle').value = game.name || game.title || '';
+            document.getElementById('gSize').value = game.size || '';
+            document.getElementById('gCategory').value = game.category || 'action';
+            document.getElementById('gNotice').value = game.specialNotice || '';
+            document.getElementById('gDescription').value = game.description || '';
+            
+            document.getElementById('gCardImgUrl').value = game.image || '';
+            document.getElementById('gMainImgUrl').value = game.mainImage || '';
+            document.getElementById('gBgBannerUrl').value = game.bgBanner || '';
+            
+            document.getElementById('t_links').value = game.links?.torrent || '';
+            document.getElementById('d_links').value = game.links?.direct || '';
+            document.getElementById('m_links').value = game.links?.mirror || '';
+            document.getElementById('gExpiryTime').value = game.expiryTime || '';
+
+            document.getElementById('btnGameDeploy').innerText = "✏️ Save Edited Game Data";
+            document.getElementById('formActionTitle').innerText = "Edit Game Mode Active";
+            window.scrollTo({ top: document.getElementById('gameFormSection').offsetTop, behavior: 'smooth' });
+        };
 
         window.deleteGameNode = function(gameId, gameTitle) {
             if (confirm(`⚠️ Delete "${gameTitle}" permanently?`)) {
@@ -166,15 +197,11 @@
 
         window.publishGameCard = async function() {
             const btn = document.getElementById('btnGameDeploy');
-            btn.innerText = "Uploading Images & Deploying...";
+            btn.innerText = "Deploying Cluster Data...";
 
             const cardImg = await handleFileUpload('gCardImgFile', 'pBarCard') || document.getElementById('gCardImgUrl').value;
             const mainImg = await handleFileUpload('gMainImgFile', 'pBarMain') || document.getElementById('gMainImgUrl').value;
             const bgBanner = await handleFileUpload('gBgBannerFile', 'pBarBg') || document.getElementById('gBgBannerUrl').value;
-
-            const ss1 = await handleFileUpload('gSs1File', 'pBarS1') || document.getElementById('gSs1Url').value;
-            const ss2 = await handleFileUpload('gSs2File', 'pBarS2') || document.getElementById('gSs2Url').value;
-            const ss3 = await handleFileUpload('gSs3File', 'pBarS3') || document.getElementById('gSs3Url').value;
 
             const gameData = {
                 name: document.getElementById('gTitle').value,
@@ -188,18 +215,48 @@
                 cardImage: cardImg,
                 mainImage: mainImg,
                 bgBanner: bgBanner,
-                screenshots: [ss1, ss2, ss3],
+                expiryTime: document.getElementById('gExpiryTime').value || "", // Save selected expiry time stamp
                 links: {
                     torrent: document.getElementById('t_links').value,
-                    direct: document.getElementById('d_links').value,
+                    direct: document.getElementById('d_links').value, // Dynamic comma-separated parts text logic
                     mirror: document.getElementById('m_links').value
                 }
             };
 
-            push(ref(database, 'games'), gameData).then(() => {
-                btn.innerText = "Add New Game to Site";
-                alert("🚀 Game Added Successfully!");
-            });
+            if (currentEditingGameId) {
+                // If editing, overwrite the exact existing node
+                set(ref(database, 'games/' + currentEditingGameId), gameData).then(() => {
+                    resetGameForm();
+                    alert("🚀 Game Updated Successfully!");
+                });
+            } else {
+                // If new, generate a brand new push id node
+                push(ref(database, 'games'), gameData).then(() => {
+                    resetGameForm();
+                    alert("🚀 Game Added Successfully!");
+                });
+            }
+        }
+
+        function resetGameForm() {
+            currentEditingGameId = null;
+            document.getElementById('btnGameDeploy').innerText = "Add New Game to Site";
+            document.getElementById('formActionTitle').innerText = "Add New Game Entry";
+            document.getElementById('gTitle').value = "";
+            document.getElementById('gSize').value = "";
+            document.getElementById('gNotice').value = "";
+            document.getElementById('gDescription').value = "";
+            document.getElementById('gCardImgUrl').value = "";
+            document.getElementById('gMainImgUrl').value = "";
+            document.getElementById('gBgBannerUrl').value = "";
+            document.getElementById('t_links').value = "";
+            document.getElementById('d_links').value = "";
+            document.getElementById('m_links').value = "";
+            document.getElementById('gExpiryTime').value = "";
+            
+            document.getElementById('pBarCard').style.width = "0%";
+            document.getElementById('pBarMain').style.width = "0%";
+            document.getElementById('pBarBg').style.width = "0%";
         }
 
         let myChart = null;
@@ -240,7 +297,7 @@
         .gate-card { background: #11111e; padding: 40px; border-radius: 12px; border: 1px solid var(--primary); text-align: center; max-width: 400px; width: 100%; }
         .panel-input { background: rgba(0,0,0,0.5); border: 1px solid var(--glass-border); padding: 12px; border-radius: 6px; color: #fff; width: 100%; margin-top: 15px; text-align: center; }
         .gate-btn { background: var(--primary); color:#fff; border:none; padding:12px; width:100%; border-radius:6px; cursor:pointer; font-weight:700; margin-top:15px; }
-        .admin-wrapper { display: grid; grid-template-columns: 300px 1fr; min-height: 100vh; }
+        .admin-wrapper { display: grid; grid-template-columns: 320px 1fr; min-height: 100vh; }
         sidebar { background: #0d0d16; border-right: 1px solid var(--glass-border); padding: 25px; display: flex; flex-direction: column; justify-content: space-between; }
         .panel-brand { font-size: 1.2rem; font-weight: 900; }
         .panel-brand span { color: var(--primary); }
@@ -267,6 +324,8 @@
         .user-log-card img { width: 30px; height: 30px; border-radius: 50%; }
         .manage-game-card { display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.02); padding: 12px; border-radius: 8px; margin-bottom: 10px; border: 1px solid var(--glass-border); }
         .delete-node-btn { background: rgba(255, 0, 60, 0.15); border: 1px solid var(--primary); color: #ff4d6d; padding: 6px 12px; font-weight: 700; border-radius: 6px; cursor: pointer; }
+        .edit-node-btn { background: rgba(0, 255, 102, 0.15); border: 1px solid var(--secondary); color: var(--secondary); padding: 6px 12px; font-weight: 700; border-radius: 6px; cursor: pointer; }
+        .input-hint { font-size: 0.7rem; color: var(--muted); }
     </style>
 </head>
 <body>
@@ -290,8 +349,8 @@
                         <div id="adminName" style="font-weight:700; color:var(--secondary);">---</div>
                     </div>
                 </div>
-                <div style="font-size:0.75rem; font-weight:700; color:var(--muted); margin-bottom:10px;">Registered Users</div>
-                <div id="activeUsersList" style="max-height: 350px; overflow-y: auto;"></div>
+                <div style="font-size:0.75rem; font-weight:700; color:var(--muted); margin-bottom:10px;">Logged-in User Management Bar</div>
+                <div id="activeUsersList" style="max-height: 380px; overflow-y: auto;"></div>
             </div>
             <button class="logout-trigger-btn" onclick="adminLogout()">Logout</button>
         </sidebar>
@@ -343,9 +402,9 @@
                 <button class="action-submit-btn" id="btnBannerSync" onclick="saveTrendingBanners()">Save Banner</button>
             </div>
 
-            <!-- Add Games -->
-            <div class="section-panel" data-aos="fade-up">
-                <div class="section-title">Add New Game Entry</div>
+            <!-- Add/Edit Games Form Section -->
+            <div class="section-panel" id="gameFormSection" data-aos="fade-up">
+                <div class="section-title" id="formActionTitle">Add New Game Entry</div>
                 <div class="form-grid">
                     <div class="form-group">
                         <label>Game Title</label>
@@ -363,6 +422,11 @@
                             <option value="sports">Sports</option>
                             <option value="horror">Horror</option>
                         </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Auto-Hide Expiry Limit (Optional Time Limit)</label>
+                        <input type="datetime-local" id="gExpiryTime">
+                        <span class="input-hint">සයිට් එකෙන් මේ ගේම් එක auto-hide වෙන්න ඕන වෙලාව දෙන්න.</span>
                     </div>
                     <div class="form-group full-width">
                         <label>Special Urgent Notice (Optional)</label>
@@ -390,7 +454,11 @@
                 </div>
 
                 <div style="margin-top:20px;" class="form-group"><label>Torrent Link</label><input type="text" id="t_links"></div>
-                <div style="margin-top:10px;" class="form-group"><label>Direct Download Link</label><input type="text" id="d_links"></div>
+                <div style="margin-top:10px;" class="form-group">
+                    <label>Direct Download Link (Parts Link Support)</label>
+                    <input type="text" id="d_links" placeholder="part1-url, part2-url, part3-url">
+                    <span class="input-hint">ගොඩක් Parts තියෙනවා නම් ඒ ලින්ක්ස් ඔක්කොම එක දිගට කමා ( , ) ලකුණෙන් වෙන් කරලා දාන්න මචං.</span>
+                </div>
                 <div style="margin-top:10px;" class="form-group"><label>Mirror Link</label><input type="text" id="m_links"></div>
 
                 <button class="action-submit-btn" id="btnGameDeploy" onclick="publishGameCard()">Add New Game to Site</button>
@@ -398,7 +466,7 @@
 
             <!-- Game Manager -->
             <div class="section-panel" data-aos="fade-up">
-                <div class="section-title">Manage Added Games</div>
+                <div class="section-title">Manage Added Games (Edit / Delete)</div>
                 <div id="deployedGamesManagementList" style="max-height: 400px; overflow-y: auto;"></div>
             </div>
         </main>
