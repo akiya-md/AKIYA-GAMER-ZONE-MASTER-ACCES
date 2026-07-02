@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Akiya Control HQ | Coming Soon Matrix</title>
+    <title>Akiya HQ | Coming Soon Slot Auto-Filler</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root { --primary: #ff003c; --secondary: #00ff66; --bg-dark: #0a0a0f; --glass-bg: rgba(18, 18, 28, 0.6); --glass-border: rgba(255, 255, 255, 0.06); --neon-shadow: 0 0 15px rgba(255, 0, 60, 0.4); }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
         body { background-color: var(--bg-dark); color: #fff; padding: 40px 20px; }
-        .admin-container { max-width: 1000px; margin: 0 auto; }
+        .admin-container { max-width: 900px; margin: 0 auto; }
         .tabs { display: flex; gap: 15px; margin-bottom: 30px; border-bottom: 1px solid var(--glass-border); padding-bottom: 15px; }
         .tab-btn { background: transparent; border: 1px solid var(--glass-border); color: #aaa; padding: 12px 24px; border-radius: 8px; cursor: pointer; font-weight: 700; text-transform: uppercase; transition: 0.3s; }
         .tab-btn.active, .tab-btn:hover { background: var(--primary); color: #fff; box-shadow: var(--neon-shadow); }
@@ -18,39 +18,25 @@
         h2 span { color: var(--primary); }
         .form-group { margin-bottom: 20px; }
         label { display: block; font-size: 0.85rem; font-weight: 700; color: #aaa; margin-bottom: 8px; text-transform: uppercase; }
-        input[type="text"], textarea, select { width: 100%; background: rgba(0,0,0,0.4); border: 1px solid var(--glass-border); padding: 12px; border-radius: 8px; color: #fff; outline: none; }
-        input:focus, textarea:focus { border-color: var(--primary); box-shadow: var(--neon-shadow); }
+        input[type="text"], select { width: 100%; background: rgba(0,0,0,0.4); border: 1px solid var(--glass-border); padding: 12px; border-radius: 8px; color: #fff; outline: none; }
         .btn-submit { width: 100%; background: var(--primary); border: none; color: #fff; padding: 15px; border-radius: 8px; font-weight: 700; cursor: pointer; text-transform: uppercase; }
-        
-        /* Management List Custom styling */
-        .item-list { display: grid; grid-template-columns: 1fr; gap: 12px; margin-top: 20px; }
-        .list-item { background: rgba(0,0,0,0.3); border: 1px solid var(--glass-border); padding: 15px; border-radius: 10px; display: flex; justify-content: space-between; align-items: center; }
-        .badge { padding: 4px 10px; border-radius: 4px; font-size: 0.75rem; font-weight: bold; text-transform: uppercase; }
-        .badge.coming { background: #ffaa00; color: #000; }
-        .badge.live { background: var(--secondary); color: #000; }
-        .btn-activate { background: var(--secondary); border: none; color: #000; padding: 6px 12px; border-radius: 4px; font-weight: bold; cursor: pointer; margin-right: 5px; }
-        .btn-delete { background: #ff3333; border: none; color: #fff; padding: 6px 12px; border-radius: 4px; cursor: pointer; }
     </style>
 </head>
 <body>
 
     <div class="admin-container">
         <div class="tabs">
-            <button class="tab-btn active" onclick="switchTab('addGameSection', this)">Single Game Entry</button>
-            <button class="tab-btn" onclick="switchTab('massSection', this)">Mass 300+ Injector</button>
-            <button class="tab-btn" onclick="switchTab('manageGamesSection', this); loadGamesList();">Control Matrix</button>
+            <button class="tab-btn active" onclick="switchTab('deploySection', this)">⚡ Deploy Game to Next Slot</button>
+            <button class="tab-btn" onclick="switchTab('setupSection', this)" style="border-color: #ffaa00;">⚙️ First-Time Setup (300 Slots)</button>
         </div>
 
-        <div class="panel-section active" id="addGameSection">
-            <h2>Add Game <span>Cluster</span></h2>
-            <form id="gameForm" style="margin-top:20px;">
+        <!-- TAB 1: DEPLOY TO NEXT SLOT -->
+        <div class="panel-section active" id="deploySection">
+            <h2>Fill Next Available <span>Coming Soon Card</span></h2>
+            <form id="uploadForm" style="margin-top:20px;">
                 <div class="form-group">
-                    <label>Game Name</label>
-                    <input type="text" id="gameName" placeholder="e.g., Cyberpunk 2077" required>
-                </div>
-                <div class="form-group">
-                    <label>Category</label>
-                    <select id="gameCategory">
+                    <label>Target Category</label>
+                    <select id="targetCategory">
                         <option value="Action">Action</option>
                         <option value="Racing">Racing</option>
                         <option value="Open World">Open World</option>
@@ -58,48 +44,36 @@
                     </select>
                 </div>
                 <div class="form-group">
-                    <label>Status</label>
-                    <select id="gameStatusField">
-                        <option value="coming_soon">Coming Soon...</option>
-                        <option value="live">Available Now (Live)</option>
-                    </select>
+                    <label>Game Title</label>
+                    <input type="text" id="gameName" placeholder="e.g., GTA V" required>
                 </div>
                 <div class="form-group">
-                    <label>Poster Image URL</label>
-                    <input type="text" id="gameUrl" placeholder="Paste link or leave blank for placeholder">
+                    <label>Game Size</label>
+                    <input type="text" id="gameSize" placeholder="e.g., 45 GB" required>
                 </div>
-                <button type="submit" class="btn-submit">Add Title</button>
+                <div class="form-group">
+                    <label>Image URL</label>
+                    <input type="text" id="gameImage" placeholder="Paste image link here" required>
+                </div>
+                <div class="form-group">
+                    <label>Torrent / Download Link</label>
+                    <input type="text" id="gameLink" placeholder="Paste download link here" required>
+                </div>
+                <button type="submit" class="btn-submit">Transform Next Coming Soon Card -> Live</button>
             </form>
         </div>
 
-        <div class="panel-section" id="massSection">
-            <h2>Mass Game <span>Auto-Injector</span></h2>
-            <p style="font-size:0.85rem; color:#888; margin-bottom:15px;">එක පේළියකට එක ගේම් එක බැගින් ටයිප් කරලා එකපාර ගේම් 100ක් වුණත් Coming Soon විදිහට Inject කරන්න මචං.</p>
-            <div class="form-group">
-                <label>Category for this batch</label>
-                <select id="massCategory">
-                    <option value="Action">Action</option>
-                    <option value="Racing">Racing</option>
-                    <option value="Open World">Open World</option>
-                    <option value="Shooter">Shooter</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label>Game Names List (One per line)</label>
-                <textarea id="massList" rows="10" placeholder="GTA VI&#10;Project Cars 4&#10;Witcher 4"></textarea>
-            </div>
-            <button class="btn-submit" onclick="injectMassGames()" style="background:var(--secondary); color:#000;">⚡ Inject Clusters</button>
-        </div>
-
-        <div class="panel-section" id="manageGamesSection">
-            <h2>Game Status <span>Control Core</span></h2>
-            <div class="item-list" id="activeGamesList"></div>
+        <!-- TAB 2: FIRST-TIME SETUP -->
+        <div class="panel-section" id="setupSection">
+            <h2>Generate 300 <span>Coming Soon Matrix Empty Slots</span></h2>
+            <p style="color:#aaa; font-size:0.9rem; margin-bottom:15px;">සයිට් එක මුලින්ම පටන් ගද්දි විතරක් මේ බටන් එක ඔබන්න මචං. එතකොට හැම Category එකකටම හිස් කාඩ් 300 ගානේ (මුළු කාඩ් 1200ක්) Firebase එකේ හැදෙනවා ලස්සනට.</p>
+            <button class="btn-submit" onclick="generateMatrix()" style="background:#ffaa00; color:#000;">Initialize 300 Slots Matrix</button>
         </div>
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getDatabase, ref, push, set, onValue, remove, update } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+        import { getDatabase, ref, set, get, child, update } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyD1SRJ0O2OcZRYafgJ0uABolb9TgBiAA3I",
@@ -118,86 +92,77 @@
             btn.classList.add('active');
         }
 
-        // Single Add
-        document.getElementById('gameForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const name = document.getElementById('gameName').value;
-            const category = document.getElementById('gameCategory').value;
-            const status = document.getElementById('gameStatusField').value;
-            const url = document.getElementById('gameUrl').value || 'https://via.placeholder.com/300x400/0a0a0f/fff?text=' + encodeURIComponent(name);
-
-            const newRef = push(ref(database, 'games'));
-            set(newRef, { name, title: name, category, status, image: url, cardImage: url, size: "TBD", desc: "Incoming package data stream..." });
-            alert("Title Deployed!");
-            document.getElementById('gameForm').reset();
-        });
-
-        // Mass Injector Logic
-        window.injectMassGames = function() {
-            const lines = document.getElementById('massList').value.split('\n');
-            const category = document.getElementById('massCategory').value;
-            let count = 0;
-
-            lines.forEach(line => {
-                const name = line.trim();
-                if(name.length > 0) {
-                    const newRef = push(ref(database, 'games'));
-                    const placeholderImg = `https://via.placeholder.com/300x400/0a0a0f/ff003c?text=${encodeURIComponent(name)}`;
-                    set(newRef, {
-                        name: name, title: name, category: category,
-                        status: "coming_soon", image: placeholderImg, cardImage: placeholderImg,
-                        size: "TBD", desc: "Awaiting core deployment links..."
+        // 1. FIRST TIME GENERATOR (කාඩ් 300ම ඩේටාබේස් එකට එකපාර දාන කෑල්ල)
+        window.generateMatrix = async function() {
+            if(!confirm("Are you sure you want to initialize 300 slots per category?")) return;
+            const categories = ["Action", "Racing", "Open World", "Shooter"];
+            
+            for(let cat of categories) {
+                for(let i = 1; i <= 300; i++) {
+                    // හැම එකක්ම සයිට් එකේ පේන්නෙ slot_1, slot_2 විදිහට පිළිවෙළට
+                    await set(ref(database, `categories/${cat}/slot_${i}`), {
+                        slotId: i,
+                        name: "Coming Soon...",
+                        title: "Coming Soon...",
+                        status: "coming_soon",
+                        image: "https://via.placeholder.com/300x400/0a0a0f/ff003c?text=COMING+SOON", // default coming soon image
+                        size: "TBD",
+                        downloadLink: "#"
                     });
-                    count++;
                 }
-            });
-            alert(`${count} Games Injected as Coming Soon!`);
-            document.getElementById('massList').value = "";
+            }
+            alert("Matrix Initialized! 300 Coming Soon slots added to all categories!");
         }
 
-        // Load & Control List
-        window.loadGamesList = function() {
-            const listDiv = document.getElementById('activeGamesList');
-            onValue(ref(database, 'games'), (snapshot) => {
-                listDiv.innerHTML = "";
-                snapshot.forEach(child => {
-                    const id = child.key;
-                    const game = child.val();
-                    const badgeClass = game.status === 'live' ? 'live' : 'coming';
-                    const badgeText = game.status === 'live' ? 'LIVE' : 'COMING SOON';
-                    
-                    listDiv.innerHTML += `
-                        <div class="list-item">
-                            <div>
-                                <strong>${game.name}</strong> <span class="badge ${badgeClass}">${badgeText}</span>
-                                <div style="font-size:0.8rem; color:#666;">${game.category}</div>
-                            </div>
-                            <div>
-                                ${game.status !== 'live' ? `<button class="btn-activate" onclick="makeLive('${id}')">Make Live</button>` : ''}
-                                <button class="btn-delete" onclick="deleteGame('${id}')">X</button>
-                            </div>
-                        </div>
-                    `;
-                });
-            });
-        }
+        // 2. AUTO-FILL NEXT AVAILABLE SLOT LOGIC
+        document.getElementById('uploadForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const cat = document.getElementById('targetCategory').value;
+            const name = document.getElementById('gameName').value;
+            const size = document.getElementById('gameSize').value;
+            const image = document.getElementById('gameImage').value;
+            const link = document.getElementById('gameLink').value;
 
-        window.makeLive = function(id) {
-            const size = prompt("Enter Game Size (e.g. 45 GB):", "50 GB");
-            const torrent = prompt("Enter Torrent Download Link:");
-            if(!torrent) return;
+            // ඩේටාබේස් එක චෙක් කරනවා දැනට "coming_soon" තියෙන මුල්ම slot එක මොකක්ද කියලා
+            const dbRef = ref(database);
+            try {
+                const snapshot = await get(child(dbRef, `categories/${cat}`));
+                if (snapshot.exists()) {
+                    let targetSlot = null;
+                    // slot_1 ඉඳන් slot_300 වෙනකම් ලූප් එකක් දුවලා පළවෙනිම Coming Soon එක අල්ලගන්නවා
+                    for(let i = 1; i <= 300; i++) {
+                        const slotData = snapshot.child(`slot_${i}`).val();
+                        if(slotData && slotData.status === "coming_soon") {
+                            targetSlot = `slot_${i}`;
+                            break; // පළවෙනි එක හම්බුන ගමන් ලූප් එක නවත්තනවා
+                        }
+                    }
 
-            update(ref(database, `games/${id}`), {
-                status: "live",
-                size: size,
-                t_links: torrent,
-                d_links: torrent // fallback download link
-            });
-        }
-
-        window.deleteGame = function(id) {
-            if(confirm("Delete Title?")) remove(ref(database, `games/${id}`));
-        }
+                    if(targetSlot) {
+                        // අන්න ඒ ස්ලොට් එක විතරක් Live ගේම් එකක් බවට අප්ඩේට් කරනවා!
+                        await update(ref(database, `categories/${cat}/${targetSlot}`), {
+                            name: name,
+                            title: name,
+                            status: "live",
+                            image: image,
+                            cardImage: image,
+                            size: size,
+                            downloadLink: link,
+                            t_links: link,
+                            d_links: link
+                        });
+                        alert(`Successfully transformed ${targetSlot} into ${name}!`);
+                        document.getElementById('uploadForm').reset();
+                    } else {
+                        alert("All 300 slots are already filled inside this category!");
+                    }
+                } else {
+                    alert("Category Matrix not found! Please run the Setup tab first.");
+                }
+            } catch (error) {
+                alert("Database Error: " + error.message);
+            }
+        });
     </script>
 </body>
 </html>
