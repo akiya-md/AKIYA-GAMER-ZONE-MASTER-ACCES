@@ -3,294 +3,201 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Akiya Gamer Zone | Master Admin Panel v3.0</title>
+    <title>Akiya Control HQ | Coming Soon Matrix</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
     <style>
-        :root {
-            --primary: #ff003c;
-            --secondary: #00ff66;
-            --bg-dark: #0a0a0f;
-            --glass-bg: rgba(18, 18, 28, 0.6);
-            --glass-border: rgba(255, 255, 255, 0.06);
-            --neon-shadow: 0 0 15px rgba(255, 0, 60, 0.4);
-        }
+        :root { --primary: #ff003c; --secondary: #00ff66; --bg-dark: #0a0a0f; --glass-bg: rgba(18, 18, 28, 0.6); --glass-border: rgba(255, 255, 255, 0.06); --neon-shadow: 0 0 15px rgba(255, 0, 60, 0.4); }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
         body { background-color: var(--bg-dark); color: #fff; padding: 40px 20px; }
         .admin-container { max-width: 1000px; margin: 0 auto; }
-        
-        /* Navigation Tabs */
         .tabs { display: flex; gap: 15px; margin-bottom: 30px; border-bottom: 1px solid var(--glass-border); padding-bottom: 15px; }
-        .tab-btn { background: transparent; border: 1px solid var(--glass-border); color: #aaa; padding: 12px 24px; border-radius: 8px; cursor: pointer; font-weight: 700; transition: 0.3s; text-transform: uppercase; }
-        .tab-btn.active, .tab-btn:hover { background: var(--primary); color: #fff; border-color: var(--primary); box-shadow: var(--neon-shadow); }
-        
-        .panel-section { background: var(--glass-bg); border: 1px solid var(--glass-border); padding: 30px; border-radius: 16px; display: none; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .tab-btn { background: transparent; border: 1px solid var(--glass-border); color: #aaa; padding: 12px 24px; border-radius: 8px; cursor: pointer; font-weight: 700; text-transform: uppercase; transition: 0.3s; }
+        .tab-btn.active, .tab-btn:hover { background: var(--primary); color: #fff; box-shadow: var(--neon-shadow); }
+        .panel-section { background: var(--glass-bg); border: 1px solid var(--glass-border); padding: 30px; border-radius: 16px; display: none; }
         .panel-section.active { display: block; }
-        
-        h2 { font-size: 1.8rem; font-weight: 900; margin-bottom: 25px; border-left: 5px solid var(--primary); padding-left: 15px; text-transform: uppercase; }
         h2 span { color: var(--primary); }
-        
         .form-group { margin-bottom: 20px; }
-        label { display: block; font-size: 0.85rem; font-weight: 700; color: #aaa; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px; }
-        input[type="text"], input[type="datetime-local"], textarea, select { width: 100%; background: rgba(0,0,0,0.4); border: 1px solid var(--glass-border); padding: 12px; border-radius: 8px; color: #fff; outline: none; transition: 0.3s; }
-        input:focus, textarea:focus, select:focus { border-color: var(--primary); box-shadow: var(--neon-shadow); }
-        .row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        label { display: block; font-size: 0.85rem; font-weight: 700; color: #aaa; margin-bottom: 8px; text-transform: uppercase; }
+        input[type="text"], textarea, select { width: 100%; background: rgba(0,0,0,0.4); border: 1px solid var(--glass-border); padding: 12px; border-radius: 8px; color: #fff; outline: none; }
+        input:focus, textarea:focus { border-color: var(--primary); box-shadow: var(--neon-shadow); }
+        .btn-submit { width: 100%; background: var(--primary); border: none; color: #fff; padding: 15px; border-radius: 8px; font-weight: 700; cursor: pointer; text-transform: uppercase; }
         
-        /* Premium Upload Box */
-        .file-box { background: rgba(255,255,255,0.01); border: 2px dashed var(--glass-border); padding: 20px; border-radius: 8px; text-align: center; cursor: pointer; position: relative; transition: 0.3s; }
-        .file-box:hover { border-color: var(--secondary); }
-        .file-box input[type="file"] { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; }
-        .file-box i { font-size: 2rem; color: var(--secondary); margin-bottom: 10px; display: block; }
-        
-        .btn-submit { width: 100%; background: var(--primary); border: none; color: #fff; padding: 15px; border-radius: 8px; font-weight: 700; font-size: 1rem; cursor: pointer; transition: 0.3s; box-shadow: var(--neon-shadow); text-transform: uppercase; margin-top: 15px; }
-        .btn-submit:hover { filter: brightness(1.2); transform: translateY(-2px); }
-        
-        /* Games Management List */
-        .item-list { display: grid; grid-template-columns: 1fr; gap: 15px; margin-top: 20px; }
+        /* Management List Custom styling */
+        .item-list { display: grid; grid-template-columns: 1fr; gap: 12px; margin-top: 20px; }
         .list-item { background: rgba(0,0,0,0.3); border: 1px solid var(--glass-border); padding: 15px; border-radius: 10px; display: flex; justify-content: space-between; align-items: center; }
-        .item-info { display: flex; align-items: center; gap: 15px; }
-        .item-info img { width: 50px; height: 60px; object-fit: cover; border-radius: 6px; border: 1px solid var(--glass-border); }
-        .item-details h4 { font-size: 1rem; font-weight: 700; }
-        .item-details p { font-size: 0.8rem; color: #777; }
-        .btn-delete { background: #ff3333; border: none; color: #fff; padding: 8px 16px; border-radius: 6px; font-weight: 700; cursor: pointer; transition: 0.3s; }
-        .btn-delete:hover { background: #ff0000; box-shadow: 0 0 10px rgba(255,0,0,0.5); }
-        
-        .status-msg { text-align: center; margin-top: 15px; font-weight: 600; font-size: 0.9rem; }
+        .badge { padding: 4px 10px; border-radius: 4px; font-size: 0.75rem; font-weight: bold; text-transform: uppercase; }
+        .badge.coming { background: #ffaa00; color: #000; }
+        .badge.live { background: var(--secondary); color: #000; }
+        .btn-activate { background: var(--secondary); border: none; color: #000; padding: 6px 12px; border-radius: 4px; font-weight: bold; cursor: pointer; margin-right: 5px; }
+        .btn-delete { background: #ff3333; border: none; color: #fff; padding: 6px 12px; border-radius: 4px; cursor: pointer; }
     </style>
 </head>
 <body>
 
     <div class="admin-container">
-        <!-- Control Tabs -->
         <div class="tabs">
-            <button class="tab-btn active" onclick="switchTab('addGameSection', this)"><i class="fa-solid fa-gamepad"></i> Add Game</button>
-            <button class="tab-btn" onclick="switchTab('manageGamesSection', this); loadGamesList();"><i class="fa-solid fa-list-check"></i> Manage Games</button>
-            <button class="tab-btn" onclick="switchTab('sliderSection', this)"><i class="fa-solid fa-images"></i> Slider Banners</button>
+            <button class="tab-btn active" onclick="switchTab('addGameSection', this)">Single Game Entry</button>
+            <button class="tab-btn" onclick="switchTab('massSection', this)">Mass 300+ Injector</button>
+            <button class="tab-btn" onclick="switchTab('manageGamesSection', this); loadGamesList();">Control Matrix</button>
         </div>
 
-        <!-- SECTION 1: ADD GAME -->
         <div class="panel-section active" id="addGameSection">
-            <h2>Deploy New <span>Game Title</span></h2>
-            <form id="gameForm">
-                <div class="row">
-                    <div class="form-group">
-                        <label>Game Title</label>
-                        <input type="text" id="gameName" placeholder="e.g., Forza Horizon 4" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Category</label>
-                        <select id="gameCategory">
-                            <option value="Action">Action</option>
-                            <option value="Racing">Racing</option>
-                            <option value="Open World">Open World</option>
-                            <option value="Adventure">Adventure</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="form-group">
-                        <label>Game Size</label>
-                        <input type="text" id="gameSize" placeholder="e.g., 66.6 GB" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Auto-Hide Date/Time (Optional)</label>
-                        <input type="datetime-local" id="expiryTime">
-                    </div>
+            <h2>Add Game <span>Cluster</span></h2>
+            <form id="gameForm" style="margin-top:20px;">
+                <div class="form-group">
+                    <label>Game Name</label>
+                    <input type="text" id="gameName" placeholder="e.g., Cyberpunk 2077" required>
                 </div>
                 <div class="form-group">
-                    <label>Description</label>
-                    <textarea id="gameDesc" rows="3" placeholder="Game features and info..."></textarea>
+                    <label>Category</label>
+                    <select id="gameCategory">
+                        <option value="Action">Action</option>
+                        <option value="Racing">Racing</option>
+                        <option value="Open World">Open World</option>
+                        <option value="Shooter">Shooter</option>
+                    </select>
                 </div>
                 <div class="form-group">
-                    <label>Upload Game Thumbnail Poster (From PC)</label>
-                    <div class="file-box">
-                        <i class="fa-solid fa-cloud-arrow-up"></i>
-                        <span id="gameFileLabel">Click to select image from your PC</span>
-                        <input type="file" accept="image/*" onchange="uploadPCImage(this, 'gameUrl', 'gameFileLabel')">
-                    </div>
-                    <input type="text" id="gameUrl" placeholder="Image cloud link will be generated automatically..." style="margin-top:10px;" readonly required>
+                    <label>Status</label>
+                    <select id="gameStatusField">
+                        <option value="coming_soon">Coming Soon...</option>
+                        <option value="live">Available Now (Live)</option>
+                    </select>
                 </div>
-                <button type="submit" class="btn-submit" id="gameSubBtn"><i class="fa-solid fa-bolt"></i> Deploy Game</button>
-                <div class="status-msg" id="gameStatus"></div>
+                <div class="form-group">
+                    <label>Poster Image URL</label>
+                    <input type="text" id="gameUrl" placeholder="Paste link or leave blank for placeholder">
+                </div>
+                <button type="submit" class="btn-submit">Add Title</button>
             </form>
         </div>
 
-        <!-- SECTION 2: MANAGE & DELETE GAMES -->
-        <div class="panel-section" id="manageGamesSection">
-            <h2>Active Deployed <span>Titles</span></h2>
-            <div class="item-list" id="activeGamesList">
-                <p style="color:#555;">Loading deployed core clusters...</p>
+        <div class="panel-section" id="massSection">
+            <h2>Mass Game <span>Auto-Injector</span></h2>
+            <p style="font-size:0.85rem; color:#888; margin-bottom:15px;">එක පේළියකට එක ගේම් එක බැගින් ටයිප් කරලා එකපාර ගේම් 100ක් වුණත් Coming Soon විදිහට Inject කරන්න මචං.</p>
+            <div class="form-group">
+                <label>Category for this batch</label>
+                <select id="massCategory">
+                    <option value="Action">Action</option>
+                    <option value="Racing">Racing</option>
+                    <option value="Open World">Open World</option>
+                    <option value="Shooter">Shooter</option>
+                </select>
             </div>
+            <div class="form-group">
+                <label>Game Names List (One per line)</label>
+                <textarea id="massList" rows="10" placeholder="GTA VI&#10;Project Cars 4&#10;Witcher 4"></textarea>
+            </div>
+            <button class="btn-submit" onclick="injectMassGames()" style="background:var(--secondary); color:#000;">⚡ Inject Clusters</button>
         </div>
 
-        <!-- SECTION 3: SLIDER BANNERS -->
-        <div class="panel-section" id="sliderSection">
-            <h2>Add Slider <span>Trending Banners</span></h2>
-            <form id="sliderForm">
-                <div class="form-group">
-                    <label>Banner Big Title</label>
-                    <input type="text" id="slideTitle" placeholder="e.g., GTA VI COMING SOON" required>
-                </div>
-                <div class="form-group">
-                    <label>Short Description</label>
-                    <input type="text" id="slideDesc" placeholder="Description...">
-                </div>
-                <div class="form-group">
-                    <label>Download Meta Text</label>
-                    <input type="text" id="slideMeta" placeholder="e.g., 📥 Fast Download" value="📥 Fast Download">
-                </div>
-                <div class="form-group">
-                    <label>Upload Banner Wallpaper (From PC)</label>
-                    <div class="file-box">
-                        <i class="fa-solid fa-image"></i>
-                        <span id="slideFileLabel">Click to select landscape image from your PC</span>
-                        <input type="file" accept="image/*" onchange="uploadPCImage(this, 'slideUrl', 'slideFileLabel')">
-                    </div>
-                    <input type="text" id="slideUrl" placeholder="Wallpaper cloud link will be generated automatically..." style="margin-top:10px;" readonly required>
-                </div>
-                <button type="submit" class="btn-submit" id="slideSubBtn"><i class="fa-solid fa-fire"></i> Add to Slider</button>
-                <div class="status-msg" id="slideStatus"></div>
-            </form>
+        <div class="panel-section" id="manageGamesSection">
+            <h2>Game Status <span>Control Core</span></h2>
+            <div class="item-list" id="activeGamesList"></div>
         </div>
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getDatabase, ref, push, set, onValue, remove } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+        import { getDatabase, ref, push, set, onValue, remove, update } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyD1SRJ0O2OcZRYafgJ0uABolb9TgBiAA3I",
             authDomain: "akiya-gamer-zone.firebaseapp.com",
             projectId: "akiya-gamer-zone",
-            storageBucket: "akiya-gamer-zone.firebasestorage.app",
-            messagingSenderId: "392261776362",
-            appId: "1:392261776362:web:e0b5bbfe267465af70f893",
             databaseURL: "https://akiya-gamer-zone-default-rtdb.asia-southeast1.firebasedatabase.app/"
         };
 
         const app = initializeApp(firebaseConfig);
         const database = getDatabase(app);
 
-        // --- Tab Switcher ---
-        window.switchTab = function(sectionId, btn) {
-            document.querySelectorAll('.panel-section').forEach(s => s.classList.remove('active'));
+        window.switchTab = function(id, btn) {
+            document.querySelectorAll('.panel-section').forEach(s => s.style.display = 'none');
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-            document.getElementById(sectionId).classList.add('active');
+            document.getElementById(id).style.display = 'block';
             btn.classList.add('active');
         }
 
-        // --- Secure & Free PC Image Upload Logic (GitHub Safe) ---
-        window.uploadPCImage = function(fileInput, targetInputId, labelId) {
-            const file = fileInput.files[0];
-            if (!file) return;
-
-            const label = document.getElementById(labelId);
-            label.innerHTML = `<i class="fa-solid fa-spinner fa-spin" style="color:var(--primary)"></i> Uploading image from PC...`;
-
-            const formData = new FormData();
-            formData.append("image", file);
-
-            // GitHub bots block නොකරන, free, global CDN image storage API එකක් පාවිච්චි කර ඇත
-            fetch("https://api.imgbb.com/1/upload?key=81c15f5c35b6fb8913b5bf95fcbb8242", {
-                method: "POST",
-                body: formData
-            })
-            .then(res => res.json())
-            .then(json => {
-                if(json.success) {
-                    document.getElementById(targetInputId).value = json.data.url;
-                    label.innerHTML = `<i class="fa-solid fa-circle-check" style="color:var(--secondary)"></i> Image Uploaded successfully!`;
-                } else {
-                    alert("Image Upload Failed! Try again.");
-                    label.innerText = "Click to select image from your PC";
-                }
-            })
-            .catch(() => {
-                alert("Upload connection error!");
-                label.innerText = "Click to select image from your PC";
-            });
-        }
-
-        // --- SUBMIT GAME ---
+        // Single Add
         document.getElementById('gameForm').addEventListener('submit', function(e) {
             e.preventDefault();
-            const btn = document.getElementById('gameSubBtn');
-            const status = document.getElementById('gameStatus');
-            btn.disabled = true;
-
             const name = document.getElementById('gameName').value;
             const category = document.getElementById('gameCategory').value;
-            const size = document.getElementById('gameSize').value;
-            const expiryTime = document.getElementById('expiryTime').value;
-            const desc = document.getElementById('gameDesc').value;
-            const imgUrl = document.getElementById('gameUrl').value;
+            const status = document.getElementById('gameStatusField').value;
+            const url = document.getElementById('gameUrl').value || 'https://via.placeholder.com/300x400/0a0a0f/fff?text=' + encodeURIComponent(name);
 
             const newRef = push(ref(database, 'games'));
-            set(newRef, {
-                name, title: name, category, size,
-                expiryTime: expiryTime ? expiryTime : null,
-                desc, image: imgUrl, cardImage: imgUrl
-            }).then(() => {
-                status.innerHTML = `<span style="color:var(--secondary)">Game Deployed Successfully!</span>`;
-                document.getElementById('gameForm').reset();
-                document.getElementById('gameFileLabel').innerText = "Click to select image from your PC";
-            }).finally(() => btn.disabled = false);
+            set(newRef, { name, title: name, category, status, image: url, cardImage: url, size: "TBD", desc: "Incoming package data stream..." });
+            alert("Title Deployed!");
+            document.getElementById('gameForm').reset();
         });
 
-        // --- LOAD & DELETE GAMES MANAGEMENT ---
+        // Mass Injector Logic
+        window.injectMassGames = function() {
+            const lines = document.getElementById('massList').value.split('\n');
+            const category = document.getElementById('massCategory').value;
+            let count = 0;
+
+            lines.forEach(line => {
+                const name = line.trim();
+                if(name.length > 0) {
+                    const newRef = push(ref(database, 'games'));
+                    const placeholderImg = `https://via.placeholder.com/300x400/0a0a0f/ff003c?text=${encodeURIComponent(name)}`;
+                    set(newRef, {
+                        name: name, title: name, category: category,
+                        status: "coming_soon", image: placeholderImg, cardImage: placeholderImg,
+                        size: "TBD", desc: "Awaiting core deployment links..."
+                    });
+                    count++;
+                }
+            });
+            alert(`${count} Games Injected as Coming Soon!`);
+            document.getElementById('massList').value = "";
+        }
+
+        // Load & Control List
         window.loadGamesList = function() {
             const listDiv = document.getElementById('activeGamesList');
             onValue(ref(database, 'games'), (snapshot) => {
                 listDiv.innerHTML = "";
-                if(!snapshot.exists()) {
-                    listDiv.innerHTML = "<p>No active games found inside core clusters.</p>";
-                    return;
-                }
                 snapshot.forEach(child => {
                     const id = child.key;
                     const game = child.val();
+                    const badgeClass = game.status === 'live' ? 'live' : 'coming';
+                    const badgeText = game.status === 'live' ? 'LIVE' : 'COMING SOON';
+                    
                     listDiv.innerHTML += `
                         <div class="list-item">
-                            <div class="item-info">
-                                <img src="${game.image}">
-                                <div class="item-details">
-                                    <h4>${game.name || game.title}</h4>
-                                    <p>${game.category} | ${game.size}</p>
-                                </div>
+                            <div>
+                                <strong>${game.name}</strong> <span class="badge ${badgeClass}">${badgeText}</span>
+                                <div style="font-size:0.8rem; color:#666;">${game.category}</div>
                             </div>
-                            <button class="btn-delete" onclick="deleteGame('${id}')"><i class="fa-solid fa-trash"></i> Delete</button>
+                            <div>
+                                ${game.status !== 'live' ? `<button class="btn-activate" onclick="makeLive('${id}')">Make Live</button>` : ''}
+                                <button class="btn-delete" onclick="deleteGame('${id}')">X</button>
+                            </div>
                         </div>
                     `;
                 });
             });
         }
 
-        window.deleteGame = function(id) {
-            if(confirm("Are you sure you want to completely wipe this title?")) {
-                remove(ref(database, `games/${id}`));
-            }
+        window.makeLive = function(id) {
+            const size = prompt("Enter Game Size (e.g. 45 GB):", "50 GB");
+            const torrent = prompt("Enter Torrent Download Link:");
+            if(!torrent) return;
+
+            update(ref(database, `games/${id}`), {
+                status: "live",
+                size: size,
+                t_links: torrent,
+                d_links: torrent // fallback download link
+            });
         }
 
-        // --- SUBMIT SLIDER BANNER ---
-        document.getElementById('sliderForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const btn = document.getElementById('slideSubBtn');
-            const status = document.getElementById('slideStatus');
-            btn.disabled = true;
-
-            const title = document.getElementById('slideTitle').value;
-            const desc = document.getElementById('slideDesc').value;
-            const downloads = document.getElementById('slideMeta').value;
-            const image = document.getElementById('slideUrl').value;
-
-            const newRef = push(ref(database, 'trendingBanners'));
-            set(newRef, { title, desc, downloads, image })
-            .then(() => {
-                status.innerHTML = `<span style="color:var(--secondary)">Banner Added to Home Slider!</span>`;
-                document.getElementById('sliderForm').reset();
-                document.getElementById('slideFileLabel').innerText = "Click to select landscape image from your PC";
-            }).finally(() => btn.disabled = false);
-        });
+        window.deleteGame = function(id) {
+            if(confirm("Delete Title?")) remove(ref(database, `games/${id}`));
+        }
     </script>
 </body>
 </html>
