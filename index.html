@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AGZ Control Center - Admin Dashboard</title>
+
+    <link rel="icon" type="image/jpeg" href="MY GAMING SITE OFFICIAL LOGO.jpg">
+    
     <!-- Google Fonts & Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
@@ -173,12 +176,12 @@
                         <p class="text-xs text-gray-400 mb-4">Force inject premium packages directly into a localized Gamer profile vault database matrix.</p>
                         <form id="vault-form" class="space-y-4">
                             <div>
-                                <label class="block text-xs text-gray-400 mb-1">Target Gamer Identification Tag (AGZ ID)</label>
-                                <input id="vault-userid" type="text" class="w-full bg-[#161b22] border border-slate-700 rounded p-2 text-white focus:outline-none focus:border-purple-500" placeholder="AGZ-XXXXX" required>
+                                <label class="block text-xs text-gray-400 mb-1">Target Gamer Identification Tag (UID / AGZ ID)</label>
+                                <input id="vault-userid" type="text" class="w-full bg-[#161b22] border border-slate-700 rounded p-2 text-white focus:outline-none focus:border-purple-500" placeholder="Enter User Firebase UID" required>
                             </div>
                             <div>
-                                <label class="block text-xs text-gray-400 mb-1">System Core Game Package Designation ID</label>
-                                <input id="vault-gameid" type="text" class="w-full bg-[#161b22] border border-slate-700 rounded p-2 text-white focus:outline-none focus:border-purple-500" placeholder="GAME-SLOT-ID" required>
+                                <label class="block text-xs text-gray-400 mb-1">System Core Game Package Designation ID (Game Slot)</label>
+                                <input id="vault-gameid" type="text" class="w-full bg-[#161b22] border border-slate-700 rounded p-2 text-white focus:outline-none focus:border-purple-500" placeholder="slot_001" required>
                             </div>
                             <button type="submit" class="w-full bg-purple-600 hover:bg-purple-500 text-white font-bold py-2 px-4 rounded font-orbitron transition">EXECUTE VAULT INJECTION</button>
                         </form>
@@ -230,7 +233,7 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
     <script>
-        // 🔴 මෙතනට ඔයාගේ සැබෑ Firebase Config විස්තර දාන්න (Your actual config data)
+        // Firebase Config Data
         const firebaseConfig = {
             apiKey: "AIzaSyD1SRJ0O2OcZRYafgJ0uABolb9TgBiAA3I",
             authDomain: "akiya-gamer-zone.firebaseapp.com",
@@ -246,7 +249,7 @@
         const database = firebase.database();
         const auth = firebase.auth();
 
-        // 🔒 SECURITY CHECK: Admin විදිහට ඇතුල්වෙන්න අවසර දෙන ඊමේල් එක මෙතන ලියන්න
+        // ALLOWED ADMIN EMAIL
         const ALLOWED_ADMIN_EMAIL = "kaviakiya@gmail.com"; 
 
         let myGrowthChart;
@@ -273,7 +276,7 @@
                     document.getElementById('admin-avatar').src = user.photoURL;
                     document.getElementById('admin-name').innerText = user.displayName;
                     
-                    // Core Realtime Matrix එක වැඩ කරවන්න ගන්නවා
+                    // Core Realtime Matrix Initialization
                     initializeAdminCore();
                     setupRealtimeVisitors();
                 } else {
@@ -290,17 +293,15 @@
 
         // --- LIVE ACTIVE VISITORS COUNTER FUNCTIONALITY ---
         function setupRealtimeVisitors() {
-            // Live ලොග් වෙලා ඉන්න කෙනාගේ Unique Session එකක් හදනවා
-            const activeUserRef = database.ref('live_visitors').push();
+            // Mapped to main site's path: 'status/usersOnline'
+            const activeUserRef = database.ref('status/usersOnline').push();
             
-            // සයිට් එක වහපු සැනින් මේ Session එක Database එකෙන් ඔටෝ මැකෙන්න සෙට් කරනවා
             activeUserRef.onDisconnect().remove();
             activeUserRef.set({
                 timestamp: firebase.database.ServerValue.TIMESTAMP
             });
 
-            // මුළු සජීවී සාමාජිකයන් සංඛ්‍යාව ගණනය කරලා UI එකට දානවා
-            database.ref('live_visitors').on('value', snapshot => {
+            database.ref('status/usersOnline').on('value', snapshot => {
                 const count = snapshot.numChildren();
                 document.getElementById('stat-live-users').innerText = count || 1;
             });
@@ -330,22 +331,20 @@
                 const totalUsers = Object.keys(usersData).length;
                 document.getElementById('stat-total-users').innerText = totalUsers;
 
-                // Graph එකට මාස අනුව සාමාජිකයෝ වෙන් කරගන්න Array එකක්
-                let monthlyCounts = [0, 0, 0, 0, 0, 0]; // Jan, Feb, Mar, Apr, May, Jun (කාර්තුවකට)
+                let monthlyCounts = [0, 0, 0, 0, 0, 0]; // Jan, Feb, Mar, Apr, May, Jun
 
                 Object.keys(usersData).forEach(key => {
                     const user = usersData[key];
                     
-                    // Graph එකට දත්ත සකස් කරගැනීම (Joined Date එක අනුව)
                     if(user.joinedDate) {
                         const date = new Date(user.joinedDate);
-                        const month = date.getMonth(); // 0 = Jan, 1 = Feb...
+                        const month = date.getMonth(); 
                         if(month >= 0 && month <= 5) {
                             monthlyCounts[month]++;
                         }
                     }
 
-                    // Table එකට User කෙනෙක්ව එකතු කිරීම
+                    // Append to table
                     const tr = document.createElement('tr');
                     tr.className = "hover:bg-slate-800/30 transition border-b border-slate-800/40";
                     tr.innerHTML = `
@@ -366,7 +365,6 @@
                     tableBody.appendChild(tr);
                 });
 
-                // ලස්සන Grow Bar Graph එක මෙතනින් අප්ඩේට් වෙනවා
                 updateGrowthGraph(monthlyCounts);
             });
 
@@ -391,30 +389,33 @@
                 .catch(err => alert("Error injecting game: " + err.message));
             });
 
-            // 4. Secure System Gift Vault Injection Form
+            // 4. Secure System Gift Vault Injection Form (Mapped to 'users/uid/gifts')
             document.getElementById('vault-form').addEventListener('submit', (e) => {
                 e.preventDefault();
                 const userId = document.getElementById('vault-userid').value.trim();
                 const gameId = document.getElementById('vault-gameid').value.trim();
 
-                database.ref('vaults/' + userId + '/' + gameId).set({
-                    unlocked: true,
+                // Directly pushes into user profile structure expected by main site
+                database.ref('users/' + userId + '/gifts').push({
+                    gameKey: gameId,
+                    gameTitle: "Premium Package Added",
+                    expiresAt: new Date().getTime() + (7 * 24 * 60 * 60 * 1000), // Default expiry 7 days
                     timestamp: firebase.database.ServerValue.TIMESTAMP
                 })
                 .then(() => {
-                    alert(`🎁 Vault Injection successful for AGZ Tag: ${userId}`);
+                    alert(`🎁 Vault Injection successful inside Gamer Node: ${userId}`);
                     document.getElementById('vault-form').reset();
                 })
                 .catch(err => alert("Vault error: " + err.message));
             });
 
-            // 5. Broadcast Announcement Controller
+            // 5. Broadcast Announcement Controller (Mapped to 'announcements/latest')
             document.getElementById('btn-update-announcement').addEventListener('click', () => {
                 const text = document.getElementById('announcement-text').value.trim();
                 if(!text) return alert("Please specify announcement directive text.");
 
-                database.ref('system/announcement').set(text)
-                .then(() => alert("📢 Global broadcast alert matrix updated."))
+                database.ref('announcements/latest').set(text)
+                .then(() => alert("📢 Global broadcast alert matrix updated successfully."))
                 .catch(err => alert("Broadcast compilation failure: " + err.message));
             });
         }
@@ -432,7 +433,6 @@
         function updateGrowthGraph(dataArray) {
             const ctx = document.getElementById('growthBarChart').getContext('2d');
             
-            // පරණ Chart එකක් තිබුනොත් ඒක Clear කරලා අලුත් එක හදනවා
             if(myGrowthChart) {
                 myGrowthChart.destroy();
             }
@@ -444,11 +444,11 @@
                     datasets: [{
                         label: 'New Gamers Registered',
                         data: dataArray,
-                        backgroundColor: 'rgba(59, 130, 246, 0.6)', // Sleek Blue Bars
+                        backgroundColor: 'rgba(59, 130, 246, 0.6)', 
                         borderColor: '#3b82f6',
                         borderWidth: 2,
                         borderRadius: 5,
-                        hoverBackgroundColor: 'rgba(34, 197, 94, 0.8)', // Green hover effect
+                        hoverBackgroundColor: 'rgba(34, 197, 94, 0.8)', 
                         hoverBorderColor: '#22c55e'
                     }]
                 },
