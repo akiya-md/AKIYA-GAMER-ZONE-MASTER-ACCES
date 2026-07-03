@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AGZ Control Center - Admin Dashboard</title>
+    <!-- Google Fonts & Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
+    <!-- Chart.js for Growth Bar Graph -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        body {
+            font-family: 'Rajdhani', sans-serif;
+            background-color: #0b0f19;
+            color: #e2e8f0;
+        }
+        .font-orbitron {
+            font-family: 'Orbitron', sans-serif;
+        }
+        .neon-glow {
+            box-shadow: 0 0 15px rgba(59, 130, 246, 0.5);
+        }
+        .neon-text-green {
+            text-shadow: 0 0 8px rgba(34, 197, 94, 0.6);
+        }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #0b0f19; }
+        ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 10px; }
+    </style>
+</head>
+<body class="bg-[#0b0f19] min-h-screen flex flex-col">
+
+    <!-- Auth Protection Overlay -->
+    <div id="auth-overlay" class="fixed inset-0 bg-[#0d1117] z-50 flex flex-col justify-center items-center p-4">
+        <div class="bg-[#161b22] border border-blue-500/30 p-8 rounded-xl max-w-md w-full text-center neon-glow">
+            <h1 class="font-orbitron text-2xl text-blue-400 font-bold mb-2">AGZ SYSTEM ACCESS</h1>
+            <p class="text-gray-400 text-sm mb-6">This terminal is restricted to authorized administrative units only.</p>
+            <button id="btn-login" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 px-4 rounded-lg font-orbitron transition flex items-center justify-center gap-2">
+                <i class="fab fa-google"></i> AUTHENTICATE WITH GOOGLE
+            </button>
+            <p id="auth-error" class="text-red-500 text-sm mt-4 hidden">Access Denied: Unauthorized Personnel.</p>
+        </div>
+    </div>
+
+    <!-- Main Dashboard UI (Hidden until authenticated) -->
+    <div id="admin-dashboard" class="hidden flex-1 flex flex-col lg:flex-row">
+        
+        <!-- Sidebar Navigation -->
+        <aside class="w-full lg:w-64 bg-[#0d1117] border-r border-slate-800 p-6 flex flex-col justify-between">
+            <div>
+                <div class="flex items-center gap-3 mb-8">
+                    <div class="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center text-white text-xl font-bold font-orbitron">A</div>
+                    <div>
+                        <h2 class="font-orbitron font-bold text-lg text-white leading-none">AGZ PANEL</h2>
+                        <span class="text-xs text-green-400 font-bold neon-text-green">● SECURE CORE v2.0</span>
+                    </div>
+                </div>
+                
+                <nav class="space-y-2">
+                    <button class="w-full text-left bg-slate-800 text-white font-semibold py-3 px-4 rounded-lg flex items-center gap-3 transition"><i class="fas fa-chart-pie text-blue-500"></i> Dashboard Overview</button>
+                    <a href="#games-section" class="w-full text-left text-gray-400 hover:bg-slate-800/50 hover:text-white py-3 px-4 rounded-lg flex items-center gap-3 transition"><i class="fas fa-gamepad"></i> Game Management</a>
+                    <a href="#users-section" class="w-full text-left text-gray-400 hover:bg-slate-800/50 hover:text-white py-3 px-4 rounded-lg flex items-center gap-3 transition"><i class="fas fa-users"></i> Users & Analytics</a>
+                    <a href="#system-section" class="w-full text-left text-gray-400 hover:bg-slate-800/50 hover:text-white py-3 px-4 rounded-lg flex items-center gap-3 transition"><i class="fas fa-sliders-h"></i> System Controls</a>
+                </nav>
+            </div>
+            
+            <div class="pt-6 border-t border-slate-800 flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                    <img id="admin-avatar" class="w-8 h-8 rounded-full border border-blue-500" src="" alt="Admin">
+                    <span id="admin-name" class="text-sm font-semibold text-gray-300 truncate max-w-[110px]">Admin</span>
+                </div>
+                <button id="btn-logout" class="text-gray-500 hover:text-red-400 transition text-lg"><i class="fas fa-sign-out-alt"></i></button>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="flex-1 p-6 lg:p-10 space-y-8 overflow-y-auto max-h-screen">
+            
+            <!-- Header Status Metrics -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Live Visitors Counter -->
+                <div class="bg-[#0d1117] border border-green-500/20 p-6 rounded-xl flex items-center justify-between shadow-lg">
+                    <div>
+                        <p class="text-sm font-semibold text-gray-400 uppercase tracking-wider">Live Active Users</p>
+                        <h3 id="stat-live-users" class="font-orbitron text-4xl font-bold text-green-400 mt-1 neon-text-green">1</h3>
+                    </div>
+                    <div class="w-12 h-12 bg-green-500/10 rounded-lg flex items-center justify-center text-green-400 text-xl animate-pulse"><i class="fas fa-broadcast-tower"></i></div>
+                </div>
+                <!-- Total Registered Users -->
+                <div class="bg-[#0d1117] border border-blue-500/20 p-6 rounded-xl flex items-center justify-between shadow-lg">
+                    <div>
+                        <p class="text-sm font-semibold text-gray-400 uppercase tracking-wider">Total Members</p>
+                        <h3 id="stat-total-users" class="font-orbitron text-4xl font-bold text-blue-400 mt-1">0</h3>
+                    </div>
+                    <div class="w-12 h-12 bg-blue-500/10 rounded-lg flex items-center justify-center text-blue-400 text-xl"><i class="fas fa-users"></i></div>
+                </div>
+                <!-- Total Games Deposited -->
+                <div class="bg-[#0d1117] border border-purple-500/20 p-6 rounded-xl flex items-center justify-between shadow-lg">
+                    <div>
+                        <p class="text-sm font-semibold text-gray-400 uppercase tracking-wider">Total Games Loaded</p>
+                        <h3 id="stat-total-games" class="font-orbitron text-4xl font-bold text-purple-400 mt-1">0</h3>
+                    </div>
+                    <div class="w-12 h-12 bg-purple-500/10 rounded-lg flex items-center justify-center text-purple-400 text-xl"><i class="fas fa-database"></i></div>
+                </div>
+                <!-- System Status Indicator -->
+                <div class="bg-[#0d1117] border border-amber-500/20 p-6 rounded-xl flex items-center justify-between shadow-lg">
+                    <div>
+                        <p class="text-sm font-semibold text-gray-400 uppercase tracking-wider">Database Status</p>
+                        <h3 class="font-orbitron text-2xl font-bold text-amber-400 mt-2 flex items-center gap-2">ONLINE</h3>
+                    </div>
+                    <div class="w-12 h-12 bg-amber-500/10 rounded-lg flex items-center justify-center text-amber-400 text-xl"><i class="fas fa-shield-alt"></i></div>
+                </div>
+            </div>
+
+            <!-- User Growth Bar Graph Section -->
+            <div class="bg-[#0d1117] border border-slate-800 p-6 rounded-xl shadow-lg">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="font-orbitron text-lg font-bold text-white flex items-center gap-2"><i class="fas fa-chart-bar text-blue-500"></i> Platform User Growth Metrics</h3>
+                    <span class="text-xs text-slate-500 uppercase">Realtime Generated Analytics</span>
+                </div>
+                <div class="relative h-64 md:h-80 w-full">
+                    <canvas id="growthBarChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Content Grid: Forms and Sub-Modules -->
+            <div id="games-section" class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <!-- Game Injector Module -->
+                <div class="bg-[#0d1117] border border-slate-800 p-6 rounded-xl shadow-lg">
+                    <h3 class="font-orbitron text-lg font-bold text-white mb-4 flex items-center gap-2"><i class="fas fa-plus-circle text-blue-500"></i> Inject Game into Directory</h3>
+                    <form id="game-form" class="space-y-4">
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs text-gray-400 mb-1">Target Slot (e.g., slot_001)</label>
+                                <input id="game-slot" type="text" class="w-full bg-[#161b22] border border-slate-700 rounded p-2 text-white focus:outline-none focus:border-blue-500" placeholder="slot_001" required>
+                            </div>
+                            <div>
+                                <label class="block text-xs text-gray-400 mb-1">Game Category</label>
+                                <input id="game-category" type="text" class="w-full bg-[#161b22] border border-slate-700 rounded p-2 text-white focus:outline-none focus:border-blue-500" placeholder="Action / Open World" required>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-xs text-gray-400 mb-1">Game Name</label>
+                            <input id="game-name" type="text" class="w-full bg-[#161b22] border border-slate-700 rounded p-2 text-white focus:outline-none focus:border-blue-500" placeholder="Grand Theft Auto V" required>
+                        </div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs text-gray-400 mb-1">File Size</label>
+                                <input id="game-size" type="text" class="w-full bg-[#161b22] border border-slate-700 rounded p-2 text-white focus:outline-none focus:border-blue-500" placeholder="65 GB" required>
+                            </div>
+                            <div>
+                                <label class="block text-xs text-gray-400 mb-1">Thumbnail URL</label>
+                                <input id="game-thumb" type="url" class="w-full bg-[#161b22] border border-slate-700 rounded p-2 text-white focus:outline-none focus:border-blue-500" placeholder="https://image-link.com/img.jpg" required>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-xs text-gray-400 mb-1">Secure Download Link</label>
+                            <input id="game-link" type="url" class="w-full bg-[#161b22] border border-slate-700 rounded p-2 text-white focus:outline-none focus:border-blue-500" placeholder="https://download-server.com/file" required>
+                        </div>
+                        <button type="submit" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-2 px-4 rounded font-orbitron transition">PUBLISH TO DIRECTORY</button>
+                    </form>
+                </div>
+
+                <!-- Secure System Vault Injection Control (Gift Vault) -->
+                <div class="bg-[#0d1117] border border-slate-800 p-6 rounded-xl shadow-lg flex flex-col justify-between">
+                    <div>
+                        <h3 class="font-orbitron text-lg font-bold text-white mb-1 flex items-center gap-2"><i class="fas fa-gift text-purple-500"></i> Secure System Vault Injection Control</h3>
+                        <p class="text-xs text-gray-400 mb-4">Force inject premium packages directly into a localized Gamer profile vault database matrix.</p>
+                        <form id="vault-form" class="space-y-4">
+                            <div>
+                                <label class="block text-xs text-gray-400 mb-1">Target Gamer Identification Tag (AGZ ID)</label>
+                                <input id="vault-userid" type="text" class="w-full bg-[#161b22] border border-slate-700 rounded p-2 text-white focus:outline-none focus:border-purple-500" placeholder="AGZ-XXXXX" required>
+                            </div>
+                            <div>
+                                <label class="block text-xs text-gray-400 mb-1">System Core Game Package Designation ID</label>
+                                <input id="vault-gameid" type="text" class="w-full bg-[#161b22] border border-slate-700 rounded p-2 text-white focus:outline-none focus:border-purple-500" placeholder="GAME-SLOT-ID" required>
+                            </div>
+                            <button type="submit" class="w-full bg-purple-600 hover:bg-purple-500 text-white font-bold py-2 px-4 rounded font-orbitron transition">EXECUTE VAULT INJECTION</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- System Configuration & Live Marquee Alert Updates -->
+            <div id="system-section" class="bg-[#0d1117] border border-slate-800 p-6 rounded-xl shadow-lg">
+                <h3 class="font-orbitron text-lg font-bold text-white mb-4 flex items-center gap-2"><i class="fas fa-bullhorn text-amber-500"></i> Broadcast Realtime System Announcement</h3>
+                <div class="flex flex-col sm:flex-row gap-4">
+                    <input id="announcement-text" type="text" class="flex-1 bg-[#161b22] border border-slate-700 rounded p-3 text-white focus:outline-none focus:border-amber-500" placeholder="Type system announcement banner alert text here...">
+                    <button id="btn-update-announcement" class="bg-amber-600 hover:bg-amber-500 text-white font-bold py-3 px-6 rounded font-orbitron transition">BROADCAST LIVE</button>
+                </div>
+            </div>
+
+            <!-- Users Registry and Database View -->
+            <div id="users-section" class="bg-[#0d1117] border border-slate-800 rounded-xl shadow-lg overflow-hidden">
+                <div class="p-6 border-b border-slate-800">
+                    <h3 class="font-orbitron text-lg font-bold text-white flex items-center gap-2"><i class="fas fa-users-cog text-emerald-400"></i> Registered Gamer Node Management</h3>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-[#161b22] text-xs text-gray-400 uppercase tracking-wider font-orbitron border-b border-slate-800">
+                                <th class="p-4">Gamer Profile / Email</th>
+                                <th class="p-4">AGZ ID</th>
+                                <th class="p-4 text-center">Visits</th>
+                                <th class="p-4 text-center">Downloads</th>
+                                <th class="p-4 text-right">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="user-table-body" class="text-sm divide-y divide-slate-800/50">
+                            <!-- Dynamically loaded users from database -->
+                            <tr>
+                                <td class="p-4 text-gray-500 italic" colspan="5">Listening to operational network nodes...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- Firebase SDK Imports -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+
+    <script>
+        // 🔴 මෙතනට ඔයාගේ සැබෑ Firebase Config විස්තර දාන්න (Your actual config data)
+        const firebaseConfig = {
+            apiKey: "AIzaSyD1SRJ0O2OcZRYafgJ0uABolb9TgBiAA3I",
+            authDomain: "akiya-gamer-zone.firebaseapp.com",
+            databaseURL: "https://akiya-gamer-zone-default-rtdb.asia-southeast1.firebasedatabase.app/",
+            projectId: "akiya-gamer-zone",
+            storageBucket: "akiya-gamer-zone.firebasestorage.app",
+            messagingSenderId: "392261776362",
+            appId: "1:392261776362:web:e0b5bbfe267465af70f893"
+        };
+
+        // Firebase Initialize
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+        const auth = firebase.auth();
+
+        // 🔒 SECURITY CHECK: Admin විදිහට ඇතුල්වෙන්න අවසර දෙන ඊමේල් එක මෙතන ලියන්න
+        const ALLOWED_ADMIN_EMAIL = "kaviakiya@gmail.com"; 
+
+        let myGrowthChart;
+
+        // --- AUTHENTICATION FLOW ---
+        document.getElementById('btn-login').addEventListener('click', () => {
+            const provider = new firebase.auth.GoogleAuthProvider();
+            auth.signInWithPopup(provider).catch(error => {
+                console.error("Auth Error:", error);
+            });
+        });
+
+        document.getElementById('btn-logout').addEventListener('click', () => {
+            auth.signOut();
+            window.location.reload();
+        });
+
+        auth.onAuthStateChanged(user => {
+            if (user) {
+                if (user.email === ALLOWED_ADMIN_EMAIL) {
+                    // Access Granted
+                    document.getElementById('auth-overlay').classList.add('hidden');
+                    document.getElementById('admin-dashboard').classList.remove('hidden');
+                    document.getElementById('admin-avatar').src = user.photoURL;
+                    document.getElementById('admin-name').innerText = user.displayName;
+                    
+                    // Core Realtime Matrix එක වැඩ කරවන්න ගන්නවා
+                    initializeAdminCore();
+                    setupRealtimeVisitors();
+                } else {
+                    // Access Denied for other users
+                    document.getElementById('auth-error').classList.remove('hidden');
+                    auth.signOut();
+                }
+            } else {
+                document.getElementById('auth-overlay').classList.remove('hidden');
+                document.getElementById('admin-dashboard').classList.add('hidden');
+            }
+        });
+
+
+        // --- LIVE ACTIVE VISITORS COUNTER FUNCTIONALITY ---
+        function setupRealtimeVisitors() {
+            // Live ලොග් වෙලා ඉන්න කෙනාගේ Unique Session එකක් හදනවා
+            const activeUserRef = database.ref('live_visitors').push();
+            
+            // සයිට් එක වහපු සැනින් මේ Session එක Database එකෙන් ඔටෝ මැකෙන්න සෙට් කරනවා
+            activeUserRef.onDisconnect().remove();
+            activeUserRef.set({
+                timestamp: firebase.database.ServerValue.TIMESTAMP
+            });
+
+            // මුළු සජීවී සාමාජිකයන් සංඛ්‍යාව ගණනය කරලා UI එකට දානවා
+            database.ref('live_visitors').on('value', snapshot => {
+                const count = snapshot.numChildren();
+                document.getElementById('stat-live-users').innerText = count || 1;
+            });
+        }
+
+
+        // --- CORE DATABASE OPERATIONS ---
+        function initializeAdminCore() {
+            // 1. Fetch System General Metrics
+            database.ref('games').on('value', snapshot => {
+                document.getElementById('stat-total-games').innerText = snapshot.numChildren() || 0;
+            });
+
+            // 2. Load Registered Users List & Graph Metrics
+            database.ref('users').on('value', snapshot => {
+                const usersData = snapshot.val();
+                const tableBody = document.getElementById('user-table-body');
+                tableBody.innerHTML = '';
+
+                if(!usersData) {
+                    tableBody.innerHTML = `<tr><td class="p-4 text-gray-500 italic" colspan="5">No registered gamenet nodes found.</td></tr>`;
+                    document.getElementById('stat-total-users').innerText = 0;
+                    updateGrowthGraph([0, 0, 0, 0, 0, 0]);
+                    return;
+                }
+
+                const totalUsers = Object.keys(usersData).length;
+                document.getElementById('stat-total-users').innerText = totalUsers;
+
+                // Graph එකට මාස අනුව සාමාජිකයෝ වෙන් කරගන්න Array එකක්
+                let monthlyCounts = [0, 0, 0, 0, 0, 0]; // Jan, Feb, Mar, Apr, May, Jun (කාර්තුවකට)
+
+                Object.keys(usersData).forEach(key => {
+                    const user = usersData[key];
+                    
+                    // Graph එකට දත්ත සකස් කරගැනීම (Joined Date එක අනුව)
+                    if(user.joinedDate) {
+                        const date = new Date(user.joinedDate);
+                        const month = date.getMonth(); // 0 = Jan, 1 = Feb...
+                        if(month >= 0 && month <= 5) {
+                            monthlyCounts[month]++;
+                        }
+                    }
+
+                    // Table එකට User කෙනෙක්ව එකතු කිරීම
+                    const tr = document.createElement('tr');
+                    tr.className = "hover:bg-slate-800/30 transition border-b border-slate-800/40";
+                    tr.innerHTML = `
+                        <td class="p-4 flex items-center gap-3">
+                            <img class="w-8 h-8 rounded-full border border-slate-700" src="${user.profile_picture || 'https://via.placeholder.com/150'}" alt="Avatar">
+                            <div>
+                                <div class="font-semibold text-white">${user.username || 'Unknown'}</div>
+                                <div class="text-xs text-gray-500">${user.email || 'N/A'}</div>
+                            </div>
+                        </td>
+                        <td class="p-4 font-mono text-xs text-blue-400 font-bold">${user.agzId || 'NOT ASSIGNED'}</td>
+                        <td class="p-4 text-center font-semibold text-green-400">${user.visits || 0}</td>
+                        <td class="p-4 text-center font-semibold text-purple-400">${user.downloads || 0}</td>
+                        <td class="p-4 text-right">
+                            <button onclick="banUser('${key}')" class="bg-red-500/10 hover:bg-red-500 text-red-500 hover:text-white border border-red-500/20 text-xs font-bold py-1 px-3 rounded transition">BAN</button>
+                        </td>
+                    `;
+                    tableBody.appendChild(tr);
+                });
+
+                // ලස්සන Grow Bar Graph එක මෙතනින් අප්ඩේට් වෙනවා
+                updateGrowthGraph(monthlyCounts);
+            });
+
+            // 3. Game Injector Submission Form
+            document.getElementById('game-form').addEventListener('submit', (e) => {
+                e.preventDefault();
+                const slot = document.getElementById('game-slot').value.trim();
+                
+                const gameData = {
+                    category: document.getElementById('game-category').value.trim(),
+                    name: document.getElementById('game-name').value.trim(),
+                    size: document.getElementById('game-size').value.trim(),
+                    thumbnail: document.getElementById('game-thumb').value.trim(),
+                    download_link: document.getElementById('game-link').value.trim()
+                };
+
+                database.ref('games/' + slot).set(gameData)
+                .then(() => {
+                    alert(`🚀 Game injected successfully into slot: ${slot}`);
+                    document.getElementById('game-form').reset();
+                })
+                .catch(err => alert("Error injecting game: " + err.message));
+            });
+
+            // 4. Secure System Gift Vault Injection Form
+            document.getElementById('vault-form').addEventListener('submit', (e) => {
+                e.preventDefault();
+                const userId = document.getElementById('vault-userid').value.trim();
+                const gameId = document.getElementById('vault-gameid').value.trim();
+
+                database.ref('vaults/' + userId + '/' + gameId).set({
+                    unlocked: true,
+                    timestamp: firebase.database.ServerValue.TIMESTAMP
+                })
+                .then(() => {
+                    alert(`🎁 Vault Injection successful for AGZ Tag: ${userId}`);
+                    document.getElementById('vault-form').reset();
+                })
+                .catch(err => alert("Vault error: " + err.message));
+            });
+
+            // 5. Broadcast Announcement Controller
+            document.getElementById('btn-update-announcement').addEventListener('click', () => {
+                const text = document.getElementById('announcement-text').value.trim();
+                if(!text) return alert("Please specify announcement directive text.");
+
+                database.ref('system/announcement').set(text)
+                .then(() => alert("📢 Global broadcast alert matrix updated."))
+                .catch(err => alert("Broadcast compilation failure: " + err.message));
+            });
+        }
+
+        // --- BAN USER FUNCTION ---
+        window.banUser = function(uid) {
+            if(confirm("Are you sure you want to ban this network access node?")) {
+                database.ref('users/' + uid).remove()
+                .then(() => alert("Node successfully disconnected and banned."))
+                .catch(err => alert("Operation failure: " + err.message));
+            }
+        };
+
+        // --- GROW BAR GRAPH RENDERING ENGINE (CHART.JS) ---
+        function updateGrowthGraph(dataArray) {
+            const ctx = document.getElementById('growthBarChart').getContext('2d');
+            
+            // පරණ Chart එකක් තිබුනොත් ඒක Clear කරලා අලුත් එක හදනවා
+            if(myGrowthChart) {
+                myGrowthChart.destroy();
+            }
+
+            myGrowthChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                    datasets: [{
+                        label: 'New Gamers Registered',
+                        data: dataArray,
+                        backgroundColor: 'rgba(59, 130, 246, 0.6)', // Sleek Blue Bars
+                        borderColor: '#3b82f6',
+                        borderWidth: 2,
+                        borderRadius: 5,
+                        hoverBackgroundColor: 'rgba(34, 197, 94, 0.8)', // Green hover effect
+                        hoverBorderColor: '#22c55e'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    scales: {
+                        y: {
+                            grid: { color: 'rgba(255, 255, 255, 0.05)' },
+                            ticks: { color: '#94a3b8', font: { family: 'Orbitron' } },
+                            beginAtZero: true
+                        },
+                        x: {
+                            grid: { display: false },
+                            ticks: { color: '#94a3b8', font: { family: 'Orbitron' } }
+                        }
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+</html>
