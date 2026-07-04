@@ -356,7 +356,8 @@
         });
 
         function setupRealtimeVisitors() {
-            const activeUserRef = database.ref('status/usersOnline').push();
+            // Live visitor tracking node mapping setup
+            const activeUserRef = database.ref('status/usersOnline/' + auth.currentUser.uid);
             activeUserRef.onDisconnect().remove();
             activeUserRef.set({ timestamp: firebase.database.ServerValue.TIMESTAMP });
 
