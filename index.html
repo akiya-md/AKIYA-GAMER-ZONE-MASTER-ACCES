@@ -411,8 +411,14 @@
                     const div = document.createElement('div');
                     div.className = "flex justify-between items-center bg-[#0d1117] p-2 rounded border border-slate-800 text-xs";
                     
-                    let nameStyle = data.isOwner ? "color: #ffd700; font-weight: 900; display: inline-flex; align-items: center; gap: 4px;" : "color: #3b82f6; font-weight: 700;";
-                    let badgeImg = data.isOwner ? `<img src="Gold Badge.png" style="width: 14px; height: 14px; display: inline-block;">` : '';
+                    let nameStyle = data.isOwner ? "color: #ffd700; font-weight: 900; display: inline-flex; align-items: center; gap: 4px;" : "color: #3b82f6; font-weight: 700; display: inline-flex; align-items: center; gap: 4px;";
+                    
+                    let badgeImg = "";
+                    if (data.isOwner) {
+                        badgeImg = `<img src="Gold Badge.png" style="width: 14px; height: 14px; display: inline-block;">`;
+                    } else if (data.isVerified === true) {
+                        badgeImg = `<img src="Gold Badge.png" style="width: 14px; height: 14px; display: inline-block;" title="Verified User">`;
+                    }
 
                     div.innerHTML = `
                         <div>
@@ -455,6 +461,7 @@
                 msg: val,
                 isOwner: true,
                 badgeClass: "badge-owner-gold",
+                isVerified: true,
                 timestamp: firebase.database.ServerValue.TIMESTAMP
             }).then(() => { input.value = ''; }).catch(err => alert(err.message));
         };
@@ -492,10 +499,10 @@
                     tr.className = "hover:bg-slate-800/30 transition border-b border-slate-800/40";
                     tr.innerHTML = `
                         <td class="p-4 flex items-center gap-3">
-                            <img class="w-8 h-8 rounded-full border border-slate-700" src="${user.photo || 'https://via.placeholder.com/150'}" alt="Avatar">
+                            <img class="w-8 h-8 rounded-full border border-slate-700" src="${user.customPhoto || user.photo || 'https://via.placeholder.com/150'}" alt="Avatar">
                             <div>
                                 <div class="font-semibold text-white flex items-center gap-1">
-                                    ${user.name || 'Unknown'} 
+                                    ${user.customName || user.name || 'Unknown'} 
                                     ${isVerified ? `<img src="Gold Badge.png" style="width:14px; height:14px;">` : ''}
                                 </div>
                                 <div class="text-xs text-gray-500">${user.email || 'N/A'}</div>
