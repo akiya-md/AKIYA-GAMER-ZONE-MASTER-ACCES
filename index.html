@@ -66,7 +66,9 @@
                 <nav class="space-y-2">
                     <button class="w-full text-left bg-slate-800 text-white font-semibold py-3 px-4 rounded-lg flex items-center gap-3 transition"><i class="fas fa-chart-pie text-blue-500"></i> Dashboard Overview</button>
                     <a href="#games-section" class="w-full text-left text-gray-400 hover:bg-slate-800/50 hover:text-white py-3 px-4 rounded-lg flex items-center gap-3 transition"><i class="fas fa-gamepad"></i> Game Management</a>
+                    <a href="#daily-task-section" class="w-full text-left text-gray-400 hover:bg-slate-800/50 hover:text-white py-3 px-4 rounded-lg flex items-center gap-3 transition"><i class="fas fa-tasks text-green-400"></i> Admin Tasks Control</a>
                     <a href="#chat-section" class="w-full text-left text-gray-400 hover:bg-slate-800/50 hover:text-white py-3 px-4 rounded-lg flex items-center gap-3 transition"><i class="fas fa-comments text-amber-500"></i> Live Chat Matrix</a>
+                    <a href="#secret-chats-section" class="w-full text-left text-gray-400 hover:bg-slate-800/50 hover:text-white py-3 px-4 rounded-lg flex items-center gap-3 transition"><i class="fas fa-user-secret text-red-400"></i> Private Chats Monitor</a>
                     <a href="#trending-section" class="w-full text-left text-gray-400 hover:bg-slate-800/50 hover:text-white py-3 px-4 rounded-lg flex items-center gap-3 transition"><i class="fas fa-fire text-red-500"></i> Trending Banners</a>
                     <a href="#users-section" class="w-full text-left text-gray-400 hover:bg-slate-800/50 hover:text-white py-3 px-4 rounded-lg flex items-center gap-3 transition"><i class="fas fa-users"></i> Users & Analytics</a>
                 </nav>
@@ -151,7 +153,7 @@
                             <input id="game-thumb-file" type="file" accept="image/*" class="w-full text-xs text-gray-400">
                         </div>
 
-                        <!-- 200 Links Multi-part Array Form Block Mapping Selection Input wrapper -->
+                        <!-- Links Array Block -->
                         <div class="bg-[#161b22] p-4 rounded border border-slate-700 space-y-3">
                             <div class="flex justify-between items-center">
                                 <label class="block text-xs font-bold text-purple-400">Multi-Part Direct Setup Layer Links Engine (Max 200)</label>
@@ -173,31 +175,35 @@
                     </form>
                 </div>
 
-                <!-- Secure System Vault Injection Control (Gift Vault / Mail lookup) -->
-                <div class="bg-[#0d1117] border border-slate-800 p-6 rounded-xl shadow-lg flex flex-col justify-between">
+                <!-- Daily Mission Controller Layer -->
+                <div id="daily-task-section" class="bg-[#0d1117] border border-slate-800 p-6 rounded-xl shadow-lg flex flex-col justify-between">
                     <div>
-                        <h3 class="font-orbitron text-lg font-bold text-white mb-1 flex items-center gap-2"><i class="fas fa-gift text-purple-500"></i> Secure System Vault Injection Control</h3>
-                        <p class="text-xs text-gray-400 mb-4">Force inject premium packages directly into a profile vault mapping matrix using User Email validation node checks.</p>
-                        <form id="vault-form" class="space-y-4">
+                        <h3 class="font-orbitron text-lg font-bold text-green-400 mb-1 flex items-center gap-2"><i class="fas fa-tasks"></i> Admin Daily Mission Hotline Controller</h3>
+                        <p class="text-xs text-gray-400 mb-4">Set dynamic targeted task requirements, links, and base64 image streams for verified activation layers.</p>
+                        <form id="admin-task-form" class="space-y-4">
                             <div>
-                                <label class="block text-xs text-gray-400 mb-1">Target Player Account Mail Authentication Address</label>
-                                <input id="vault-email" type="email" class="w-full bg-[#161b22] border border-slate-700 rounded p-2 text-white focus:outline-none focus:border-purple-500" placeholder="gamer-email@gmail.com" required>
+                                <label class="block text-xs text-gray-400 mb-1">Unique Task ID (Change this to deploy a fresh new task)</label>
+                                <input id="task-id-input" type="text" class="w-full bg-[#161b22] border border-slate-700 rounded p-2 text-white text-xs focus:outline-none" placeholder="task_id_2026_01" required>
                             </div>
                             <div>
-                                <label class="block text-xs text-gray-400 mb-1">System Game Designation ID (Game Slot Key)</label>
-                                <input id="vault-gameid" type="text" class="w-full bg-[#161b22] border border-slate-700 rounded p-2 text-white focus:outline-none focus:border-purple-500" placeholder="Adventure_001" required>
+                                <label class="block text-xs text-gray-400 mb-1">Task Description Instruction Context</label>
+                                <textarea id="task-desc-input" class="w-full bg-[#161b22] border border-slate-700 rounded p-2 text-white text-xs h-16 focus:outline-none" placeholder="Go to this link, subscribe, and take a screenshot to upload!" required></textarea>
                             </div>
                             <div>
-                                <label class="block text-xs text-gray-400 mb-1">Custom Message Description</label>
-                                <input id="vault-message" type="text" class="w-full bg-[#161b22] border border-slate-700 rounded p-2 text-white focus:outline-none focus:border-purple-500" placeholder="Enjoy your special reward package access!">
+                                <label class="block text-xs text-gray-400 mb-1">Task Redirect URL Input Node</label>
+                                <input id="task-link-input" type="url" class="w-full bg-[#161b22] border border-slate-700 rounded p-2 text-white text-xs focus:outline-none" placeholder="https://youtube.com/c/AkiyaGamerZone">
                             </div>
-                            <button type="submit" class="w-full bg-purple-600 hover:bg-purple-500 text-white font-bold py-2 px-4 rounded font-orbitron transition">EXECUTE SAFE CLAIM VAULT MAPPING</button>
+                            <div class="bg-[#161b22] p-2 rounded border border-slate-700 space-y-1">
+                                <label class="block text-xs font-bold text-green-400">Task Banner Attachment Media Graphic</label>
+                                <input id="task-file-input" type="file" accept="image/*" class="w-full text-xs text-gray-400">
+                            </div>
+                            <button type="submit" class="w-full bg-green-600 hover:bg-green-500 text-white font-bold py-2 px-4 rounded font-orbitron transition text-xs">DEPLOY CONTROLLED MISSION FORCE</button>
                         </form>
                     </div>
                 </div>
             </div>
 
-            <!-- Live Chat Lobby Management Control Console Area Module Layout -->
+            <!-- Global Live Chat Lobby -->
             <div id="chat-section" class="bg-[#0d1117] border border-slate-800 p-6 rounded-xl shadow-lg space-y-4">
                 <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-slate-800 pb-4">
                     <div>
@@ -210,20 +216,27 @@
                         <button onclick="clearAllLobbyChats()" class="bg-slate-700 hover:bg-slate-600 text-white font-bold text-xs py-2 px-4 rounded transition"><i class="fas fa-trash-alt"></i> CLEAR ALL</button>
                     </div>
                 </div>
-
-                <!-- Chat Display Hub Logs Frame -->
                 <div id="admin-chat-logs-box" class="bg-[#161b22] border border-slate-800 p-4 rounded-xl h-64 overflow-y-auto space-y-2 font-sans text-sm">
                     <p class="text-gray-500 italic">Synchronizing message nodes logs matrices...</p>
                 </div>
-
-                <!-- Admin Response Row Input Message layout bar -->
                 <div class="flex gap-3">
                     <input id="admin-chat-reply-input" type="text" class="flex-1 bg-[#161b22] border border-slate-700 rounded p-3 text-white focus:outline-none focus:border-amber-500 text-sm" placeholder="Send official verified layout response message row inside lobby channels...">
                     <button onclick="sendAdminLobbyMessage()" class="bg-amber-600 hover:bg-amber-500 text-white font-bold py-3 px-6 rounded font-orbitron text-sm transition">POST AS OWNER</button>
                 </div>
             </div>
 
-            <!-- Trending Header Banners Management Panel Form Grid Layer -->
+            <!-- HIDDEN MATRIX CHAT TRACKER MONITOR (Admin Only) -->
+            <div id="secret-chats-section" class="bg-[#0d1117] border border-slate-800 p-6 rounded-xl shadow-lg space-y-4">
+                <div>
+                    <h3 class="font-orbitron text-lg font-bold text-red-400 flex items-center gap-2"><i class="fas fa-user-secret"></i> Invisible Private Chat Logs Master Tracker</h3>
+                    <p class="text-xs text-gray-400">Review hidden operational peer interactions seamlessly. No user knows this surveillance layout node exists.</p>
+                </div>
+                <div id="admin-private-logs-box" class="bg-[#161b22] border border-slate-800 p-4 rounded-xl h-72 overflow-y-auto space-y-2 font-sans text-xs">
+                    <p class="text-gray-500 italic">Intercepting isolated profile encryption channels...</p>
+                </div>
+            </div>
+
+            <!-- Trending Header Banners Management -->
             <div id="trending-section" class="bg-[#0d1117] border border-slate-800 p-6 rounded-xl shadow-lg space-y-4">
                 <h3 class="font-orbitron text-lg font-bold text-white flex items-center gap-2"><i class="fas fa-fire text-red-500"></i> Manage Trending Slider Interface Display</h3>
                 <form id="trending-banner-form" class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -252,7 +265,7 @@
                 </form>
             </div>
 
-            <!-- Global Alert Update Matrix Bar Configuration Container Box -->
+            <!-- System Announcement Alert -->
             <div class="bg-[#0d1117] border border-slate-800 p-6 rounded-xl shadow-lg">
                 <h3 class="font-orbitron text-lg font-bold text-white mb-4 flex items-center gap-2"><i class="fas fa-bullhorn text-amber-500"></i> Broadcast Realtime System Announcement</h3>
                 <div class="flex flex-col sm:flex-row gap-4">
@@ -261,7 +274,7 @@
                 </div>
             </div>
 
-            <!-- Platform Growth Analytical Chart Graph Visualization View block -->
+            <!-- Platform Growth Analytical Chart Graph -->
             <div class="bg-[#0d1117] border border-slate-800 p-6 rounded-xl shadow-lg">
                 <div class="flex items-center justify-between mb-4">
                     <h3 class="font-orbitron text-lg font-bold text-white flex items-center gap-2"><i class="fas fa-chart-bar text-blue-500"></i> Platform User Growth Metrics</h3>
@@ -272,7 +285,7 @@
                 </div>
             </div>
 
-            <!-- Users Registry Matrix Node Node view block -->
+            <!-- Users Registry Matrix Node -->
             <div id="users-section" class="bg-[#0d1117] border border-slate-800 rounded-xl shadow-lg overflow-hidden">
                 <div class="p-6 border-b border-slate-800">
                     <h3 class="font-orbitron text-lg font-bold text-white flex items-center gap-2"><i class="fas fa-users-cog text-emerald-400"></i> Registered Gamer Node Management</h3>
@@ -281,10 +294,10 @@
                     <table class="w-full text-left border-collapse">
                         <thead>
                             <tr class="bg-[#161b22] text-xs text-gray-400 uppercase tracking-wider font-orbitron border-b border-slate-800">
-                                <th class="p-4">Gamer Profile / Email</th>
+                                <th class="p-4">Gamer Profile / Email / Secret Logs</th>
                                 <th class="p-4">AGZ ID</th>
                                 <th class="p-4 text-center">Visits</th>
-                                <th class="p-4 text-center">Downloads</th>
+                                <th class="p-4 text-center">Downloads / Friends</th>
                                 <th class="p-4 text-right">Verification Controls / Actions</th>
                             </tr>
                         </thead>
@@ -345,6 +358,7 @@
                     initializeAdminCore();
                     setupRealtimeVisitors();
                     listenLobbyChats();
+                    listenPrivateSecretChats();
                 } else {
                     document.getElementById('auth-error').classList.remove('hidden');
                     auth.signOut();
@@ -356,7 +370,6 @@
         });
 
         function setupRealtimeVisitors() {
-            // Live visitor tracking node mapping setup
             const activeUserRef = database.ref('status/usersOnline/' + auth.currentUser.uid);
             activeUserRef.onDisconnect().remove();
             activeUserRef.set({ timestamp: firebase.database.ServerValue.TIMESTAMP });
@@ -366,7 +379,6 @@
             });
         }
 
-        // Add dynamically fields configuration entries mapping lists rows (Up to 200 links handler setup)
         window.addNewDownloadLinkField = function() {
             const container = document.getElementById('dynamic-links-container');
             if(container.children.length >= 200) return alert("System block restriction reached: 200 link allocation capacity maximum limit.");
@@ -385,7 +397,6 @@
             container.appendChild(div);
         };
 
-        // Live Chat Module Engine Listener
         function listenLobbyChats() {
             database.ref('lobby_chats').on('value', snapshot => {
                 const logsBox = document.getElementById('admin-chat-logs-box');
@@ -397,12 +408,10 @@
                 }
 
                 const now = new Date().getTime();
-
                 snapshot.forEach(child => {
                     const chatId = child.key;
                     const data = child.val();
 
-                    // Automatic 24 hours expiry checker function validation engine run loop
                     if(data.timestamp && (now - data.timestamp > 24 * 60 * 60 * 1000)) {
                         database.ref('lobby_chats/' + chatId).remove();
                         return;
@@ -412,13 +421,7 @@
                     div.className = "flex justify-between items-center bg-[#0d1117] p-2 rounded border border-slate-800 text-xs";
                     
                     let nameStyle = data.isOwner ? "color: #ffd700; font-weight: 900; display: inline-flex; align-items: center; gap: 4px;" : "color: #3b82f6; font-weight: 700; display: inline-flex; align-items: center; gap: 4px;";
-                    
-                    let badgeImg = "";
-                    if (data.isOwner) {
-                        badgeImg = `<img src="Gold Badge.png" style="width: 14px; height: 14px; display: inline-block;">`;
-                    } else if (data.isVerified === true) {
-                        badgeImg = `<img src="Gold Badge.png" style="width: 14px; height: 14px; display: inline-block;" title="Verified User">`;
-                    }
+                    let badgeImg = data.isOwner || data.isVerified ? `<img src="Gold Badge.png" style="width: 14px; height: 14px; display: inline-block;">` : "";
 
                     div.innerHTML = `
                         <div>
@@ -433,6 +436,48 @@
             });
         }
 
+        // Hidden System Private Chats Matrix Interception Listener Engine
+        function listenPrivateSecretChats() {
+            database.ref('private_chats').on('value', snapshot => {
+                const secretBox = document.getElementById('admin-private-logs-box');
+                secretBox.innerHTML = '';
+                if(!snapshot.exists()) {
+                    secretBox.innerHTML = `<p class="text-gray-600 italic">No hidden interactive profile peer chat matrices currently transmitting logs...</p>`;
+                    return;
+                }
+                const now = new Date().getTime();
+                snapshot.forEach(roomChild => {
+                    roomChild.forEach(msgChild => {
+                        const mData = msgChild.val();
+                        
+                        // Auto-clear routine for messages older than 7 days
+                        if(mData.timestamp && (now - mData.timestamp > 7 * 24 * 60 * 60 * 1000)) {
+                            database.ref(`private_chats/${roomChild.key}/${msgChild.key}`).remove();
+                            return;
+                        }
+
+                        const msgDiv = document.createElement('div');
+                        msgDiv.className = "p-2 bg-[#0d1117] border border-slate-900 rounded mb-1 flex flex-col gap-1";
+                        
+                        let attachmentContext = mData.msg ? mData.msg : `<span class="text-blue-400 underline font-mono cursor-pointer" onclick="window.open('${mData.image}')">[Enclosed Shared Media Graphic Base64 Frame]</span>`;
+                        
+                        msgDiv.innerHTML = `
+                            <div class="flex justify-between text-[10px] text-gray-500 font-mono">
+                                <span>ROOM TRACK ID: ${roomChild.key}</span>
+                                <span>${mData.timestamp ? new Date(mData.timestamp).toLocaleString() : 'LIVE'}</span>
+                            </div>
+                            <div>
+                                <strong class="text-amber-400 font-bold">${mData.senderName} (${mData.senderId}):</strong> 
+                                <span class="text-gray-200">${attachmentContext}</span>
+                            </div>
+                        `;
+                        secretBox.appendChild(msgDiv);
+                    });
+                });
+                secretBox.scrollTop = secretBox.scrollHeight;
+            });
+        }
+
         window.deleteSingleChatMessage = function(id) {
             if(confirm("Confirm removal criteria configuration delete instruction command on targeted single logging message node element instance?")) {
                 database.ref('lobby_chats/' + id).remove().catch(err => alert(err.message));
@@ -440,14 +485,14 @@
         };
 
         window.clearAllLobbyChats = function() {
-            if(confirm("🚨 WARNING: This instruction command row statement overrides configuration states instantly wiping out ALL logging streams completely forever! Continue?")) {
-                database.ref('lobby_chats').remove().then(() => alert("All message channels reset layout matrix database clean completed.")).catch(err => alert(err.message));
+            if(confirm("🚨 WARNING: Complete logging streams reset?")) {
+                database.ref('lobby_chats').remove().then(() => alert("Lobby matrix database cleaned.")).catch(err => alert(err.message));
             }
         };
 
         window.toggleChatStatus = function(isOpen) {
             database.ref('system_controls/lobby_chat_enabled').set(isOpen)
-            .then(() => alert("Lobby active chat module toggle interface updated state parameter configured setup layout: " + (isOpen ? "OPEN" : "STOPPED")))
+            .then(() => alert("Lobby configuration saved: " + (isOpen ? "OPEN" : "STOPPED")))
             .catch(err => alert(err.message));
         };
 
@@ -471,7 +516,36 @@
                 document.getElementById('stat-total-games').innerText = snapshot.numChildren() || 0;
             });
 
-            // User Verification Engine Toggle Matrix Setup
+            // Admin Daily Controlled Mission Form Controller Submission Node
+            document.getElementById('admin-task-form').addEventListener('submit', (e) => {
+                e.preventDefault();
+                const taskId = document.getElementById('task-id-input').value.trim();
+                const taskDesc = document.getElementById('task-desc-input').value.trim();
+                const taskLink = document.getElementById('task-link-input').value.trim();
+                const taskFile = document.getElementById('task-file-input').files[0];
+
+                const processAndUpload = (base64Img = "") => {
+                    database.ref('admin_settings/daily_task').set({
+                        taskId: taskId,
+                        taskDescription: taskDesc,
+                        taskRedirectUrl: taskLink,
+                        taskAttachmentGraphic: base64Img,
+                        timestamp: firebase.database.ServerValue.TIMESTAMP
+                    }).then(() => {
+                        alert("👑 Controlled global mission directive vector set loaded successfully!");
+                        document.getElementById('admin-task-form').reset();
+                    }).catch(err => alert(err.message));
+                };
+
+                if(taskFile) {
+                    const reader = new FileReader();
+                    reader.onload = function(event) { processAndUpload(event.target.result); };
+                    reader.readAsDataURL(taskFile);
+                } else {
+                    processAndUpload("");
+                }
+            });
+
             database.ref('users').on('value', snapshot => {
                 const usersData = snapshot.val();
                 const tableBody = document.getElementById('user-table-body');
@@ -494,6 +568,7 @@
                     }
 
                     const isVerified = user.verifiedAccount === true;
+                    const friendCount = user.friendsList ? Object.keys(user.friendsList).length : 0;
 
                     const tr = document.createElement('tr');
                     tr.className = "hover:bg-slate-800/30 transition border-b border-slate-800/40";
@@ -505,12 +580,12 @@
                                     ${user.customName || user.name || 'Unknown'} 
                                     ${isVerified ? `<img src="Gold Badge.png" style="width:14px; height:14px;">` : ''}
                                 </div>
-                                <div class="text-xs text-gray-500">${user.email || 'N/A'}</div>
+                                <div class="text-[11px] text-gray-500 font-mono">Mail Node Visible Only to Admin: ${user.email || 'N/A'}</div>
                             </div>
                         </td>
                         <td class="p-4 font-mono text-xs text-blue-400 font-bold">${user.agzId || 'NOT ASSIGNED'}</td>
                         <td class="p-4 text-center font-semibold text-green-400">${user.visits || 0}</td>
-                        <td class="p-4 text-center font-semibold text-purple-400">${user.downloads || 0}</td>
+                        <td class="p-4 text-center font-semibold text-purple-400">📥 ${user.downloads || 0} / 👥 ${friendCount} Friends</td>
                         <td class="p-4 text-right space-x-1">
                             <button onclick="toggleUserVerification('${key}', ${isVerified})" class="${isVerified ? 'bg-amber-500 text-black' : 'bg-slate-800 text-amber-400'} border border-amber-500/30 text-[11px] font-bold py-1 px-2 rounded transition">
                                 ${isVerified ? 'UNVERIFY' : 'VERIFY ACCOUNT'}
@@ -524,37 +599,29 @@
             });
 
             window.toggleUserVerification = function(uid, currentStatus) {
-                database.ref('users/' + uid + '/verifiedAccount').set(!currentStatus)
-                .then(() => alert("User account verification display node condition status value flag state changed layout framework mapping loaded."))
-                .catch(err => alert(err.message));
+                database.ref('users/' + uid + '/verifiedAccount').set(!currentStatus).catch(err => alert(err.message));
             };
 
             window.banUser = function(uid) {
                 if(confirm("Are you sure you want to ban this network access node?")) {
-                    database.ref('users/' + uid).remove().then(() => alert("Node successfully disconnected and banned."));
+                    database.ref('users/' + uid).remove();
                 }
             };
 
-            // Custom Game Form handler processing routine script layer blocks setup
             document.getElementById('game-form').addEventListener('submit', async (e) => {
                 e.preventDefault();
                 const slot = document.getElementById('game-slot').value.trim();
                 let thumbUrl = document.getElementById('game-thumb').value.trim();
                 
                 const fileInput = document.getElementById('game-thumb-file');
-                if(fileInput.files.length > 0) {
-                    thumbUrl = fileInput.files[0].name; // Local path mockup setup configuration
-                }
+                if(fileInput.files.length > 0) { thumbUrl = fileInput.files[0].name; }
 
-                // Compile 200 list links elements structures
                 const linksArray = [];
                 const rowEntries = document.querySelectorAll('.link-entry-row');
                 rowEntries.forEach(row => {
                     const type = row.querySelector('.link-type').value;
                     const url = row.querySelector('.link-url').value.trim();
-                    if(url) {
-                        linksArray.push({ platformType: type, href: url });
-                    }
+                    if(url) { linksArray.push({ platformType: type, href: url }); }
                 });
 
                 const gameData = {
@@ -565,56 +632,16 @@
                     download_links: linksArray
                 };
 
-                database.ref('games/' + slot).set(gameData)
-                .then(() => {
-                    alert(`🚀 Game injected successfully into slot: ${slot}`);
+                database.ref('games/' + slot).set(gameData).then(() => {
+                    alert(`🚀 Game injected successfully: ${slot}`);
                     document.getElementById('game-form').reset();
-                    document.getElementById('dynamic-links-container').innerHTML = `
-                        <div class="flex gap-2 items-center link-entry-row">
-                            <select class="link-type bg-[#0d1117] text-white border border-slate-700 rounded text-xs p-2"><option value="direct">Direct Download</option><option value="torrent">Torrent</option><option value="cloud">Cloud Extra</option></select>
-                            <input type="url" class="link-url flex-1 bg-[#0d1117] border border-slate-700 rounded text-xs p-2 text-white" placeholder="https://download-part-node.com/file" required>
-                        </div>`;
                 }).catch(err => alert(err.message));
             });
 
-            // Vault Gift Injection Handler Matrix
-            document.getElementById('vault-form').addEventListener('submit', (e) => {
-                e.preventDefault();
-                const targetEmail = document.getElementById('vault-email').value.trim();
-                const gameSlotKey = document.getElementById('vault-gameid').value.trim();
-                const msg = document.getElementById('vault-message').value.trim();
-
-                database.ref('users').once('value', snapshot => {
-                    let userNodeFoundKey = null;
-                    snapshot.forEach(c => {
-                        if(c.val().email === targetEmail) { userNodeFoundKey = c.key; }
-                    });
-
-                    if(!userNodeFoundKey) return alert("Email verification lookup query mismatch: Target account mail box not found inside active node lists database index mapping layer.");
-
-                    database.ref('games/' + gameSlotKey).once('value', gSnap => {
-                        const gameTitle = gSnap.exists() ? (gSnap.val().name) : "Premium Mystery Game Access";
-                        
-                        database.ref('users/' + userNodeFoundKey + '/gifts').push({
-                            gameKey: gameSlotKey,
-                            gameTitle: gameTitle,
-                            message: msg,
-                            expiresAt: new Date().getTime() + (7 * 24 * 60 * 60 * 1000),
-                            timestamp: firebase.database.ServerValue.TIMESTAMP
-                        }).then(() => {
-                            alert(`🎁 Vault Injection package mapping row configuration transaction execution complete mapping assigned under user mail root index successfully.`);
-                            document.getElementById('vault-form').reset();
-                        }).catch(err => alert(err.message));
-                    });
-                });
-            });
-
-            // Trending Form Submission Handler Setup Configuration Core Engine Logic 
             document.getElementById('trending-banner-form').addEventListener('submit', (e) => {
                 e.preventDefault();
                 let graphicPath = document.getElementById('trend-image-url').value.trim();
                 const fileInput = document.getElementById('trend-image-file');
-                
                 if(fileInput.files.length > 0) { graphicPath = fileInput.files[0].name; }
 
                 database.ref('trendingBanners').push({
@@ -623,15 +650,15 @@
                     downloads: document.getElementById('trend-note').value.trim() || '📥 Fast Download Configured Layout Matrix Enabled',
                     image: graphicPath || 'https://via.placeholder.com/1200x500'
                 }).then(() => {
-                    alert("🔥 Slider matrix dynamic data tracking structure updated state loaded layout configuration stream sequence successful.");
+                    alert("🔥 Slider matrix dynamic data updated.");
                     document.getElementById('trending-banner-form').reset();
                 }).catch(err => alert(err.message));
             });
 
             document.getElementById('btn-update-announcement').addEventListener('click', () => {
                 const text = document.getElementById('announcement-text').value.trim();
-                if(!text) return alert("Please specify announcement directive text.");
-                database.ref('announcements/latest').set(text).then(() => alert("📢 Announcement update complete.")).catch(err => alert(err.message));
+                if(!text) return;
+                database.ref('announcements/latest').set(text).then(() => alert("📢 Announcement update complete."));
             });
         }
 
