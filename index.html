@@ -18,24 +18,24 @@
     <style>
         body {
             font-family: 'Rajdhani', sans-serif;
-            background-color: #0b0f19;
+            background-color: #060814;
             color: #e2e8f0;
         }
         .font-orbitron {
             font-family: 'Orbitron', sans-serif;
         }
         .neon-glow {
-            box-shadow: 0 0 15px rgba(59, 130, 246, 0.5);
+            box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
         }
         .neon-text-green {
             text-shadow: 0 0 8px rgba(34, 197, 94, 0.6);
         }
         ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: #0b0f19; }
+        ::-webkit-scrollbar-track { background: #060814; }
         ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 10px; }
     </style>
 </head>
-<body class="bg-[#0b0f19] min-h-screen flex flex-col">
+<body class="bg-[#060814] min-h-screen flex flex-col">
 
     <!-- Auth Protection Overlay -->
     <div id="auth-overlay" class="fixed inset-0 bg-[#0d1117] z-50 flex flex-col justify-center items-center p-4">
@@ -53,7 +53,7 @@
     <div id="admin-dashboard" class="hidden flex-1 flex flex-col lg:flex-row">
         
         <!-- Sidebar Navigation -->
-        <aside class="w-full lg:w-64 bg-[#0d1117] border-r border-slate-800 p-6 flex flex-col justify-between">
+        <aside class="w-full lg:w-64 bg-[#0b0d19] border-r border-slate-800/60 p-6 flex flex-col justify-between">
             <div>
                 <div class="flex items-center gap-3 mb-8">
                     <div class="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center text-white text-xl font-bold font-orbitron">A</div>
@@ -88,28 +88,28 @@
             
             <!-- Metrics -->
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <div class="bg-[#0d1117] border border-green-500/20 p-6 rounded-xl flex items-center justify-between shadow-lg">
+                <div class="bg-[#0b0d19] border border-green-500/20 p-6 rounded-xl flex items-center justify-between shadow-lg">
                     <div>
                         <p class="text-sm font-semibold text-gray-400 uppercase tracking-wider">Live Active Users</p>
                         <h3 id="stat-live-users" class="font-orbitron text-4xl font-bold text-green-400 mt-1 neon-text-green">1</h3>
                     </div>
                     <div class="w-12 h-12 bg-green-500/10 rounded-lg flex items-center justify-center text-green-400 text-xl animate-pulse"><i class="fas fa-broadcast-tower"></i></div>
                 </div>
-                <div class="bg-[#0d1117] border border-blue-500/20 p-6 rounded-xl flex items-center justify-between shadow-lg">
+                <div class="bg-[#0b0d19] border border-blue-500/20 p-6 rounded-xl flex items-center justify-between shadow-lg">
                     <div>
                         <p class="text-sm font-semibold text-gray-400 uppercase tracking-wider">Total Members</p>
                         <h3 id="stat-total-users" class="font-orbitron text-4xl font-bold text-blue-400 mt-1">0</h3>
                     </div>
                     <div class="w-12 h-12 bg-blue-500/10 rounded-lg flex items-center justify-center text-blue-400 text-xl"><i class="fas fa-users"></i></div>
                 </div>
-                <div class="bg-[#0d1117] border border-purple-500/20 p-6 rounded-xl flex items-center justify-between shadow-lg">
+                <div class="bg-[#0b0d19] border border-purple-500/20 p-6 rounded-xl flex items-center justify-between shadow-lg">
                     <div>
                         <p class="text-sm font-semibold text-gray-400 uppercase tracking-wider">Total Games Loaded</p>
                         <h3 id="stat-total-games" class="font-orbitron text-4xl font-bold text-purple-400 mt-1">0</h3>
                     </div>
                     <div class="w-12 h-12 bg-purple-500/10 rounded-lg flex items-center justify-center text-purple-400 text-xl"><i class="fas fa-database"></i></div>
                 </div>
-                <div class="bg-[#0d1117] border border-amber-500/20 p-6 rounded-xl flex items-center justify-between shadow-lg">
+                <div class="bg-[#0b0d19] border border-amber-500/20 p-6 rounded-xl flex items-center justify-between shadow-lg">
                     <div>
                         <p class="text-sm font-semibold text-gray-400 uppercase tracking-wider">Database Status</p>
                         <h3 class="font-orbitron text-2xl font-bold text-amber-400 mt-2 flex items-center gap-2">ONLINE</h3>
@@ -121,7 +121,7 @@
             <!-- Content Grid Forms -->
             <div id="games-section" class="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 <!-- Game Injector Module -->
-                <div class="bg-[#0d1117] border border-slate-800 p-6 rounded-xl shadow-lg">
+                <div class="bg-[#0b0d19] border border-slate-800 p-6 rounded-xl shadow-lg">
                     <h3 class="font-orbitron text-lg font-bold text-white mb-4 flex items-center gap-2"><i class="fas fa-plus-circle text-blue-500"></i> Inject Game Directory System</h3>
                     <form id="game-form" class="space-y-4">
                         <div class="grid grid-cols-2 gap-4">
@@ -148,7 +148,7 @@
                         <!-- Thumbnail URL or Device Upload Image Option -->
                         <div class="bg-[#161b22] p-3 rounded border border-slate-700 space-y-2">
                             <label class="block text-xs font-bold text-blue-400">Game Card Graphic Media Option</label>
-                            <input id="game-thumb" type="url" class="w-full bg-[#0d1117] border border-slate-700 rounded p-2 text-white text-xs focus:outline-none" placeholder="Paste Image URL Layout Link">
+                            <input id="game-thumb" type="url" class="w-full bg-[#0b0d19] border border-slate-700 rounded p-2 text-white text-xs focus:outline-none" placeholder="Paste Image URL Layout Link">
                             <div class="text-center text-xs text-gray-500 font-bold">OR CHOOSE LOCAL FILE STORAGE</div>
                             <input id="game-thumb-file" type="file" accept="image/*" class="w-full text-xs text-gray-400">
                         </div>
@@ -161,12 +161,12 @@
                             </div>
                             <div id="dynamic-links-container" class="space-y-2 max-h-48 overflow-y-auto pr-1">
                                 <div class="flex gap-2 items-center link-entry-row">
-                                    <select class="link-type bg-[#0d1117] text-white border border-slate-700 rounded text-xs p-2">
+                                    <select class="link-type bg-[#0b0d19] text-white border border-slate-700 rounded text-xs p-2">
                                         <option value="direct">Direct Download</option>
                                         <option value="torrent">Torrent</option>
                                         <option value="cloud">Cloud Extra</option>
                                     </select>
-                                    <input type="url" class="link-url flex-1 bg-[#0d1117] border border-slate-700 rounded text-xs p-2 text-white" placeholder="https://download-part-node.com/file" required>
+                                    <input type="url" class="link-url flex-1 bg-[#0b0d19] border border-slate-700 rounded text-xs p-2 text-white" placeholder="https://download-part-node.com/file" required>
                                 </div>
                             </div>
                         </div>
@@ -176,7 +176,7 @@
                 </div>
 
                 <!-- Daily Mission Controller Layer -->
-                <div id="daily-task-section" class="bg-[#0d1117] border border-slate-800 p-6 rounded-xl shadow-lg flex flex-col justify-between">
+                <div id="daily-task-section" class="bg-[#0b0d19] border border-slate-800 p-6 rounded-xl shadow-lg flex flex-col justify-between">
                     <div>
                         <h3 class="font-orbitron text-lg font-bold text-green-400 mb-1 flex items-center gap-2"><i class="fas fa-tasks"></i> Admin Daily Mission Hotline Controller</h3>
                         <p class="text-xs text-gray-400 mb-4">Set dynamic targeted task requirements, links, and base64 image streams for verified activation layers.</p>
@@ -204,7 +204,7 @@
             </div>
 
             <!-- Global Live Chat Lobby -->
-            <div id="chat-section" class="bg-[#0d1117] border border-slate-800 p-6 rounded-xl shadow-lg space-y-4">
+            <div id="chat-section" class="bg-[#0b0d19] border border-slate-800 p-6 rounded-xl shadow-lg space-y-4">
                 <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-slate-800 pb-4">
                     <div>
                         <h3 class="font-orbitron text-lg font-bold text-amber-400 flex items-center gap-2"><i class="fas fa-comments"></i> Realtime Gamer Lobby Chat Management Arena</h3>
@@ -226,7 +226,7 @@
             </div>
 
             <!-- HIDDEN MATRIX CHAT TRACKER MONITOR (Admin Only) -->
-            <div id="secret-chats-section" class="bg-[#0d1117] border border-slate-800 p-6 rounded-xl shadow-lg space-y-4">
+            <div id="secret-chats-section" class="bg-[#0b0d19] border border-slate-800 p-6 rounded-xl shadow-lg space-y-4">
                 <div>
                     <h3 class="font-orbitron text-lg font-bold text-red-400 flex items-center gap-2"><i class="fas fa-user-secret"></i> Invisible Private Chat Logs Master Tracker</h3>
                     <p class="text-xs text-gray-400">Review hidden operational peer interactions seamlessly. No user knows this surveillance layout node exists.</p>
@@ -237,7 +237,7 @@
             </div>
 
             <!-- Trending Header Banners Management -->
-            <div id="trending-section" class="bg-[#0d1117] border border-slate-800 p-6 rounded-xl shadow-lg space-y-4">
+            <div id="trending-section" class="bg-[#0b0d19] border border-slate-800 p-6 rounded-xl shadow-lg space-y-4">
                 <h3 class="font-orbitron text-lg font-bold text-white flex items-center gap-2"><i class="fas fa-fire text-red-500"></i> Manage Trending Slider Interface Display</h3>
                 <form id="trending-banner-form" class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div class="space-y-3">
@@ -257,7 +257,7 @@
                         </div>
                         <div class="bg-[#161b22] p-2 rounded border border-slate-700 space-y-1">
                             <label class="block text-xs font-bold text-red-400">Graphic Background Media Option</label>
-                            <input id="trend-image-url" type="url" class="w-full bg-[#0d1117] border border-slate-700 rounded p-1 text-white text-xs focus:outline-none" placeholder="Paste structural image URL path">
+                            <input id="trend-image-url" type="url" class="w-full bg-[#0b0d19] border border-slate-700 rounded p-1 text-white text-xs focus:outline-none" placeholder="Paste structural image URL path">
                             <input id="trend-image-file" type="file" accept="image/*" class="w-full text-xs text-gray-500 mt-1">
                         </div>
                         <button type="submit" class="w-full bg-red-600 hover:bg-red-500 text-white font-bold py-2 px-4 rounded font-orbitron transition text-sm">UPDATE TRENDING BACKGROUND STREAM</button>
@@ -266,7 +266,7 @@
             </div>
 
             <!-- System Announcement Alert -->
-            <div class="bg-[#0d1117] border border-slate-800 p-6 rounded-xl shadow-lg">
+            <div class="bg-[#0b0d19] border border-slate-800 p-6 rounded-xl shadow-lg">
                 <h3 class="font-orbitron text-lg font-bold text-white mb-4 flex items-center gap-2"><i class="fas fa-bullhorn text-amber-500"></i> Broadcast Realtime System Announcement</h3>
                 <div class="flex flex-col sm:flex-row gap-4">
                     <input id="announcement-text" type="text" class="flex-1 bg-[#161b22] border border-slate-700 rounded p-3 text-white focus:outline-none focus:border-amber-500" placeholder="Type system announcement banner alert text here...">
@@ -275,7 +275,7 @@
             </div>
 
             <!-- Platform Growth Analytical Chart Graph -->
-            <div class="bg-[#0d1117] border border-slate-800 p-6 rounded-xl shadow-lg">
+            <div class="bg-[#0b0d19] border border-slate-800 p-6 rounded-xl shadow-lg">
                 <div class="flex items-center justify-between mb-4">
                     <h3 class="font-orbitron text-lg font-bold text-white flex items-center gap-2"><i class="fas fa-chart-bar text-blue-500"></i> Platform User Growth Metrics</h3>
                     <span class="text-xs text-slate-500 uppercase">Realtime Generated Analytics</span>
@@ -286,22 +286,22 @@
             </div>
 
             <!-- Users Registry Matrix Node -->
-            <div id="users-section" class="bg-[#0d1117] border border-slate-800 rounded-xl shadow-lg overflow-hidden">
-                <div class="p-6 border-b border-slate-800">
+            <div id="users-section" class="bg-[#0b0d19] border border-slate-800 rounded-xl shadow-lg overflow-hidden">
+                <div class="p-6 border-b border-slate-800/80 bg-[#0e1122]">
                     <h3 class="font-orbitron text-lg font-bold text-white flex items-center gap-2"><i class="fas fa-users-cog text-emerald-400"></i> Registered Gamer Node Management</h3>
                 </div>
                 <div class="overflow-x-auto">
                     <table class="w-full text-left border-collapse">
                         <thead>
-                            <tr class="bg-[#161b22] text-xs text-gray-400 uppercase tracking-wider font-orbitron border-b border-slate-800">
-                                <th class="p-4">Gamer Profile / Email / Secret Logs</th>
+                            <tr class="bg-[#12162b] text-xs text-gray-300 uppercase tracking-wider font-orbitron border-b border-slate-800">
+                                <th class="p-4">Gamer Profile / Details</th>
                                 <th class="p-4">AGZ ID</th>
                                 <th class="p-4 text-center">Visits</th>
-                                <th class="p-4 text-center">Downloads / Friends</th>
-                                <th class="p-4 text-right">Verification Controls / Actions</th>
+                                <th class="p-4 text-center">Downloads & Friends</th>
+                                <th class="p-4 text-right">Verification Actions</th>
                             </tr>
                         </thead>
-                        <tbody id="user-table-body" class="text-sm divide-y divide-slate-800/50">
+                        <tbody id="user-table-body" class="text-sm divide-y divide-slate-800/60">
                             <tr>
                                 <td class="p-4 text-gray-500 italic" colspan="5">Listening to operational network nodes...</td>
                             </tr>
@@ -386,12 +386,12 @@
             const div = document.createElement('div');
             div.className = "flex gap-2 items-center link-entry-row mt-2";
             div.innerHTML = `
-                <select class="link-type bg-[#0d1117] text-white border border-slate-700 rounded text-xs p-2">
+                <select class="link-type bg-[#0b0d19] text-white border border-slate-700 rounded text-xs p-2">
                     <option value="direct">Direct Download</option>
                     <option value="torrent">Torrent</option>
                     <option value="cloud">Cloud Extra</option>
                 </select>
-                <input type="url" class="link-url flex-1 bg-[#0d1117] border border-slate-700 rounded text-xs p-2 text-white" placeholder="https://download-part-node.com/file" required>
+                <input type="url" class="link-url flex-1 bg-[#0b0d19] border border-slate-700 rounded text-xs p-2 text-white" placeholder="https://download-part-node.com/file" required>
                 <button type="button" onclick="this.parentElement.remove()" class="text-red-500 hover:text-red-400 font-bold px-1 text-xs">X</button>
             `;
             container.appendChild(div);
@@ -418,7 +418,7 @@
                     }
 
                     const div = document.createElement('div');
-                    div.className = "flex justify-between items-center bg-[#0d1117] p-2 rounded border border-slate-800 text-xs";
+                    div.className = "flex justify-between items-center bg-[#0b0d19] p-2 rounded border border-slate-800 text-xs";
                     
                     let nameStyle = data.isOwner ? "color: #ffd700; font-weight: 900; display: inline-flex; align-items: center; gap: 4px;" : "color: #3b82f6; font-weight: 700; display: inline-flex; align-items: center; gap: 4px;";
                     let badgeImg = data.isOwner || data.isVerified ? `<img src="Gold Badge.png" style="width: 14px; height: 14px; display: inline-block;">` : "";
@@ -457,7 +457,7 @@
                         }
 
                         const msgDiv = document.createElement('div');
-                        msgDiv.className = "p-2 bg-[#0d1117] border border-slate-900 rounded mb-1 flex flex-col gap-1";
+                        msgDiv.className = "p-2 bg-[#0b0d19] border border-slate-900 rounded mb-1 flex flex-col gap-1";
                         
                         let attachmentContext = mData.msg ? mData.msg : `<span class="text-blue-400 underline font-mono cursor-pointer" onclick="window.open('${mData.image}')">[Enclosed Shared Media Graphic Base64 Frame]</span>`;
                         
@@ -571,26 +571,29 @@
                     const friendCount = user.friendsList ? Object.keys(user.friendsList).length : 0;
 
                     const tr = document.createElement('tr');
-                    tr.className = "hover:bg-slate-800/30 transition border-b border-slate-800/40";
+                    tr.className = "hover:bg-slate-800/40 transition border-b border-slate-800/40 bg-[#0b0e1e]/40";
                     tr.innerHTML = `
                         <td class="p-4 flex items-center gap-3">
-                            <img class="w-8 h-8 rounded-full border border-slate-700" src="${user.customPhoto || user.photo || 'https://via.placeholder.com/150'}" alt="Avatar">
+                            <img class="w-10 h-10 rounded-full border-2 border-slate-700 object-cover" src="${user.customPhoto || user.photo || 'https://via.placeholder.com/150'}" alt="Avatar">
                             <div>
-                                <div class="font-semibold text-white flex items-center gap-1">
-                                    ${user.customName || user.name || 'Unknown'} 
-                                    ${isVerified ? `<img src="Gold Badge.png" style="width:14px; height:14px;">` : ''}
+                                <div class="font-bold text-white text-base flex items-center gap-1.5">
+                                    <span>${user.customName || user.name || 'Unknown'}</span> 
+                                    ${isVerified ? `<img src="Gold Badge.png" style="width:16px; height:16px;">` : ''}
                                 </div>
-                                <div class="text-[11px] text-gray-500 font-mono">Mail Node Visible Only to Admin: ${user.email || 'N/A'}</div>
+                                <div class="text-xs text-gray-400 font-medium font-sans mt-0.5"><i class="fas fa-envelope text-slate-500 mr-1"></i>${user.email || 'N/A'}</div>
                             </div>
                         </td>
-                        <td class="p-4 font-mono text-xs text-blue-400 font-bold">${user.agzId || 'NOT ASSIGNED'}</td>
-                        <td class="p-4 text-center font-semibold text-green-400">${user.visits || 0}</td>
-                        <td class="p-4 text-center font-semibold text-purple-400">📥 ${user.downloads || 0} / 👥 ${friendCount} Friends</td>
-                        <td class="p-4 text-right space-x-1">
-                            <button onclick="toggleUserVerification('${key}', ${isVerified})" class="${isVerified ? 'bg-amber-500 text-black' : 'bg-slate-800 text-amber-400'} border border-amber-500/30 text-[11px] font-bold py-1 px-2 rounded transition">
-                                ${isVerified ? 'UNVERIFY' : 'VERIFY ACCOUNT'}
+                        <td class="p-4 font-mono text-sm text-blue-400 font-bold tracking-wide">${user.agzId || 'NOT ASSIGNED'}</td>
+                        <td class="p-4 text-center font-bold text-green-400 text-base">${user.visits || 0}</td>
+                        <td class="p-4 text-center font-semibold text-purple-300 text-xs space-y-1">
+                            <div class="bg-purple-950/40 border border-purple-800/30 px-2 py-0.5 rounded text-purple-400 font-bold">📥 Downloads: ${user.downloads || 0}</div>
+                            <div class="bg-blue-950/40 border border-blue-800/30 px-2 py-0.5 rounded text-blue-400 font-bold">👥 Friends: ${friendCount}</div>
+                        </td>
+                        <td class="p-4 text-right space-x-2 whitespace-nowrap">
+                            <button onclick="toggleUserVerification('${key}', ${isVerified})" class="${isVerified ? 'bg-amber-500 text-black hover:bg-amber-400' : 'bg-slate-800 text-amber-400 hover:bg-slate-700'} border border-amber-500/30 text-xs font-bold py-1.5 px-3 rounded-lg transition-all shadow-sm">
+                                ${isVerified ? '<i class="fas fa-user-minus mr-1"></i>UNVERIFY' : '<i class="fas fa-user-check mr-1"></i>VERIFY'}
                             </button>
-                            <button onclick="banUser('${key}')" class="bg-red-500/10 hover:bg-red-500 text-red-500 hover:text-white border border-red-500/20 text-[11px] font-bold py-1 px-2 rounded transition">BAN</button>
+                            <button onclick="banUser('${key}')" class="bg-red-600/10 hover:bg-red-600 text-red-500 hover:text-white border border-red-500/30 text-xs font-bold py-1.5 px-3 rounded-lg transition-all shadow-sm"><i class="fas fa-ban mr-1"></i>BAN</button>
                         </td>
                     `;
                     tableBody.appendChild(tr);
