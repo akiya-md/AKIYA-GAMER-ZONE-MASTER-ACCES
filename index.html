@@ -90,7 +90,7 @@
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 <div class="bg-[#0b0d19] border border-green-500/20 p-6 rounded-xl flex items-center justify-between shadow-lg">
                     <div>
-                        <p class="text-sm font-semibold text-gray-400 uppercase tracking-wider">Live Active Users</p>
+                        <p class="text-sm font-semibold text-gray-400 uppercase tracking-wider">Live Active Visitors</p>
                         <h3 id="stat-live-users" class="font-orbitron text-4xl font-bold text-green-400 mt-1 neon-text-green">1</h3>
                     </div>
                     <div class="w-12 h-12 bg-green-500/10 rounded-lg flex items-center justify-center text-green-400 text-xl animate-pulse"><i class="fas fa-broadcast-tower"></i></div>
@@ -229,9 +229,9 @@
             <div id="secret-chats-section" class="bg-[#0b0d19] border border-slate-800 p-6 rounded-xl shadow-lg space-y-4">
                 <div>
                     <h3 class="font-orbitron text-lg font-bold text-red-400 flex items-center gap-2"><i class="fas fa-user-secret"></i> Invisible Private Chat Logs Master Tracker</h3>
-                    <p class="text-xs text-gray-400">Review hidden operational peer interactions seamlessly. No user knows this surveillance layout node exists.</p>
+                    <p class="text-xs text-gray-400">Review hidden operational peer interactions seamlessly. Controlled cyber tracking environment.</p>
                 </div>
-                <div id="admin-private-logs-box" class="bg-[#161b22] border border-slate-800 p-4 rounded-xl h-72 overflow-y-auto space-y-2 font-sans text-xs">
+                <div id="admin-private-logs-box" class="bg-[#161b22] border border-slate-800 p-4 rounded-xl h-80 overflow-y-auto space-y-3 font-sans text-xs">
                     <p class="text-gray-500 italic">Intercepting isolated profile encryption channels...</p>
                 </div>
             </div>
@@ -436,7 +436,6 @@
             });
         }
 
-        // Hidden System Private Chats Matrix Interception Listener Engine
         function listenPrivateSecretChats() {
             database.ref('private_chats').on('value', snapshot => {
                 const secretBox = document.getElementById('admin-private-logs-box');
@@ -450,25 +449,24 @@
                     roomChild.forEach(msgChild => {
                         const mData = msgChild.val();
                         
-                        // Auto-clear routine for messages older than 7 days
                         if(mData.timestamp && (now - mData.timestamp > 7 * 24 * 60 * 60 * 1000)) {
                             database.ref(`private_chats/${roomChild.key}/${msgChild.key}`).remove();
                             return;
                         }
 
                         const msgDiv = document.createElement('div');
-                        msgDiv.className = "p-2 bg-[#0b0d19] border border-slate-900 rounded mb-1 flex flex-col gap-1";
+                        msgDiv.className = "p-3 bg-[#0f1225] border border-slate-800/80 rounded-xl flex flex-col gap-1 shadow-md hover:border-red-500/20 transition-all";
                         
-                        let attachmentContext = mData.msg ? mData.msg : `<span class="text-blue-400 underline font-mono cursor-pointer" onclick="window.open('${mData.image}')">[Enclosed Shared Media Graphic Base64 Frame]</span>`;
+                        let attachmentContext = mData.msg ? mData.msg : `<span class="text-rose-400 underline font-mono font-bold cursor-pointer" onclick="window.open('${mData.image}')"><i class="fa-solid fa-image mr-1"></i>[Enclosed Shared Media Graphic Base64 Frame]</span>`;
                         
                         msgDiv.innerHTML = `
-                            <div class="flex justify-between text-[10px] text-gray-500 font-mono">
-                                <span>ROOM TRACK ID: ${roomChild.key}</span>
-                                <span>${mData.timestamp ? new Date(mData.timestamp).toLocaleString() : 'LIVE'}</span>
+                            <div class="flex justify-between text-[10px] text-gray-500 font-mono border-b border-slate-800/60 pb-1 mb-1">
+                                <span class="text-blue-400 font-bold"><i class="fa-solid fa-network-wired mr-1"></i>ROOM: ${roomChild.key}</span>
+                                <span><i class="fa-regular fa-clock mr-1"></i>${mData.timestamp ? new Date(mData.timestamp).toLocaleString() : 'LIVE'}</span>
                             </div>
-                            <div>
-                                <strong class="text-amber-400 font-bold">${mData.senderName} (${mData.senderId}):</strong> 
-                                <span class="text-gray-200">${attachmentContext}</span>
+                            <div class="text-xs">
+                                <strong class="text-amber-400 font-bold">${mData.senderName || 'Anonymous'} <span class="text-gray-500 font-normal">(${mData.senderId || 'N/A'})</span>:</strong> 
+                                <span class="text-gray-200 ml-1 bg-[#060814]/40 px-2 py-0.5 rounded inline-block mt-1">${attachmentContext}</span>
                             </div>
                         `;
                         secretBox.appendChild(msgDiv);
@@ -516,7 +514,6 @@
                 document.getElementById('stat-total-games').innerText = snapshot.numChildren() || 0;
             });
 
-            // Admin Daily Controlled Mission Form Controller Submission Node
             document.getElementById('admin-task-form').addEventListener('submit', (e) => {
                 e.preventDefault();
                 const taskId = document.getElementById('task-id-input').value.trim();
