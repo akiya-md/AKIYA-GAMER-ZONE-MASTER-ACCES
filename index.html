@@ -59,13 +59,14 @@
                     <div class="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center text-white text-xl font-bold font-orbitron">A</div>
                     <div>
                         <h2 class="font-orbitron font-bold text-lg text-white leading-none">AGZ PANEL</h2>
-                        <span class="text-xs text-green-400 font-bold neon-text-green">● SECURE CORE v2.5</span>
+                        <span class="text-xs text-green-400 font-bold neon-text-green">● SECURE CORE v3.0</span>
                     </div>
                 </div>
                 
                 <nav class="space-y-2">
                     <button class="w-full text-left bg-slate-800 text-white font-semibold py-3 px-4 rounded-lg flex items-center gap-3 transition"><i class="fas fa-chart-pie text-blue-500"></i> Dashboard Overview</button>
-                    <a href="#games-section" class="w-full text-left text-gray-400 hover:bg-slate-800/50 hover:text-white py-3 px-4 rounded-lg flex items-center gap-3 transition"><i class="fas fa-gamepad"></i> Game Management</a>
+                    <a href="#games-section" class="w-full text-left text-gray-400 hover:bg-slate-800/50 hover:text-white py-3 px-4 rounded-lg flex items-center gap-3 transition"><i class="fas fa-gamepad"></i> Game Catalog Control</a>
+                    <a href="#games-lookup-section" class="w-full text-left text-gray-400 hover:bg-slate-800/50 hover:text-white py-3 px-4 rounded-lg flex items-center gap-3 transition"><i class="fas fa-search"></i> Card Editor & Search Bar</a>
                     <a href="#daily-task-section" class="w-full text-left text-gray-400 hover:bg-slate-800/50 hover:text-white py-3 px-4 rounded-lg flex items-center gap-3 transition"><i class="fas fa-tasks text-green-400"></i> Admin Tasks Control</a>
                     <a href="#chat-section" class="w-full text-left text-gray-400 hover:bg-slate-800/50 hover:text-white py-3 px-4 rounded-lg flex items-center gap-3 transition"><i class="fas fa-comments text-amber-500"></i> Live Chat Matrix</a>
                     <a href="#secret-chats-section" class="w-full text-left text-gray-400 hover:bg-slate-800/50 hover:text-white py-3 px-4 rounded-lg flex items-center gap-3 transition"><i class="fas fa-user-secret text-red-400"></i> Private Chats Monitor</a>
@@ -119,15 +120,19 @@
             </div>
 
             <!-- Content Grid Forms -->
-            <div id="games-section" class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                <!-- Game Injector Module -->
+            <div id="games-section" class="grid grid-cols-1 gap-8">
+                <!-- Advanced Game Injector Module -->
                 <div class="bg-[#0b0d19] border border-slate-800 p-6 rounded-xl shadow-lg">
-                    <h3 class="font-orbitron text-lg font-bold text-white mb-4 flex items-center gap-2"><i class="fas fa-plus-circle text-blue-500"></i> Inject Game Directory System</h3>
+                    <h3 class="font-orbitron text-lg font-bold text-white mb-4 flex items-center gap-2"><i class="fas fa-plus-circle text-blue-500"></i> Deploy / Edit Game Card Registry Node</h3>
                     <form id="game-form" class="space-y-4">
-                        <div class="grid grid-cols-2 gap-4">
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                             <div>
-                                <label class="block text-xs text-gray-400 mb-1">Target Slot (e.g., Adventure_001)</label>
-                                <input id="game-slot" type="text" class="w-full bg-[#161b22] border border-slate-700 rounded p-2 text-white focus:outline-none focus:border-blue-500" placeholder="Adventure_001" required>
+                                <label class="block text-xs text-gray-400 mb-1">Target Slot Key (Unique Record ID ID - No Spaces)</label>
+                                <input id="game-slot" type="text" class="w-full bg-[#161b22] border border-slate-700 rounded p-2 text-white focus:outline-none focus:border-blue-500" placeholder="Cyberpunk_2077" required>
+                            </div>
+                            <div>
+                                <label class="block text-xs text-gray-400 mb-1">Game Name</label>
+                                <input id="game-name" type="text" class="w-full bg-[#161b22] border border-slate-700 rounded p-2 text-white focus:outline-none focus:border-blue-500" placeholder="Grand Theft Auto V" required>
                             </div>
                             <div>
                                 <label class="block text-xs text-gray-400 mb-1">Game Category</label>
@@ -144,45 +149,87 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="grid grid-cols-2 gap-4">
+
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                             <div>
-                                <label class="block text-xs text-gray-400 mb-1">Game Name</label>
-                                <input id="game-name" type="text" class="w-full bg-[#161b22] border border-slate-700 rounded p-2 text-white focus:outline-none focus:border-blue-500" placeholder="Grand Theft Auto V" required>
+                                <label class="block text-xs text-gray-400 mb-1">File Size String</label>
+                                <input id="game-size" type="text" class="w-full bg-[#161b22] border border-slate-700 rounded p-2 text-white focus:outline-none focus:border-blue-500" placeholder="65 GB" required>
                             </div>
                             <div>
-                                <label class="block text-xs text-gray-400 mb-1">File Size</label>
-                                <input id="game-size" type="text" class="w-full bg-[#161b22] border border-slate-700 rounded p-2 text-white focus:outline-none focus:border-blue-500" placeholder="65 GB" required>
+                                <label class="block text-xs text-gray-400 mb-1">YouTube Trailer ID or Complete URL</label>
+                                <input id="game-trailer" type="text" class="w-full bg-[#161b22] border border-slate-700 rounded p-2 text-white focus:outline-none focus:border-blue-500" placeholder="e.g.,dQw4w9WgXcQ">
+                            </div>
+                            <div>
+                                <label class="block text-xs text-gray-400 mb-1">Manual Rating Control Override (Leave 0 for auto update)</label>
+                                <input id="game-manual-rating" type="number" step="0.1" min="0" max="5" class="w-full bg-[#161b22] border border-slate-700 rounded p-2 text-white focus:outline-none focus:border-blue-500" value="0">
                             </div>
                         </div>
                         
                         <!-- Thumbnail URL or Device Upload Image Option -->
-                        <div class="bg-[#161b22] p-3 rounded border border-slate-700 space-y-2">
-                            <label class="block text-xs font-bold text-blue-400">Game Card Graphic Media (Photo)</label>
-                            <input id="game-thumb" type="url" class="w-full bg-[#0b0d19] border border-slate-700 rounded p-2 text-white text-xs focus:outline-none" placeholder="Paste Image URL Layout Link">
-                            <div class="text-center text-[10px] text-gray-500 font-bold">OR CHOOSE LOCAL FILE STORAGE</div>
-                            <input id="game-thumb-file" type="file" accept="image/*" class="w-full text-xs text-gray-400">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="bg-[#161b22] p-3 rounded border border-slate-700 space-y-2">
+                                <label class="block text-xs font-bold text-blue-400">Game Card Graphic Media Thumbnail (Photo)</label>
+                                <input id="game-thumb" type="url" class="w-full bg-[#0b0d19] border border-slate-700 rounded p-2 text-white text-xs focus:outline-none" placeholder="Paste Image URL Layout Link">
+                                <div class="text-center text-[10px] text-gray-500 font-bold">OR CHOOSE LOCAL FILE STORAGE</div>
+                                <input id="game-thumb-file" type="file" accept="image/*" class="w-full text-xs text-gray-400">
+                            </div>
+
+                            <!-- Hero Banner URL or Device Upload Option -->
+                            <div class="bg-[#161b22] p-3 rounded border border-slate-700 space-y-2">
+                                <label class="block text-xs font-bold text-red-400">Hero Banner Background Image</label>
+                                <input id="game-banner-url" type="url" class="w-full bg-[#0b0d19] border border-slate-700 rounded p-2 text-white text-xs focus:outline-none" placeholder="Paste Banner Image URL Layout Link">
+                                <div class="text-center text-[10px] text-gray-500 font-bold">OR CHOOSE LOCAL FILE STORAGE</div>
+                                <input id="game-banner-file" type="file" accept="image/*" class="w-full text-xs text-gray-400">
+                            </div>
                         </div>
 
-                        <!-- Hero Banner URL or Device Upload Option -->
-                        <div class="bg-[#161b22] p-3 rounded border border-slate-700 space-y-2">
-                            <label class="block text-xs font-bold text-red-400">Hero Banner Background Image</label>
-                            <input id="game-banner-url" type="url" class="w-full bg-[#0b0d19] border border-slate-700 rounded p-2 text-white text-xs focus:outline-none" placeholder="Paste Banner Image URL Layout Link">
-                            <div class="text-center text-[10px] text-gray-500 font-bold">OR CHOOSE LOCAL FILE STORAGE</div>
-                            <input id="game-banner-file" type="file" accept="image/*" class="w-full text-xs text-gray-400">
+                        <!-- Extended Screenshots Node Storage Block (Up to 3 images) -->
+                        <div class="bg-[#111424] p-4 rounded-xl border border-purple-900/40 space-y-3">
+                            <label class="block text-xs font-bold text-purple-400 uppercase font-orbitron tracking-wider">Extended Media Screenshots Array (Maximum 3 Snapshots Allocated)</label>
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                                <div class="p-2 bg-[#161b22] rounded border border-slate-700">
+                                    <span class="block text-[10px] text-gray-400 mb-1">Screenshot 1 (URL/File)</span>
+                                    <input id="screenshot-1-url" type="url" class="w-full bg-[#0b0d19] text-white text-xs p-1 rounded border border-slate-800 mb-1" placeholder="URL Link">
+                                    <input id="screenshot-1-file" type="file" accept="image/*" class="text-[10px] text-slate-500 w-full">
+                                </div>
+                                <div class="p-2 bg-[#161b22] rounded border border-slate-700">
+                                    <span class="block text-[10px] text-gray-400 mb-1">Screenshot 2 (URL/File)</span>
+                                    <input id="screenshot-2-url" type="url" class="w-full bg-[#0b0d19] text-white text-xs p-1 rounded border border-slate-800 mb-1" placeholder="URL Link">
+                                    <input id="screenshot-2-file" type="file" accept="image/*" class="text-[10px] text-slate-500 w-full">
+                                </div>
+                                <div class="p-2 bg-[#161b22] rounded border border-slate-700">
+                                    <span class="block text-[10px] text-gray-400 mb-1">Screenshot 3 (URL/File)</span>
+                                    <input id="screenshot-3-url" type="url" class="w-full bg-[#0b0d19] text-white text-xs p-1 rounded border border-slate-800 mb-1" placeholder="URL Link">
+                                    <input id="screenshot-3-file" type="file" accept="image/*" class="text-[10px] text-slate-500 w-full">
+                                </div>
+                            </div>
                         </div>
 
-                        <!-- Description & System Specs Fields -->
+                        <!-- 5000 Characters Safe Text Area Box for Game Description -->
                         <div>
-                            <label class="block text-xs text-gray-400 mb-1">Game Description</label>
-                            <textarea id="game-desc" class="w-full bg-[#161b22] border border-slate-700 rounded p-2 text-white text-xs h-16 focus:outline-none focus:border-blue-500" placeholder="Write context info about the game..." required></textarea>
+                            <div class="flex justify-between items-center mb-1">
+                                <label class="text-xs text-gray-400">Game Main Rich Context Text Layout (Supports up to 5,000 characters)</label>
+                                <span id="description-char-counter" class="text-[10px] font-mono text-blue-400">0 / 5000</span>
+                            </div>
+                            <textarea id="game-desc" maxlength="5000" oninput="document.getElementById('description-char-counter').innerText = this.value.length + ' / 5000'" class="w-full bg-[#161b22] border border-slate-700 rounded p-2.5 text-white text-xs h-36 focus:outline-none focus:border-blue-500" placeholder="Write comprehensive breakdown structural logs regarding the specified game title layout profile structure here..." required></textarea>
                         </div>
 
-                        <div class="bg-[#161b22] p-3 rounded border border-slate-700 grid grid-cols-2 gap-2 text-xs">
-                            <div class="col-span-2 font-bold text-green-400 mb-1">System Requirements (Minimum)</div>
-                            <input id="spec-os" type="text" placeholder="OS (e.g., Windows 10)" class="bg-[#0b0d19] p-1.5 border border-slate-700 rounded text-white focus:outline-none focus:border-blue-500">
-                            <input id="spec-cpu" type="text" placeholder="CPU" class="bg-[#0b0d19] p-1.5 border border-slate-700 rounded text-white focus:outline-none focus:border-blue-500">
-                            <input id="spec-ram" type="text" placeholder="RAM" class="bg-[#0b0d19] p-1.5 border border-slate-700 rounded text-white focus:outline-none focus:border-blue-500">
-                            <input id="spec-vga" type="text" placeholder="VGA / Graphics" class="bg-[#0b0d19] p-1.5 border border-slate-700 rounded text-white focus:outline-none focus:border-blue-500">
+                        <!-- Hardware Requirements Grid Matrix Layout System (Minimum & Recommended) -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="bg-[#161b22] p-4 rounded-xl border border-slate-800 space-y-2 text-xs">
+                                <div class="font-bold text-green-400 mb-1 uppercase font-orbitron">System Requirements (Minimum Configuration)</div>
+                                <input id="spec-os" type="text" placeholder="OS (e.g., Windows 10 x64)" class="w-full bg-[#0b0d19] p-2 border border-slate-700 rounded text-white focus:outline-none mb-1">
+                                <input id="spec-cpu" type="text" placeholder="CPU Architecture Node" class="w-full bg-[#0b0d19] p-2 border border-slate-700 rounded text-white focus:outline-none mb-1">
+                                <input id="spec-ram" type="text" placeholder="RAM Capacity Limit" class="w-full bg-[#0b0d19] p-2 border border-slate-700 rounded text-white focus:outline-none mb-1">
+                                <input id="spec-vga" type="text" placeholder="VGA / Graphics Processing Core" class="w-full bg-[#0b0d19] p-2 border border-slate-700 rounded text-white focus:outline-none">
+                            </div>
+                            <div class="bg-[#161b22] p-4 rounded-xl border border-slate-800 space-y-2 text-xs">
+                                <div class="font-bold text-blue-400 mb-1 uppercase font-orbitron">System Requirements (Recommended Apex Grid)</div>
+                                <input id="spec-rec-os" type="text" placeholder="OS (e.g., Windows 11 Pro)" class="w-full bg-[#0b0d19] p-2 border border-slate-700 rounded text-white focus:outline-none mb-1">
+                                <input id="spec-rec-cpu" type="text" placeholder="CPU Recommended Core" class="w-full bg-[#0b0d19] p-2 border border-slate-700 rounded text-white focus:outline-none mb-1">
+                                <input id="spec-rec-ram" type="text" placeholder="RAM Recommended Unit" class="w-full bg-[#0b0d19] p-2 border border-slate-700 rounded text-white focus:outline-none mb-1">
+                                <input id="spec-rec-vga" type="text" placeholder="VGA Core Selection Processing Card" class="w-full bg-[#0b0d19] p-2 border border-slate-700 rounded text-white focus:outline-none">
+                            </div>
                         </div>
 
                         <!-- Links Array Block -->
@@ -203,35 +250,65 @@
                             </div>
                         </div>
 
-                        <button type="submit" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-2 px-4 rounded font-orbitron transition">PUBLISH INTEGRATED MATRIX CARD</button>
+                        <button type="submit" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 px-4 rounded font-orbitron tracking-wider transition">PUBLISH INTEGRATED MATRIX CARD LAYER</button>
                     </form>
                 </div>
+            </div>
 
-                <!-- Daily Mission Controller Layer -->
-                <div id="daily-task-section" class="bg-[#0b0d19] border border-slate-800 p-6 rounded-xl shadow-lg flex flex-col justify-between">
+            <!-- Real-time Live Cards Metrics and Comment Filtering Section -->
+            <div id="games-lookup-section" class="bg-[#0b0d19] border border-slate-800 p-6 rounded-xl shadow-lg space-y-4">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                     <div>
-                        <h3 class="font-orbitron text-lg font-bold text-green-400 mb-1 flex items-center gap-2"><i class="fas fa-tasks"></i> Admin Daily Mission Hotline Controller</h3>
-                        <p class="text-xs text-gray-400 mb-4">Set dynamic targeted task requirements, links, and base64 image streams for verified activation layers.</p>
-                        <form id="admin-task-form" class="space-y-4">
-                            <div>
-                                <label class="block text-xs text-gray-400 mb-1">Unique Task ID (Change this to deploy a fresh new task)</label>
-                                <input id="task-id-input" type="text" class="w-full bg-[#161b22] border border-slate-700 rounded p-2 text-white text-xs focus:outline-none" placeholder="task_id_2026_01" required>
-                            </div>
-                            <div>
-                                <label class="block text-xs text-gray-400 mb-1">Task Description Instruction Context</label>
-                                <textarea id="task-desc-input" class="w-full bg-[#161b22] border border-slate-700 rounded p-2 text-white text-xs h-16 focus:outline-none" placeholder="Go to this link, subscribe, and take a screenshot to upload!" required></textarea>
-                            </div>
-                            <div>
-                                <label class="block text-xs text-gray-400 mb-1">Task Redirect URL Input Node</label>
-                                <input id="task-link-input" type="url" class="w-full bg-[#161b22] border border-slate-700 rounded p-2 text-white text-xs focus:outline-none" placeholder="https://youtube.com/c/AkiyaGamerZone">
-                            </div>
-                            <div class="bg-[#161b22] p-2 rounded border border-slate-700 space-y-1">
-                                <label class="block text-xs font-bold text-green-400">Task Banner Attachment Media Graphic</label>
-                                <input id="task-file-input" type="file" accept="image/*" class="w-full text-xs text-gray-400">
-                            </div>
-                            <button type="submit" class="w-full bg-green-600 hover:bg-green-500 text-white font-bold py-2 px-4 rounded font-orbitron transition text-xs">DEPLOY CONTROLLED MISSION FORCE</button>
-                        </form>
+                        <h3 class="font-orbitron text-lg font-bold text-white flex items-center gap-2"><i class="fas fa-search text-purple-500"></i> Interactive Game Roster Database Terminal Lookup</h3>
+                        <p class="text-xs text-gray-400">Search game items, review total reaction loads, metrics parameters, and wipe localized abusive user logs.</p>
                     </div>
+                    <div class="w-full md:w-72 relative">
+                        <input id="game-matrix-search-bar" type="text" oninput="executeLiveGameSearch(this.value)" class="w-full bg-[#161b22] text-xs p-2.5 rounded-lg border border-slate-700 focus:outline-none focus:border-purple-500 pl-8 text-white" placeholder="Type game profile name query node...">
+                        <i class="fas fa-search absolute left-2.5 top-3.5 text-gray-500 text-xs"></i>
+                    </div>
+                </div>
+
+                <!-- Real-time Generated Grid List -->
+                <div id="game-search-results-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4 max-h-96 overflow-y-auto p-1">
+                    <p class="text-xs text-gray-500 italic">Awakening database indexing modules tracking arrays...</p>
+                </div>
+
+                <!-- Live Track Card Comment Modifying Terminal Frame Layer -->
+                <div id="target-game-comments-panel" class="hidden border-t border-slate-800/80 pt-4 space-y-3">
+                    <div class="flex justify-between items-center">
+                        <h4 id="comments-panel-title-string" class="text-xs font-bold font-orbitron text-amber-400 uppercase tracking-widest">Active Moderation Logs Box Target:</h4>
+                        <button onclick="document.getElementById('target-game-comments-panel').classList.add('hidden')" class="text-gray-500 hover:text-white text-xs font-bold font-orbitron">X CLOSE CONSOLE</button>
+                    </div>
+                    <div id="card-comments-terminal-logs-box" class="bg-[#060814] rounded-lg p-3 max-h-48 overflow-y-auto space-y-2 border border-slate-800 text-xs">
+                        <!-- Filled dynamically -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Daily Mission Controller Layer -->
+            <div id="daily-task-section" class="bg-[#0b0d19] border border-slate-800 p-6 rounded-xl shadow-lg flex flex-col justify-between">
+                <div>
+                    <h3 class="font-orbitron text-lg font-bold text-green-400 mb-1 flex items-center gap-2"><i class="fas fa-tasks"></i> Admin Daily Mission Hotline Controller</h3>
+                    <p class="text-xs text-gray-400 mb-4">Set dynamic targeted task requirements, links, and base64 image streams for verified activation layers.</p>
+                    <form id="admin-task-form" class="space-y-4">
+                        <div>
+                            <label class="block text-xs text-gray-400 mb-1">Unique Task ID (Change this to deploy a fresh new task)</label>
+                            <input id="task-id-input" type="text" class="w-full bg-[#161b22] border border-slate-700 rounded p-2 text-white text-xs focus:outline-none" placeholder="task_id_2026_01" required>
+                        </div>
+                        <div>
+                            <label class="block text-xs text-gray-400 mb-1">Task Description Instruction Context</label>
+                            <textarea id="task-desc-input" class="w-full bg-[#161b22] border border-slate-700 rounded p-2 text-white text-xs h-16 focus:outline-none" placeholder="Go to this link, subscribe, and take a screenshot to upload!" required></textarea>
+                        </div>
+                        <div>
+                            <label class="block text-xs text-gray-400 mb-1">Task Redirect URL Input Node</label>
+                            <input id="task-link-input" type="url" class="w-full bg-[#161b22] border border-slate-700 rounded p-2 text-white text-xs focus:outline-none" placeholder="https://youtube.com/c/AkiyaGamerZone">
+                        </div>
+                        <div class="bg-[#161b22] p-2 rounded border border-slate-700 space-y-1">
+                            <label class="block text-xs font-bold text-green-400">Task Banner Attachment Media Graphic</label>
+                            <input id="task-file-input" type="file" accept="image/*" class="w-full text-xs text-gray-400">
+                        </div>
+                        <button type="submit" class="w-full bg-green-600 hover:bg-green-500 text-white font-bold py-2 px-4 rounded font-orbitron transition text-xs">DEPLOY CONTROLLED MISSION FORCE</button>
+                    </form>
                 </div>
             </div>
 
@@ -367,6 +444,7 @@
 
         const ALLOWED_ADMIN_EMAIL = "kaviakiya@gmail.com"; 
         let myGrowthChart;
+        let globalGamesCache = {};
 
         // Base64 stream file reader helper function
         function getBase64(file) {
@@ -401,6 +479,7 @@
                     setupRealtimeVisitors();
                     listenLobbyChats();
                     listenPrivateSecretChats();
+                    cacheAndListenGamesRegistry();
                 } else {
                     document.getElementById('auth-error').classList.remove('hidden');
                     auth.signOut();
@@ -423,7 +502,7 @@
 
         window.addNewDownloadLinkField = function() {
             const container = document.getElementById('dynamic-links-container');
-            if(container.children.length >= 200) return alert("System block restriction reached: 200 link allocation capacity maximum limit.");
+            if(container.children.length >= 200) return alert("System restriction reached: 200 link allocation capacity limit.");
             
             const div = document.createElement('div');
             div.className = "flex gap-2 items-center link-entry-row mt-2";
@@ -437,6 +516,182 @@
                 <button type="button" onclick="this.parentElement.remove()" class="text-red-500 hover:text-red-400 font-bold px-1 text-xs">X</button>
             `;
             container.appendChild(div);
+        };
+
+        // Cache and Display Games Matrix Node
+        function cacheAndListenGamesRegistry() {
+            database.ref('games').on('value', snapshot => {
+                globalGamesCache = snapshot.val() || {};
+                executeLiveGameSearch(document.getElementById('game-matrix-search-bar').value);
+            });
+        }
+
+        window.executeLiveGameSearch = function(query) {
+            const container = document.getElementById('game-search-results-grid');
+            container.innerHTML = '';
+            const lowerQuery = query.toLowerCase().trim();
+
+            let matchedCount = 0;
+            Object.keys(globalGamesCache).forEach(slotKey => {
+                const game = globalGamesCache[slotKey];
+                if(lowerQuery && !slotKey.toLowerCase().includes(lowerQuery) && !game.name.toLowerCase().includes(lowerQuery)) {
+                    return;
+                }
+                matchedCount++;
+
+                // Collect metric statistics safely
+                const visitors = game.visitorsCount || 0;
+                const downloaders = game.downloadsCount || 0;
+                const likes = game.likesCount || 0;
+                const manualRating = game.manualRatingOverride || 0;
+                
+                // Automatically calculate rating up & down dynamically based on stats if manual override is missing
+                let calculatedRating = manualRating > 0 ? manualRating : 3.5;
+                if(manualRating === 0 && (visitors > 0 || downloaders > 0)) {
+                    let weight = (downloaders * 3) + likes;
+                    let factor = visitors > 0 ? (weight / visitors) : 1;
+                    calculatedRating = Math.min(5, Math.max(1, 3.0 + factor)).toFixed(1);
+                }
+
+                let reactionSum = 0;
+                if(game.reactionsMap) {
+                    Object.values(game.reactionsMap).forEach(v => reactionSum += v);
+                }
+
+                const div = document.createElement('div');
+                div.className = "bg-[#161b22] p-4 rounded-xl border border-slate-800 flex flex-col justify-between space-y-3";
+                div.innerHTML = `
+                    <div class="flex items-start gap-3">
+                        <img src="${game.image}" class="w-12 h-16 rounded object-cover bg-black border border-slate-700">
+                        <div class="flex-1 min-w-0">
+                            <h4 class="text-sm font-bold text-white truncate">${game.name}</h4>
+                            <p class="text-[11px] font-mono text-purple-400 font-bold">Slot: ${slotKey}</p>
+                            <p class="text-[11px] text-gray-400 truncate">${game.category} | ${game.size}</p>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-3 gap-1.5 text-[10px] text-center font-bold tracking-wide text-gray-300">
+                        <div class="bg-[#0b0d19] p-1 rounded"><i class="fas fa-eye text-blue-400"></i> Visits: ${visitors}</div>
+                        <div class="bg-[#0b0d19] p-1 rounded"><i class="fas fa-download text-green-400"></i> Dls: ${downloaders}</div>
+                        <div class="bg-[#0b0d19] p-1 rounded"><i class="fas fa-heart text-red-500"></i> Likes: ${likes}</div>
+                        <div class="bg-[#0b0d19] p-1 rounded"><i class="fas fa-smile text-amber-400"></i> Reacts: ${reactionSum}</div>
+                        <div class="bg-[#0b0d19] p-1 rounded col-span-2 text-amber-400"><i class="fas fa-star"></i> Calculated Rating: ${calculatedRating}★</div>
+                    </div>
+
+                    <div class="flex gap-2 text-xs pt-1">
+                        <button onclick="loadGameToFormForEditing('${slotKey}')" class="flex-1 bg-blue-600 hover:bg-blue-500 text-white font-bold py-1 px-2 rounded transition">EDIT CARD</button>
+                        <button onclick="openCommentsTerminalLogsConsole('${slotKey}')" class="flex-1 bg-amber-600 hover:bg-amber-500 text-white font-bold py-1 px-2 rounded transition">MOD COMMENTS</button>
+                        <button onclick="deleteEntireGameCardRegistryNode('${slotKey}')" class="bg-red-900/40 hover:bg-red-600 text-red-400 hover:text-white px-2 rounded transition"><i class="fas fa-trash"></i></button>
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+
+            if(matchedCount === 0) {
+                container.innerHTML = `<p class="text-xs text-gray-500 italic p-2">No matching registered game metrics nodes match query tracking index arrays.</p>`;
+            }
+        };
+
+        window.loadGameToFormForEditing = function(slotKey) {
+            const game = globalGamesCache[slotKey];
+            if(!game) return;
+
+            document.getElementById('game-slot').value = slotKey;
+            document.getElementById('game-name').value = game.name || '';
+            document.getElementById('game-category').value = game.category || 'Adventure';
+            document.getElementById('game-size').value = game.size || '';
+            document.getElementById('game-desc').value = game.description || '';
+            document.getElementById('game-trailer').value = game.trailerYoutubeId || '';
+            document.getElementById('game-manual-rating').value = game.manualRatingOverride || 0;
+            
+            document.getElementById('game-thumb').value = (game.image && !game.image.startsWith('data:')) ? game.image : '';
+            document.getElementById('game-banner-url').value = (game.banner && !game.banner.startsWith('data:')) ? game.banner : '';
+            
+            // Set screenshots urls safely if explicit string
+            document.getElementById('screenshot-1-url').value = (game.screenshots && game.screenshots[0] && !game.screenshots[0].startsWith('data:')) ? game.screenshots[0] : '';
+            document.getElementById('screenshot-2-url').value = (game.screenshots && game.screenshots[1] && !game.screenshots[1].startsWith('data:')) ? game.screenshots[1] : '';
+            document.getElementById('screenshot-3-url').value = (game.screenshots && game.screenshots[2] && !game.screenshots[2].startsWith('data:')) ? game.screenshots[2] : '';
+
+            if(game.specs && game.specs.min) {
+                document.getElementById('spec-os').value = game.specs.min.os || '';
+                document.getElementById('spec-cpu').value = game.specs.min.cpu || '';
+                document.getElementById('spec-ram').value = game.specs.min.ram || '';
+                document.getElementById('spec-vga').value = game.specs.min.vga || '';
+            }
+            if(game.specs && game.specs.recommended) {
+                document.getElementById('spec-rec-os').value = game.specs.recommended.os || '';
+                document.getElementById('spec-rec-cpu').value = game.specs.recommended.cpu || '';
+                document.getElementById('spec-rec-ram').value = game.specs.recommended.ram || '';
+                document.getElementById('spec-rec-vga').value = game.specs.recommended.vga || '';
+            }
+
+            // Render Dynamic Download Nodes Layout Links
+            const container = document.getElementById('dynamic-links-container');
+            container.innerHTML = '';
+            if(game.download_links && game.download_links.length > 0) {
+                game.download_links.forEach((link, idx) => {
+                    const div = document.createElement('div');
+                    div.className = "flex gap-2 items-center link-entry-row" + (idx > 0 ? " mt-2" : "");
+                    div.innerHTML = `
+                        <select class="link-type bg-[#0b0d19] text-white border border-slate-700 rounded text-xs p-2">
+                            <option value="direct" ${link.platformType === 'direct' ? 'selected' : ''}>Direct Download</option>
+                            <option value="torrent" ${link.platformType === 'torrent' ? 'selected' : ''}>Torrent</option>
+                            <option value="cloud" ${link.platformType === 'cloud' ? 'selected' : ''}>Cloud Extra</option>
+                        </select>
+                        <input type="url" value="${link.href || ''}" class="link-url flex-1 bg-[#0b0d19] border border-slate-700 rounded text-xs p-2 text-white" placeholder="https://download-part-node.com/file" required>
+                        ${idx > 0 ? `<button type="button" onclick="this.parentElement.remove()" class="text-red-500 hover:text-red-400 font-bold px-1 text-xs">X</button>` : ''}
+                    `;
+                    container.appendChild(div);
+                });
+            } else {
+                addNewDownloadLinkField();
+            }
+
+            document.getElementById('description-char-counter').innerText = (game.description || '').length + " / 5000";
+            location.hash = "#games-section";
+        };
+
+        window.openCommentsTerminalLogsConsole = function(slotKey) {
+            const game = globalGamesCache[slotKey];
+            if(!game) return;
+
+            document.getElementById('comments-panel-title-string').innerText = `Active Moderation Logs Box Target: ${game.name}`;
+            const container = document.getElementById('card-comments-terminal-logs-box');
+            container.innerHTML = '';
+            document.getElementById('target-game-comments-panel').classList.remove('hidden');
+
+            if(!game.commentsMap) {
+                container.innerHTML = `<p class="text-gray-500 italic">No localized user remarks comments matrices mapped on this game directory yet.</p>`;
+                return;
+            }
+
+            Object.keys(game.commentsMap).forEach(commentId => {
+                const c = game.commentsMap[commentId];
+                const row = document.createElement('div');
+                row.className = "flex justify-between items-center bg-[#0b0d19] p-2 border border-slate-800 rounded";
+                row.innerHTML = `
+                    <div class="truncate pr-4">
+                        <span class="text-blue-400 font-bold">${c.senderName || 'Anonymous'}:</span>
+                        <span class="text-gray-300 ml-1 font-sans">${c.textMessage || ''}</span>
+                    </div>
+                    <button onclick="deleteSingleCardCommentSignatureNode('${slotKey}', '${commentId}')" class="text-red-500 hover:text-red-400 font-bold tracking-wider text-[10px] shrink-0">DELETE</button>
+                `;
+                container.appendChild(row);
+            });
+        };
+
+        window.deleteSingleCardCommentSignatureNode = function(slotKey, commentId) {
+            if(confirm("Confirm removal instruction command on targeted game comments node entry?")) {
+                database.ref(`games/${slotKey}/commentsMap/${commentId}`).remove()
+                .then(() => openCommentsTerminalLogsConsole(slotKey))
+                .catch(err => alert(err.message));
+            }
+        };
+
+        window.deleteEntireGameCardRegistryNode = function(slotKey) {
+            if(confirm(`🚨 CRITICAL WARNING: Complete destructive erasure sequence planned for slot identifier: [${slotKey}]. Confirm?`)) {
+                database.ref(`games/${slotKey}`).remove().catch(err => alert(err.message));
+            }
         };
 
         function listenLobbyChats() {
@@ -650,7 +905,7 @@
                 }
             };
 
-            // Enhanced Game Submit Engine
+            // Enhanced Game Submit Engine Block
             document.getElementById('game-form').addEventListener('submit', async (e) => {
                 e.preventDefault();
                 const slot = document.getElementById('game-slot').value.trim();
@@ -664,6 +919,16 @@
                 let bannerUrl = document.getElementById('game-banner-url').value.trim();
                 const bannerFile = document.getElementById('game-banner-file').files[0];
                 if(bannerFile) { bannerUrl = await getBase64(bannerFile); }
+
+                // Processing Up to 3 Media Screenshots Elements Sequence Array
+                const screenshotPromises = [1, 2, 3].map(async (idx) => {
+                    let sUrl = document.getElementById(`screenshot-${idx}-url`).value.trim();
+                    const sFile = document.getElementById(`screenshot-${idx}-file`).files[0];
+                    if(sFile) { sUrl = await getBase64(sFile); }
+                    return sUrl || "";
+                });
+                const screenshotsArray = await Promise.all(screenshotPromises);
+                const optimizedScreenshots = screenshotsArray.filter(item => item !== "");
 
                 // Download Links Mapping
                 const linksArray = [];
@@ -680,20 +945,36 @@
                     }
                 });
 
+                const existingRecord = globalGamesCache[slot] || {};
+
                 // Structured Scheme Array Node Payload
                 const gameData = {
                     category: document.getElementById('game-category').value.trim(),
                     name: document.getElementById('game-name').value.trim(),
                     size: document.getElementById('game-size').value.trim(),
                     description: document.getElementById('game-desc').value.trim(),
-                    image: thumbUrl || 'https://via.placeholder.com/300x400',
-                    banner: bannerUrl || 'https://via.placeholder.com/1920x1080',
+                    image: thumbUrl || existingRecord.image || 'https://via.placeholder.com/300x400',
+                    banner: bannerUrl || existingRecord.banner || 'https://via.placeholder.com/1920x1080',
+                    trailerYoutubeId: document.getElementById('game-trailer').value.trim(),
+                    manualRatingOverride: parseFloat(document.getElementById('game-manual-rating').value) || 0,
+                    screenshots: optimizedScreenshots,
+                    visitorsCount: existingRecord.visitorsCount || 0,
+                    downloadsCount: existingRecord.downloadsCount || 0,
+                    likesCount: existingRecord.likesCount || 0,
+                    reactionsMap: existingRecord.reactionsMap || { "👍":0, "🔥":0, "😲":0, "🎮":0, "👑":0 },
+                    commentsMap: existingRecord.commentsMap || null,
                     specs: {
                         min: {
                             os: document.getElementById('spec-os').value || "Windows 10 (64-bit)",
                             cpu: document.getElementById('spec-cpu').value || "Intel Core i5 / AMD Ryzen 5",
                             ram: document.getElementById('spec-ram').value || "8 GB RAM",
                             vga: document.getElementById('spec-vga').value || "NVIDIA GTX / AMD Radeon"
+                        },
+                        recommended: {
+                            os: document.getElementById('spec-rec-os').value || "Windows 10/11 (64-bit)",
+                            cpu: document.getElementById('spec-rec-cpu').value || "Intel Core i7 / AMD Ryzen 7",
+                            ram: document.getElementById('spec-rec-ram').value || "16 GB RAM",
+                            vga: document.getElementById('spec-rec-vga').value || "NVIDIA RTX / AMD Radeon RX"
                         }
                     },
                     download_links: linksArray
