@@ -472,9 +472,12 @@
         });
 
         function setupRealtimeVisitors() {
+            // Admin වත් online ලිස්ට් එකට එකතු කරනවා
             const activeUserRef = database.ref('status/usersOnline/' + auth.currentUser.uid);
             activeUserRef.onDisconnect().remove();
             activeUserRef.set({ timestamp: firebase.database.ServerValue.TIMESTAMP });
+            
+            // මුළු සයිට් එකේම Live ඉන්න සියලුම දෙනාගේ ගණන (Snapshot එකෙන්) real-time අප්ඩේට් කරනවා
             database.ref('status/usersOnline').on('value', snapshot => {
                 document.getElementById('stat-live-users').innerText = snapshot.numChildren() || 1;
             });
@@ -884,7 +887,7 @@
                 };
 
                 if(editId) {
-                    database.ref(`trendingBanners/${editId}`).set(dataPayload).then(() => {
+                    database.ref(`trending_banners/${editId}`).set(dataPayload).then(() => {
                         alert("Trending Banner Node updated successfully.");
                         cancelTrendingEdit();
                     });
