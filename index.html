@@ -359,6 +359,7 @@
                 <h3 class="font-orbitron text-lg font-bold text-white flex items-center gap-2"><i class="fas fa-fire text-red-500"></i> Manage Trending Slider Interface Display</h3>
                 <form id="trending-banner-form" class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div class="space-y-3">
+                        <input type="hidden" id="trend-edit-id">
                         <div>
                             <label class="block text-xs text-gray-400 mb-1">Epic Game Banner Title</label>
                             <input id="trend-title" type="text" class="w-full bg-[#161b22] border border-slate-700 rounded p-2 text-white text-sm focus:outline-none" placeholder="Cyberpunk 2077 Phantom Liberty" required>
@@ -378,7 +379,10 @@
                             <input id="trend-image-url" type="url" class="w-full bg-[#0b0d19] border border-slate-700 rounded p-1 text-white text-xs focus:outline-none" placeholder="Paste structural image URL path">
                             <input id="trend-image-file" type="file" accept="image/*" class="w-full text-xs text-gray-500 mt-1">
                         </div>
-                        <button type="submit" class="w-full bg-red-600 hover:bg-red-500 text-white font-bold py-2 px-4 rounded font-orbitron transition text-sm">UPDATE TRENDING BACKGROUND STREAM</button>
+                        <div class="flex gap-2">
+                            <button type="submit" id="btn-trend-submit" class="flex-1 bg-red-600 hover:bg-red-500 text-white font-bold py-2 px-4 rounded font-orbitron transition text-sm">UPDATE TRENDING BACKGROUND STREAM</button>
+                            <button type="button" id="btn-trend-cancel" onclick="cancelTrendingEdit()" class="hidden bg-slate-700 hover:bg-slate-600 text-white font-bold py-2 px-4 rounded font-orbitron transition text-sm">CANCEL</button>
+                        </div>
                     </div>
                 </form>
 
@@ -454,6 +458,7 @@
         let myGrowthChart;
         let globalGamesCache = {};
         let globalUsersCache = {};
+        let globalTrendingCache = {};
         let userSearchQuery = "";
 
         function getBase64(file) {
@@ -615,7 +620,8 @@
         window.toggleGameLockStatus = function(slotKey, currentStatus) {
             const confirmationMsg = currentStatus ? "Unlock this game card node registry?" : "Lock this game card node? Users will be blocked from accessing details.";
             if(confirm(confirmationMsg)) {
-                database.ref(`games/${slotKey}/isLocked`).set(!currentStatus);
+                // FIXED: Direct Boolean Update logic mapped seamlessly to Realtime Database
+                database.ref(`games/${slotKey}`).update({ isLocked: !currentStatus });
             }
         };
 
@@ -864,15 +870,18 @@
             database.ref('trending_banners').on('value', snapshot => {
                 const box = document.getElementById('admin-trending-banners-list-box');
                 box.innerHTML = '';
+                globalTrendingCache = snapshot.val() || {};
+                
                 if(!snapshot.exists()) {
                     box.innerHTML = '<p class="text-xs text-gray-500 italic">No trending banners mapped inside database structural arrays.</p>';
                     return;
                 }
-                snapshot.forEach(child => {
-                    const id = child.key;
-                    const banner = child.val();
+                
+                // Sorting banners chronologically (Newest first) so they update flawlessly on the UI
+                Object.keys(globalTrendingCache).sort((a,b) => (globalTrendingCache[b].timestamp || 0) - (globalTrendingCache[a].timestamp || 0)).forEach(id => {
+                    const banner = globalTrendingCache[id];
                     const div = document.createElement('div');
-                    div.className = "bg-[#161b22] border border-slate-800 p-2 rounded flex flex-col justify-between text-xs";
+                    div.className = "bg-[#161b22] border border-slate-800 p-3 rounded flex flex-col justify-between text-xs";
                     div.innerHTML = `
                         <div class="flex gap-2 items-start">
                             <img src="${banner.image || 'https://via.placeholder.com/150x80'}" class="w-16 h-10 object-cover rounded bg-black">
@@ -881,16 +890,40 @@
                                 <p class="text-gray-400 text-[10px] truncate">${banner.description || ''}</p>
                             </div>
                         </div>
-                        <button onclick="deleteTrendingBannerNode('${id}')" class="w-full bg-red-900/40 hover:bg-red-600 text-red-400 hover:text-white font-bold py-1 px-2 rounded mt-2 transition text-[10px] uppercase font-orbitron">Delete Banner</button>
+                        <div class="flex gap-2 mt-2">
+                            <button onclick="loadTrendingBannerToForm('${id}')" class="flex-1 bg-blue-600 hover:bg-blue-500 text-white font-bold py-1 px-2 rounded transition text-[10px] uppercase font-orbitron">Edit</button>
+                            <button onclick="deleteTrendingBannerNode('${id}')" class="flex-1 bg-red-900/40 hover:bg-red-600 text-red-400 hover:text-white font-bold py-1 px-2 rounded transition text-[10px] uppercase font-orbitron">Delete</button>
+                        </div>
                     `;
                     box.appendChild(div);
                 });
             });
         }
 
+        window.loadTrendingBannerToForm = function(id) {
+            const banner = globalTrendingCache[id];
+            if(!banner) return;
+            document.getElementById('trend-edit-id').value = id;
+            document.getElementById('trend-title').value = banner.title || '';
+            document.getElementById('trend-desc').value = banner.description || '';
+            document.getElementById('trend-note').value = banner.note || '';
+            document.getElementById('trend-image-url').value = (!banner.image || banner.image.startsWith('data:')) ? '' : banner.image;
+            document.getElementById('btn-trend-submit').innerText = "SAVE CHANGED BANNER NODE";
+            document.getElementById('btn-trend-cancel').classList.remove('hidden');
+        };
+
+        window.cancelTrendingEdit = function() {
+            document.getElementById('trend-edit-id').value = '';
+            document.getElementById('trending-banner-form').reset();
+            document.getElementById('btn-trend-submit').innerText = "UPDATE TRENDING BACKGROUND STREAM";
+            document.getElementById('btn-trend-cancel').classList.add('hidden');
+        };
+
         window.deleteTrendingBannerNode = function(id) {
             if(confirm("Erase this trending highlight banner element layout from global carousel?")) {
-                database.ref(`trending_banners/${id}`).remove();
+                database.ref(`trending_banners/${id}`).remove().then(() => {
+                    if(document.getElementById('trend-edit-id').value === id) cancelTrendingEdit();
+                });
             }
         };
 
@@ -907,23 +940,38 @@
                 }).then(() => { alert("Controlled task node metrics updated."); document.getElementById('admin-task-form').reset(); });
             });
 
-            // Trending Banner Form Core Execution Module
+            // FIXED & DYNAMICALLY UPDATED: Trending Banner Module with precise Overwrite/Edit configuration
             document.getElementById('trending-banner-form').addEventListener('submit', async (e) => {
                 e.preventDefault();
+                const editId = document.getElementById('trend-edit-id').value;
                 let imgUrl = document.getElementById('trend-image-url').value.trim();
                 const imgFile = document.getElementById('trend-image-file').files[0];
-                if(imgFile) imgUrl = await getBase64(imgFile);
+                
+                if(imgFile) {
+                    imgUrl = await getBase64(imgFile);
+                } else if(editId && !imgUrl && globalTrendingCache[editId]) {
+                    imgUrl = globalTrendingCache[editId].image;
+                }
 
-                database.ref('trending_banners').push({
+                const dataPayload = {
                     title: document.getElementById('trend-title').value.trim(),
                     description: document.getElementById('trend-desc').value.trim(),
                     note: document.getElementById('trend-note').value.trim(),
                     image: imgUrl || 'https://via.placeholder.com/1920x1080',
                     timestamp: firebase.database.ServerValue.TIMESTAMP
-                }).then(() => {
-                    alert("Trending Background Node Stream Uploaded Successfully.");
-                    document.getElementById('trending-banner-form').reset();
-                });
+                };
+
+                if(editId) {
+                    database.ref(`trending_banners/${editId}`).set(dataPayload).then(() => {
+                        alert("Trending Banner Node updated successfully.");
+                        cancelTrendingEdit();
+                    });
+                } else {
+                    database.ref('trending_banners').push(dataPayload).then(() => {
+                        alert("Trending Background Node Stream Uploaded Successfully.");
+                        document.getElementById('trending-banner-form').reset();
+                    });
+                }
             });
 
             database.ref('users').on('value', snapshot => {
@@ -950,7 +998,6 @@
                 let bannerUrl = document.getElementById('game-banner-url').value.trim();
                 const bannerFile = document.getElementById('game-banner-file').files[0]; if(bannerFile) bannerUrl = await getBase64(bannerFile);
 
-                // FIXED: Capture Extended Media Screenshots Array (Maximum 3 Snapshots Allocated)
                 let scr1 = document.getElementById('screenshot-1-url').value.trim();
                 const scr1File = document.getElementById('screenshot-1-file').files[0]; if(scr1File) scr1 = await getBase64(scr1File);
                 let scr2 = document.getElementById('screenshot-2-url').value.trim();
