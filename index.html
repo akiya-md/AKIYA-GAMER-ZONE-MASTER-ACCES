@@ -884,7 +884,7 @@
                 };
 
                 if(editId) {
-                    database.ref(`trending_banners/${editId}`).set(dataPayload).then(() => {
+                    database.ref(`trendingBanners/${editId}`).set(dataPayload).then(() => {
                         alert("Trending Banner Node updated successfully.");
                         cancelTrendingEdit();
                     });
