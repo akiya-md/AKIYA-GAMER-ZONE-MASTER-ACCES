@@ -4,23 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AGZ Control Center - Admin Dashboard</title>
-
     <link class="rounded-full" rel="icon" type="image/jpeg" href="MY GAMING SITE OFFICIAL LOGO.jpg">
-    
-    <!-- Google Fonts & Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
-    <!-- Chart.js for Growth Bar Graph -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
     <style>
-        body {
-            font-family: 'Rajdhani', sans-serif;
-            background-color: #060814;
-            color: #e2e8f0;
-        }
+        body { font-family: 'Rajdhani', sans-serif; background-color: #060814; color: #e2e8f0; }
         .font-orbitron { font-family: 'Orbitron', sans-serif; }
         .neon-glow { box-shadow: 0 0 20px rgba(59, 130, 246, 0.3); }
         .neon-text-green { text-shadow: 0 0 8px rgba(34, 197, 94, 0.6); }
@@ -45,7 +35,6 @@
 
     <!-- Main Dashboard UI -->
     <div id="admin-dashboard" class="hidden flex-1 flex flex-col lg:flex-row">
-        
         <!-- Sidebar Navigation -->
         <aside class="w-full lg:w-64 bg-[#0b0d19] border-r border-slate-800/60 p-6 flex flex-col justify-between">
             <div>
@@ -56,7 +45,6 @@
                         <span class="text-xs text-green-400 font-bold neon-text-green">● SECURE CORE v3.0</span>
                     </div>
                 </div>
-                
                 <nav class="space-y-2">
                     <button class="w-full text-left bg-slate-800 text-white font-semibold py-3 px-4 rounded-lg flex items-center gap-3 transition"><i class="fas fa-chart-pie text-blue-500"></i> Dashboard Overview</button>
                     <a href="#games-section" class="w-full text-left text-gray-400 hover:bg-slate-800/50 hover:text-white py-3 px-4 rounded-lg flex items-center gap-3 transition"><i class="fas fa-gamepad"></i> Game Catalog Control</a>
@@ -68,7 +56,6 @@
                     <a href="#users-section" class="w-full text-left text-gray-400 hover:bg-slate-800/50 hover:text-white py-3 px-4 rounded-lg flex items-center gap-3 transition"><i class="fas fa-users"></i> Users & Analytics</a>
                 </nav>
             </div>
-            
             <div class="pt-6 border-t border-slate-800 flex items-center justify-between">
                 <div class="flex items-center gap-2">
                     <img id="admin-avatar" class="w-8 h-8 rounded-full border border-blue-500" src="" alt="Admin">
@@ -80,8 +67,7 @@
 
         <!-- Main Content Area -->
         <main class="flex-1 p-6 lg:p-10 space-y-8 overflow-y-auto max-h-screen">
-            
-            <!-- Metrics -->
+            <!-- Metrics Panels -->
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 <div class="bg-[#0b0d19] border border-green-500/20 p-6 rounded-xl flex items-center justify-between shadow-lg">
                     <div>
@@ -113,7 +99,7 @@
                 </div>
             </div>
 
-            <!-- Content Grid Forms -->
+            <!-- Game Card Form Section -->
             <div id="games-section" class="grid grid-cols-1 gap-8">
                 <div class="bg-[#0b0d19] border border-slate-800 p-6 rounded-xl shadow-lg">
                     <h3 class="font-orbitron text-lg font-bold text-white mb-4 flex items-center gap-2"><i class="fas fa-plus-circle text-blue-500"></i> Deploy / Edit Game Card Registry Node</h3>
@@ -134,7 +120,7 @@
                                 </select>
                             </div>
                             <div>
-                                <label class="block text-xs text-gray-400 mb-1">Select Existing Slot (Or Create New Auto-Generated)</label>
+                                <label class="block text-xs text-gray-400 mb-1">Select Existing Slot</label>
                                 <select id="category-slots-dropdown" onchange="handleSlotSelectionChange(this.value)" class="w-full bg-[#161b22] border border-slate-700 rounded p-2 text-white focus:outline-none focus:border-blue-500">
                                     <option value="__NEW__">-- Auto Generate New Slot --</option>
                                 </select>
@@ -155,40 +141,37 @@
                                 <input id="game-size" type="text" class="w-full bg-[#161b22] border border-slate-700 rounded p-2 text-white focus:outline-none focus:border-blue-500" placeholder="65 GB" required>
                             </div>
                             <div>
-                                <label class="block text-xs text-gray-400 mb-1">YouTube Trailer ID or Complete URL</label>
-                                <input id="game-trailer" type="text" class="w-full bg-[#161b22] border border-slate-700 rounded p-2 text-white focus:outline-none focus:border-blue-500" placeholder="e.g.,dQw4w9WgXcQ">
+                                <label class="block text-xs text-gray-400 mb-1">YouTube Trailer ID or URL</label>
+                                <input id="game-trailer" type="text" class="w-full bg-[#161b22] border border-slate-700 rounded p-2 text-white focus:outline-none focus:border-blue-500" placeholder="e.g., dQw4w9WgXcQ">
                             </div>
                         </div>
 
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
-                                <label class="block text-xs text-gray-400 mb-1">Manual Rating Control Override (1 - 5 Stars / Leave 0 for auto)</label>
+                                <label class="block text-xs text-gray-400 mb-1">Manual Rating Override (1-5)</label>
                                 <input id="game-manual-rating" type="number" step="0.1" min="0" max="5" class="w-full bg-[#161b22] border border-slate-700 rounded p-2 text-white focus:outline-none focus:border-blue-500" value="0">
                             </div>
                             <div>
-                                <label class="block text-xs text-amber-400 font-bold mb-1">Card Specific Notification News Alert Banner Text</label>
-                                <input id="game-alert-message" type="text" class="w-full bg-[#161b22] border border-slate-700 rounded p-2 text-white text-xs focus:outline-none focus:border-amber-500" placeholder="Type micro-announcements specific to this game card layout context node...">
+                                <label class="block text-xs text-amber-400 font-bold mb-1">Card Micro-Announcements Alert Banner Text</label>
+                                <input id="game-alert-message" type="text" class="w-full bg-[#161b22] border border-slate-700 rounded p-2 text-white text-xs focus:outline-none focus:border-amber-500" placeholder="Type micro-announcements...">
                             </div>
                         </div>
                         
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div class="bg-[#161b22] p-3 rounded border border-slate-700 space-y-2">
-                                <label class="block text-xs font-bold text-blue-400">Game Card Graphic Media Thumbnail (Photo)</label>
-                                <input id="game-thumb" type="url" class="w-full bg-[#0b0d19] border border-slate-700 rounded p-2 text-white text-xs focus:outline-none" placeholder="Paste Image URL Layout Link">
-                                <div class="text-center text-[10px] text-gray-500 font-bold">OR CHOOSE LOCAL FILE STORAGE</div>
+                                <label class="block text-xs font-bold text-blue-400">Game Thumbnail Image URL</label>
+                                <input id="game-thumb" type="url" class="w-full bg-[#0b0d19] border border-slate-700 rounded p-2 text-white text-xs focus:outline-none" placeholder="Paste Thumbnail Link">
                                 <input id="game-thumb-file" type="file" accept="image/*" class="w-full text-xs text-gray-400">
                             </div>
-
                             <div class="bg-[#161b22] p-3 rounded border border-slate-700 space-y-2">
-                                <label class="block text-xs font-bold text-red-400">Hero Banner Background Image</label>
-                                <input id="game-banner-url" type="url" class="w-full bg-[#0b0d19] border border-slate-700 rounded p-2 text-white text-xs focus:outline-none" placeholder="Paste Banner Image URL Layout Link">
-                                <div class="text-center text-[10px] text-gray-500 font-bold">OR CHOOSE LOCAL FILE STORAGE</div>
+                                <label class="block text-xs font-bold text-red-400">Hero Banner Background Image URL</label>
+                                <input id="game-banner-url" type="url" class="w-full bg-[#0b0d19] border border-slate-700 rounded p-2 text-white text-xs focus:outline-none" placeholder="Paste Banner Link">
                                 <input id="game-banner-file" type="file" accept="image/*" class="w-full text-xs text-gray-400">
                             </div>
                         </div>
 
                         <div class="bg-[#111424] p-4 rounded-xl border border-purple-900/40 space-y-3">
-                            <label class="block text-xs font-bold text-purple-400 uppercase font-orbitron tracking-wider">Extended Media Screenshots Array (Maximum 3 Snapshots Allocated)</label>
+                            <label class="block text-xs font-bold text-purple-400 uppercase font-orbitron tracking-wider">Extended Media Screenshots Array (Max 3)</label>
                             <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
                                 <div class="p-2 bg-[#161b22] rounded border border-slate-700">
                                     <span class="block text-[10px] text-gray-400 mb-1">Screenshot 1 (URL/File)</span>
@@ -210,32 +193,32 @@
 
                         <div>
                             <div class="flex justify-between items-center mb-1">
-                                <label class="text-xs text-gray-400">Game Main Rich Context Text Layout (Supports up to 5,000 characters)</label>
+                                <label class="text-xs text-gray-400">Game Main Description Context</label>
                                 <span id="description-char-counter" class="text-[10px] font-mono text-blue-400">0 / 5000</span>
                             </div>
-                            <textarea id="game-desc" maxlength="5000" oninput="document.getElementById('description-char-counter').innerText = this.value.length + ' / 5000'" class="w-full bg-[#161b22] border border-slate-700 rounded p-2.5 text-white text-xs h-36 focus:outline-none focus:border-blue-500" placeholder="Write comprehensive breakdown structure layouts..." required></textarea>
+                            <textarea id="game-desc" maxlength="5000" oninput="document.getElementById('description-char-counter').innerText = this.value.length + ' / 5000'" class="w-full bg-[#161b22] border border-slate-700 rounded p-2.5 text-white text-xs h-36 focus:outline-none focus:border-blue-500" placeholder="Write comprehensive description..." required></textarea>
                         </div>
 
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div class="bg-[#161b22] p-4 rounded-xl border border-slate-800 space-y-2 text-xs">
-                                <div class="font-bold text-green-400 mb-1 uppercase font-orbitron">System Requirements (Minimum Configuration)</div>
-                                <input id="spec-os" type="text" placeholder="OS (e.g., Windows 10 x64)" class="w-full bg-[#0b0d19] p-2 border border-slate-700 rounded text-white focus:outline-none mb-1">
-                                <input id="spec-cpu" type="text" placeholder="CPU Architecture Node" class="w-full bg-[#0b0d19] p-2 border border-slate-700 rounded text-white focus:outline-none mb-1">
-                                <input id="spec-ram" type="text" placeholder="RAM Capacity Limit" class="w-full bg-[#0b0d19] p-2 border border-slate-700 rounded text-white focus:outline-none mb-1">
-                                <input id="spec-vga" type="text" placeholder="VGA / Graphics Processing Core" class="w-full bg-[#0b0d19] p-2 border border-slate-700 rounded text-white focus:outline-none">
+                                <div class="font-bold text-green-400 mb-1 uppercase font-orbitron">System Requirements (Minimum)</div>
+                                <input id="spec-os" type="text" placeholder="OS" class="w-full bg-[#0b0d19] p-2 border border-slate-700 rounded text-white focus:outline-none mb-1">
+                                <input id="spec-cpu" type="text" placeholder="CPU" class="w-full bg-[#0b0d19] p-2 border border-slate-700 rounded text-white focus:outline-none mb-1">
+                                <input id="spec-ram" type="text" placeholder="RAM" class="w-full bg-[#0b0d19] p-2 border border-slate-700 rounded text-white focus:outline-none mb-1">
+                                <input id="spec-vga" type="text" placeholder="VGA" class="w-full bg-[#0b0d19] p-2 border border-slate-700 rounded text-white focus:outline-none">
                             </div>
                             <div class="bg-[#161b22] p-4 rounded-xl border border-slate-800 space-y-2 text-xs">
-                                <div class="font-bold text-blue-400 mb-1 uppercase font-orbitron">System Requirements (Recommended Apex Grid)</div>
-                                <input id="spec-rec-os" type="text" placeholder="OS (e.g., Windows 11 Pro)" class="w-full bg-[#0b0d19] p-2 border border-slate-700 rounded text-white focus:outline-none mb-1">
-                                <input id="spec-rec-cpu" type="text" placeholder="CPU Recommended Core" class="w-full bg-[#0b0d19] p-2 border border-slate-700 rounded text-white focus:outline-none mb-1">
-                                <input id="spec-rec-ram" type="text" placeholder="RAM Recommended Unit" class="w-full bg-[#0b0d19] p-2 border border-slate-700 rounded text-white focus:outline-none mb-1">
-                                <input id="spec-rec-vga" type="text" placeholder="VGA Core Selection Processing Card" class="w-full bg-[#0b0d19] p-2 border border-slate-700 rounded text-white focus:outline-none">
+                                <div class="font-bold text-blue-400 mb-1 uppercase font-orbitron">System Requirements (Recommended)</div>
+                                <input id="spec-rec-os" type="text" placeholder="OS" class="w-full bg-[#0b0d19] p-2 border border-slate-700 rounded text-white focus:outline-none mb-1">
+                                <input id="spec-rec-cpu" type="text" placeholder="CPU" class="w-full bg-[#0b0d19] p-2 border border-slate-700 rounded text-white focus:outline-none mb-1">
+                                <input id="spec-rec-ram" type="text" placeholder="RAM" class="w-full bg-[#0b0d19] p-2 border border-slate-700 rounded text-white focus:outline-none mb-1">
+                                <input id="spec-rec-vga" type="text" placeholder="VGA" class="w-full bg-[#0b0d19] p-2 border border-slate-700 rounded text-white focus:outline-none">
                             </div>
                         </div>
 
                         <div class="bg-[#161b22] p-4 rounded border border-slate-700 space-y-3">
                             <div class="flex justify-between items-center">
-                                <label class="block text-xs font-bold text-purple-400">Multi-Part Direct Setup Layer Links Engine (Categorized Node Links)</label>
+                                <label class="block text-xs font-bold text-purple-400">Download Nodes Configurations Grid Links Engine</label>
                                 <button type="button" onclick="addNewDownloadLinkField()" class="bg-purple-600/30 text-purple-300 hover:bg-purple-600 text-xs py-1 px-2 rounded transition font-bold">+ Add Link Node</button>
                             </div>
                             <div id="dynamic-links-container" class="space-y-2 max-h-48 overflow-y-auto pr-1">
@@ -245,7 +228,7 @@
                                         <option value="torrent">Torrent</option>
                                         <option value="cloud">Cloud Extra</option>
                                     </select>
-                                    <input type="url" class="link-url flex-1 bg-[#0b0d19] border border-slate-700 rounded text-xs p-2 text-white" placeholder="https://download-part-node.com/file" required>
+                                    <input type="url" class="link-url flex-1 bg-[#0b0d19] border border-slate-700 rounded text-xs p-2 text-white" placeholder="https://download-link.com" required>
                                 </div>
                             </div>
                         </div>
@@ -255,25 +238,24 @@
                 </div>
             </div>
 
-            <!-- Real-time Live Cards Metrics and Comment Filtering Section -->
+            <!-- Game Matrix Roster Search Engine -->
             <div id="games-lookup-section" class="bg-[#0b0d19] border border-slate-800 p-6 rounded-xl shadow-lg space-y-4">
                 <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                     <div>
-                        <h3 class="font-orbitron text-lg font-bold text-white flex items-center gap-2"><i class="fas fa-search text-purple-500"></i> Interactive Game Roster Database Terminal Lookup</h3>
-                        <p class="text-xs text-gray-400">Search game items, review total reaction loads, metrics parameters, and wipe localized abusive user logs.</p>
+                        <h3 class="font-orbitron text-lg font-bold text-white flex items-center gap-2"><i class="fas fa-search text-purple-500"></i> Game Roster Terminal Lookup</h3>
+                        <p class="text-xs text-gray-400">Search game items, status, reaction logs data stream nodes.</p>
                     </div>
                     <div class="w-full md:w-72 relative">
-                        <input id="game-matrix-search-bar" type="text" oninput="executeLiveGameSearch(this.value)" class="w-full bg-[#161b22] text-xs p-2.5 rounded-lg border border-slate-700 focus:outline-none focus:border-purple-500 pl-8 text-white" placeholder="Type game profile name query node...">
+                        <input id="game-matrix-search-bar" type="text" oninput="executeLiveGameSearch(this.value)" class="w-full bg-[#161b22] text-xs p-2.5 rounded-lg border border-slate-700 focus:outline-none focus:border-purple-500 pl-8 text-white" placeholder="Type game profile name...">
                         <i class="fas fa-search absolute left-2.5 top-3.5 text-gray-500 text-xs"></i>
                     </div>
                 </div>
 
-                <!-- Real-time Generated Grid List -->
                 <div id="game-search-results-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4 max-h-96 overflow-y-auto p-1">
-                    <p class="text-xs text-gray-500 italic">Awakening database indexing modules tracking arrays...</p>
+                    <p class="text-xs text-gray-500 italic">Awakening database indexing modules...</p>
                 </div>
 
-                <!-- Live Track Card Comment Modifying Terminal Frame Layer -->
+                <!-- Comment Mod Terminal Frame Layer -->
                 <div id="target-game-comments-panel" class="hidden border-t border-slate-800/80 pt-4 space-y-3">
                     <div class="flex justify-between items-center">
                         <h4 id="comments-panel-title-string" class="text-xs font-bold font-orbitron text-amber-400 uppercase tracking-widest">Active Moderation Logs Box Target:</h4>
@@ -284,9 +266,8 @@
                     </div>
                     <div id="card-comments-terminal-logs-box" class="bg-[#060814] rounded-lg p-3 max-h-64 overflow-y-auto space-y-2 border border-slate-800 text-xs"></div>
                     
-                    <!-- Admin Reply Management Terminal Sub-System -->
                     <div id="admin-comment-reply-container" class="hidden bg-[#121622] p-3 rounded-lg border border-slate-700 mt-2 space-y-2">
-                        <span class="text-xs font-bold text-amber-400 font-orbitron"><i class="fas fa-reply"></i> Submit Certified Reply to Selected Commentary Node</span>
+                        <span class="text-xs font-bold text-amber-400 font-orbitron"><i class="fas fa-reply"></i> Submit Certified Reply</span>
                         <input type="hidden" id="reply-target-comment-id">
                         <input type="hidden" id="reply-target-game-slot">
                         <textarea id="admin-comment-reply-text" class="w-full bg-[#060814] p-2 text-white border border-slate-700 rounded text-xs focus:outline-none" placeholder="Type administrative response node content here..."></textarea>
@@ -298,84 +279,74 @@
                 </div>
             </div>
 
-            <!-- Existing UI Blocks Kept Intact Layout Arrays -->
-            <div id="daily-task-section" class="bg-[#0b0d19] border border-slate-800 p-6 rounded-xl shadow-lg flex flex-col justify-between">
-                <div>
-                    <h3 class="font-orbitron text-lg font-bold text-green-400 mb-1 flex items-center gap-2"><i class="fas fa-tasks"></i> Admin Daily Mission Hotline Controller</h3>
-                    <p class="text-xs text-gray-400 mb-4">Set dynamic targeted task requirements, links, and base64 image streams for verified activation layers.</p>
-                    <form id="admin-task-form" class="space-y-4">
-                        <div>
-                            <label class="block text-xs text-gray-400 mb-1">Unique Task ID</label>
-                            <input id="task-id-input" type="text" class="w-full bg-[#161b22] border border-slate-700 rounded p-2 text-white text-xs focus:outline-none" placeholder="task_id_2026_01" required>
-                        </div>
-                        <div>
-                            <label class="block text-xs text-gray-400 mb-1">Task Description Instruction Context</label>
-                            <textarea id="task-desc-input" class="w-full bg-[#161b22] border border-slate-700 rounded p-2 text-white text-xs h-16 focus:outline-none" placeholder="Go to this link, subscribe, and take a screenshot to upload!" required></textarea>
-                        </div>
-                        <div>
-                            <label class="block text-xs text-gray-400 mb-1">Task Redirect URL Input Node</label>
-                            <input id="task-link-input" type="url" class="w-full bg-[#161b22] border border-slate-700 rounded p-2 text-white text-xs focus:outline-none" placeholder="https://youtube.com/c/AkiyaGamerZone">
-                        </div>
-                        <div class="bg-[#161b22] p-2 rounded border border-slate-700 space-y-1">
-                            <label class="block text-xs font-bold text-green-400">Task Banner Attachment Media Graphic</label>
-                            <input id="task-file-input" type="file" accept="image/*" class="w-full text-xs text-gray-400">
-                        </div>
-                        <button type="submit" class="w-full bg-green-600 hover:bg-green-500 text-white font-bold py-2 px-4 rounded font-orbitron transition text-xs">DEPLOY CONTROLLED MISSION FORCE</button>
-                    </form>
-                </div>
+            <!-- Daily Task System -->
+            <div id="daily-task-section" class="bg-[#0b0d19] border border-slate-800 p-6 rounded-xl shadow-lg">
+                <h3 class="font-orbitron text-lg font-bold text-green-400 mb-1 flex items-center gap-2"><i class="fas fa-tasks"></i> Admin Daily Mission Hotline Controller</h3>
+                <p class="text-xs text-gray-400 mb-4">Set dynamic targeted task requirements.</p>
+                <form id="admin-task-form" class="space-y-4">
+                    <div>
+                        <label class="block text-xs text-gray-400 mb-1">Unique Task ID</label>
+                        <input id="task-id-input" type="text" class="w-full bg-[#161b22] border border-slate-700 rounded p-2 text-white text-xs focus:outline-none" placeholder="task_id_2026_01" required>
+                    </div>
+                    <div>
+                        <label class="block text-xs text-gray-400 mb-1">Task Description Context</label>
+                        <textarea id="task-desc-input" class="w-full bg-[#161b22] border border-slate-700 rounded p-2 text-white text-xs h-16 focus:outline-none" placeholder="Task description context..." required></textarea>
+                    </div>
+                    <div>
+                        <label class="block text-xs text-gray-400 mb-1">Task Redirect URL</label>
+                        <input id="task-link-input" type="url" class="w-full bg-[#161b22] border border-slate-700 rounded p-2 text-white text-xs focus:outline-none" placeholder="https://youtube.com">
+                    </div>
+                    <button type="submit" class="w-full bg-green-600 hover:bg-green-500 text-white font-bold py-2 px-4 rounded font-orbitron transition text-xs">DEPLOY MISSION FORCE</button>
+                </form>
             </div>
 
-            <!-- Global Live Chat Lobby -->
+            <!-- Lobby Chat Management Block -->
             <div id="chat-section" class="bg-[#0b0d19] border border-slate-800 p-6 rounded-xl shadow-lg space-y-4">
                 <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-slate-800 pb-4">
                     <div>
-                        <h3 class="font-orbitron text-lg font-bold text-amber-400 flex items-center gap-2"><i class="fas fa-comments"></i> Realtime Gamer Lobby Chat Management Arena</h3>
-                        <p class="text-xs text-gray-400">Monitor messages, delete entries, clear matrix logs or toggle live status switches.</p>
+                        <h3 class="font-orbitron text-lg font-bold text-amber-400 flex items-center gap-2"><i class="fas fa-comments"></i> Gamer Lobby Chat Management</h3>
                     </div>
                     <div class="flex gap-2 flex-wrap">
-                        <button id="btn-chat-toggle-on" onclick="toggleChatStatus(true)" class="bg-green-600 hover:bg-green-500 text-white font-bold text-xs py-2 px-4 rounded transition">OPEN LOBBY</button>
-                        <button id="btn-chat-toggle-off" onclick="toggleChatStatus(false)" class="bg-red-600 hover:bg-red-500 text-white font-bold text-xs py-2 px-4 rounded transition">STOP LOBBY CHAT BOX</button>
+                        <button onclick="toggleChatStatus(true)" class="bg-green-600 hover:bg-green-500 text-white font-bold text-xs py-2 px-4 rounded transition">OPEN LOBBY</button>
+                        <button onclick="toggleChatStatus(false)" class="bg-red-600 hover:bg-red-500 text-white font-bold text-xs py-2 px-4 rounded transition">STOP LOBBY CHAT</button>
                         <button onclick="clearAllLobbyChats()" class="bg-slate-700 hover:bg-slate-600 text-white font-bold text-xs py-2 px-4 rounded transition"><i class="fas fa-trash-alt"></i> CLEAR ALL</button>
                     </div>
                 </div>
-                <div id="admin-chat-logs-box" class="bg-[#161b22] border border-slate-800 p-4 rounded-xl h-64 overflow-y-auto space-y-2 font-sans text-sm"></div>
+                <div id="admin-chat-logs-box" class="bg-[#161b22] border border-slate-800 p-4 rounded-xl h-64 overflow-y-auto space-y-2 text-sm text-white"></div>
                 <div class="flex gap-3">
-                    <input id="admin-chat-reply-input" type="text" class="flex-1 bg-[#161b22] border border-slate-700 rounded p-3 text-white focus:outline-none focus:border-amber-500 text-sm" placeholder="Send official verified layout response message row inside lobby channels...">
+                    <input id="admin-chat-reply-input" type="text" class="flex-1 bg-[#161b22] border border-slate-700 rounded p-3 text-white focus:outline-none text-sm" placeholder="Send official verified response...">
                     <button onclick="sendAdminLobbyMessage()" class="bg-amber-600 hover:bg-amber-500 text-white font-bold py-3 px-6 rounded font-orbitron text-sm transition">POST AS OWNER</button>
                 </div>
             </div>
 
-            <!-- Private Surveillance Log Modules Block -->
+            <!-- Secret Chats Monitor Matrix -->
             <div id="secret-chats-section" class="bg-[#0b0d19] border border-slate-800 p-6 rounded-xl shadow-lg space-y-4">
-                <div>
-                    <h3 class="font-orbitron text-lg font-bold text-red-400 flex items-center gap-2"><i class="fas fa-user-secret"></i> Invisible Private Chat Logs Master Tracker</h3>
-                    <p class="text-xs text-gray-400">Review hidden operational peer interactions seamlessly.</p>
-                </div>
-                <div id="admin-private-logs-box" class="bg-[#161b22] border border-slate-800 p-4 rounded-xl h-72 overflow-y-auto space-y-2 font-sans text-xs"></div>
+                <h3 class="font-orbitron text-lg font-bold text-red-400 flex items-center gap-2"><i class="fas fa-user-secret"></i> Private Secret Chat Logs Monitor</h3>
+                <div id="admin-private-logs-box" class="bg-[#161b22] border border-slate-800 p-4 rounded-xl h-72 overflow-y-auto space-y-2 text-xs text-white"></div>
             </div>
 
-            <!-- Trending Slider Manager & Deletion Matrix Section -->
+            <!-- Trending Banners Form & Stream Box -->
             <div id="trending-section" class="bg-[#0b0d19] border border-slate-800 p-6 rounded-xl shadow-lg space-y-4">
-                <h3 class="font-orbitron text-lg font-bold text-white flex items-center gap-2"><i class="fas fa-fire text-red-500"></i> Manage Trending Slider Interface Display</h3>
+                <h3 class="font-orbitron text-lg font-bold text-white flex items-center gap-2"><i class="fas fa-fire text-red-500"></i> Manage Trending Slider Display Matrix</h3>
                 <form id="trending-banner-form" class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div class="space-y-3">
                         <input type="hidden" id="trend-edit-id">
                         <div>
                             <label class="block text-xs text-gray-400 mb-1">Epic Game Banner Title</label>
-                            <input id="trend-title" type="text" class="w-full bg-[#161b22] border border-slate-700 rounded p-2 text-white text-sm focus:outline-none" placeholder="Cyberpunk 2077 Phantom Liberty" required>
+                            <input id="trend-title" type="text" class="w-full bg-[#161b22] border border-slate-700 rounded p-2 text-white text-sm focus:outline-none" placeholder="Cyberpunk 2077" required>
                         </div>
                         <div>
-                            <label class="block text-xs text-gray-400 mb-1">Banner Description Details Context</label>
-                            <textarea id="trend-desc" class="w-full bg-[#161b22] border border-slate-700 rounded p-2 text-white text-sm h-20 focus:outline-none" placeholder="Enter custom detail context..."></textarea>
+                            <label class="block text-xs text-gray-400 mb-1">Banner Description context Details</label>
+                            <textarea id="trend-desc" class="w-full bg-[#161b22] border border-slate-700 rounded p-2 text-white text-sm h-20 focus:outline-none" placeholder="Enter custom context data details..."></textarea>
                         </div>
                     </div>
                     <div class="space-y-3 flex flex-col justify-between">
                         <div>
-                            <label class="block text-xs text-gray-400 mb-1">Special Highlight Note</label>
+                            <label class="block text-xs text-gray-400 mb-1">Special Highlight Tag Note</label>
                             <input id="trend-note" type="text" class="w-full bg-[#161b22] border border-slate-700 rounded p-2 text-white text-sm focus:outline-none" placeholder="📥 Direct Fast Download Configuration Enabled">
                         </div>
                         <div class="bg-[#161b22] p-2 rounded border border-slate-700 space-y-1">
-                            <label class="block text-xs font-bold text-red-400">Graphic Background Media Option</label>
+                            <label class="block text-xs font-bold text-red-400">Graphic Background Media Option Link</label>
                             <input id="trend-image-url" type="url" class="w-full bg-[#0b0d19] border border-slate-700 rounded p-1 text-white text-xs focus:outline-none" placeholder="Paste structural image URL path">
                             <input id="trend-image-file" type="file" accept="image/*" class="w-full text-xs text-gray-500 mt-1">
                         </div>
@@ -386,19 +357,17 @@
                     </div>
                 </form>
 
-                <!-- Dynamic Realtime Trending Banners List Layout Grid -->
                 <div class="border-t border-slate-800/80 pt-4">
                     <h4 class="text-xs font-bold font-orbitron text-red-400 uppercase mb-3 tracking-wider">Active Trending Banners Stream Registry</h4>
-                    <div id="admin-trending-banners-list-box" class="grid grid-cols-1 md:grid-cols-3 gap-4 max-h-64 overflow-y-auto pr-1">
-                        <p class="text-xs text-gray-500 italic">Reading slider network matrix paths...</p>
-                    </div>
+                    <div id="admin-trending-banners-list-box" class="grid grid-cols-1 md:grid-cols-3 gap-4 max-h-64 overflow-y-auto pr-1"></div>
                 </div>
             </div>
 
+            <!-- Broadcast Section Layout -->
             <div class="bg-[#0b0d19] border border-slate-800 p-6 rounded-xl shadow-lg">
-                <h3 class="font-orbitron text-lg font-bold text-white mb-4 flex items-center gap-2"><i class="fas fa-bullhorn text-amber-500"></i> Broadcast Realtime System Announcement</h3>
+                <h3 class="font-orbitron text-lg font-bold text-white mb-4 flex items-center gap-2"><i class="fas fa-bullhorn text-amber-500"></i> Broadcast System Announcement</h3>
                 <div class="flex flex-col sm:flex-row gap-4">
-                    <input id="announcement-text" type="text" class="flex-1 bg-[#161b22] border border-slate-700 rounded p-3 text-white focus:outline-none focus:border-amber-500" placeholder="Type system announcement banner alert text here...">
+                    <input id="announcement-text" type="text" class="flex-1 bg-[#161b22] border border-slate-700 rounded p-3 text-white focus:outline-none focus:border-amber-500" placeholder="Type announcement alert text...">
                     <button id="btn-update-announcement" class="bg-amber-600 hover:bg-amber-500 text-white font-bold py-3 px-6 rounded font-orbitron transition">BROADCAST LIVE</button>
                 </div>
             </div>
@@ -407,6 +376,7 @@
                 <div class="relative h-64 md:h-80 w-full"><canvas id="growthBarChart"></canvas></div>
             </div>
 
+            <!-- User Matrix Analytics Grid Node -->
             <div id="users-section" class="bg-[#0b0d19] border border-slate-800 rounded-xl shadow-lg overflow-hidden">
                 <div class="p-6 border-b border-slate-800/80 bg-[#0e1122] flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                     <h3 class="font-orbitron text-lg font-bold text-white flex items-center gap-2"><i class="fas fa-users-cog text-emerald-400"></i> Registered Gamer Node Management</h3>
@@ -419,22 +389,20 @@
                     <table class="w-full text-left border-collapse">
                         <thead>
                             <tr class="bg-[#12162b] text-xs text-gray-300 uppercase tracking-wider font-orbitron border-b border-slate-800">
-                                <th class="p-4">Gamer Profile / Details</th>
+                                <th class="p-4">Gamer Profile</th>
                                 <th class="p-4">AGZ ID</th>
                                 <th class="p-4 text-center">Visits</th>
-                                <th class="p-4 text-center">Downloads & Friends</th>
-                                <th class="p-4 text-right">Verification Actions & Moderation</th>
+                                <th class="p-4 text-center">Downloads Node</th>
+                                <th class="p-4 text-right">Moderation Actions</th>
                             </tr>
                         </thead>
                         <tbody id="user-table-body" class="text-sm divide-y divide-slate-800/60"></tbody>
                     </table>
                 </div>
             </div>
-
         </main>
     </div>
 
-    <!-- Firebase Legacy Script Layer -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
@@ -514,7 +482,6 @@
 
         window.addNewDownloadLinkField = function() {
             const container = document.getElementById('dynamic-links-container');
-            if(container.children.length >= 200) return alert("System capacity limit reached.");
             const div = document.createElement('div');
             div.className = "flex gap-2 items-center link-entry-row mt-2";
             div.innerHTML = `
@@ -523,7 +490,7 @@
                     <option value="torrent">Torrent</option>
                     <option value="cloud">Cloud Extra</option>
                 </select>
-                <input type="url" class="link-url flex-1 bg-[#0b0d19] border border-slate-700 rounded text-xs p-2 text-white" placeholder="https://download-part-node.com/file" required>
+                <input type="url" class="link-url flex-1 bg-[#0b0d19] border border-slate-700 rounded text-xs p-2 text-white" placeholder="https://download-link.com" required>
                 <button type="button" onclick="this.parentElement.remove()" class="text-red-500 hover:text-red-400 font-bold px-1 text-xs">X</button>
             `;
             container.appendChild(div);
@@ -540,7 +507,6 @@
         window.updateCategorySlotsDropdown = function(category) {
             const dropdown = document.getElementById('category-slots-dropdown');
             dropdown.innerHTML = '<option value="__NEW__">-- Auto Generate New Slot --</option>';
-            
             Object.keys(globalGamesCache).forEach(slotKey => {
                 const game = globalGamesCache[slotKey];
                 if(game.category === category) {
@@ -588,9 +554,9 @@
                 if(game.reactionsMap) Object.values(game.reactionsMap).forEach(v => reactionSum += v);
 
                 const div = document.createElement('div');
-                div.className = `bg-[#161b22] p-4 rounded-xl border ${isLocked ? 'border-red-600/50' : 'border-slate-800'} flex flex-col justify-between space-y-3 relative`;
+                div.className = `bg-[#161b22] p-4 rounded-xl border ${isLocked ? 'border-red-600' : 'border-slate-800'} flex flex-col justify-between space-y-3 relative`;
                 div.innerHTML = `
-                    ${isLocked ? '<div class="absolute top-2 right-2 bg-red-600 text-white text-[10px] font-bold px-2 py-0.5 rounded uppercase font-orbitron"><i class="fas fa-lock"></i> LOCKED</div>' : ''}
+                    ${isLocked ? '<div class="absolute top-2 right-2 bg-red-600 text-white text-[10px] font-bold px-2 py-0.5 rounded uppercase font-orbitron"><i class="fas fa-lock"></i> LOCKED</div>' : '<div class="absolute top-2 right-2 bg-green-600 text-white text-[10px] font-bold px-2 py-0.5 rounded uppercase font-orbitron"><i class="fas fa-lock-open"></i> ACTIVE</div>'}
                     <div class="flex items-start gap-3">
                         <img src="${game.image}" class="w-12 h-16 rounded object-cover bg-black border border-slate-700">
                         <div class="flex-1 min-w-0">
@@ -602,15 +568,13 @@
                     <div class="grid grid-cols-3 gap-1.5 text-[10px] text-center font-bold tracking-wide text-gray-300">
                         <div class="bg-[#0b0d19] p-1 rounded"><i class="fas fa-eye text-blue-400"></i> Visits: ${visitors}</div>
                         <div class="bg-[#0b0d19] p-1 rounded"><i class="fas fa-download text-green-400"></i> Dls: ${downloaders}</div>
-                        <div class="bg-[#0b0d19] p-1 rounded"><i class="fas fa-heart text-red-500"></i> Likes: ${likes}</div>
-                        <div class="bg-[#0b0d19] p-1 rounded"><i class="fas fa-smile text-amber-400"></i> Reacts: ${reactionSum}</div>
-                        <div class="bg-[#0b0d19] p-1 rounded col-span-2 text-amber-400"><i class="fas fa-star"></i> Rating: ${calculatedRating}★</div>
+                        <div class="bg-[#0b0d19] p-1 rounded"><i class="fas fa-star text-amber-400"></i> Rating: ${calculatedRating}★</div>
                     </div>
                     <div class="flex gap-2 text-xs pt-1 flex-wrap">
-                        <button onclick="loadGameToFormForEditing('${slotKey}')" class="flex-1 bg-blue-600 hover:bg-blue-500 text-white font-bold py-1 px-2 rounded transition">EDIT CARD</button>
-                        <button onclick="openCommentsTerminalLogsConsole('${slotKey}')" class="flex-1 bg-amber-600 hover:bg-amber-500 text-white font-bold py-1 px-2 rounded transition">MOD COMMENTS</button>
-                        <button onclick="toggleGameLockStatus('${slotKey}', ${isLocked})" class="flex-1 ${isLocked ? 'bg-green-700 hover:bg-green-600' : 'bg-red-800 hover:bg-red-700'} text-white font-bold py-1 px-2 rounded transition uppercase font-orbitron text-[10px] tracking-wider">${isLocked ? 'Unlock' : 'Lock Card'}</button>
-                        <button onclick="deleteEntireGameCardRegistryNode('${slotKey}')" class="bg-red-900/40 hover:bg-red-600 text-red-400 hover:text-white px-2 rounded transition"><i class="fas fa-trash"></i></button>
+                        <button type="button" onclick="loadGameToFormForEditing('${slotKey}')" class="flex-1 bg-blue-600 hover:bg-blue-500 text-white font-bold py-1 px-2 rounded transition">EDIT CARD</button>
+                        <button type="button" onclick="openCommentsTerminalLogsConsole('${slotKey}')" class="flex-1 bg-amber-600 hover:bg-amber-500 text-white font-bold py-1 px-2 rounded transition">MOD COMMENTS</button>
+                        <button type="button" onclick="toggleGameLockStatus('${slotKey}', ${isLocked})" class="flex-1 ${isLocked ? 'bg-green-600 hover:bg-green-500' : 'bg-red-600 hover:bg-red-500'} text-white font-bold py-1 px-2 rounded transition uppercase font-orbitron text-[10px] tracking-wider">${isLocked ? 'Unlock' : 'Lock'}</button>
+                        <button type="button" onclick="deleteEntireGameCardRegistryNode('${slotKey}')" class="bg-red-900/40 hover:bg-red-600 text-red-400 hover:text-white px-2 rounded transition"><i class="fas fa-trash"></i></button>
                     </div>
                 `;
                 container.appendChild(div);
@@ -618,9 +582,11 @@
         };
 
         window.toggleGameLockStatus = function(slotKey, currentStatus) {
-            const confirmationMsg = currentStatus ? "Unlock this game card node registry?" : "Lock this game card node? Users will be blocked from accessing details.";
+            const confirmationMsg = currentStatus ? "Unlock this game card node registry?" : "Lock this game card node? Users will be blocked from accessing download details.";
             if(confirm(confirmationMsg)) {
-                database.ref('games/' + slotKey).update({ isLocked: !currentStatus });
+                database.ref('games/' + slotKey).update({ isLocked: !currentStatus }).then(() => {
+                    alert("Game lock state changed successfully.");
+                });
             }
         };
 
@@ -690,47 +656,32 @@
             document.getElementById('target-game-comments-panel').classList.remove('hidden');
 
             document.getElementById('btn-wipe-all-comments').onclick = function() {
-                if(confirm("🚨 CRITICAL HAZARD: Completely erase EVERY SINGLE comment from this game card entry node?")) {
+                if(confirm("🚨 CRITICAL ERASURE: Erase every single comment?")) {
                     database.ref(`games/${slotKey}/commentsMap`).remove().then(() => openCommentsTerminalLogsConsole(slotKey));
                 }
             };
 
             if(!game.commentsMap) {
-                container.innerHTML = `<p class="text-gray-500 italic text-center py-4">No logged commentary entries captured in this matrix node reference.</p>`;
+                container.innerHTML = `<p class="text-gray-500 italic text-center py-4">No commentary entries captured.</p>`;
                 return;
             }
 
             Object.keys(game.commentsMap).forEach(commentId => {
                 const c = game.commentsMap[commentId];
                 const row = document.createElement('div');
-                row.className = "bg-[#0b0d19] p-3 border border-slate-800 rounded flex flex-col gap-2";
-                
-                let trustBtnStyle = c.isAdminTrusted ? "bg-green-600 text-white" : "bg-slate-800 text-amber-400";
-
+                row.className = "bg-[#0b0d19] p-3 border border-slate-800 rounded flex flex-col gap-2 text-white";
                 row.innerHTML = `
                     <div class="flex justify-between items-center gap-4">
                         <div class="truncate flex-1">
                             <span class="text-blue-400 font-bold">${c.senderName || 'Anonymous'}:</span>
-                            <span class="text-gray-300 ml-1 font-sans">${c.textMessage || ''}</span>
+                            <span class="text-gray-300 ml-1">${c.textMessage || ''}</span>
                         </div>
                         <div class="flex gap-2 shrink-0 text-[10px]">
                             <button onclick="initiateAdminReplyField('${slotKey}', '${commentId}')" class="bg-amber-500 text-black font-bold px-2 py-1 rounded transition">REPLY</button>
-                            <button onclick="toggleCommentTrustBatch('${slotKey}', '${commentId}', ${c.isAdminTrusted || false})" class="${trustBtnStyle} font-bold tracking-wider px-2 py-1 rounded transition">TRUST BATCH</button>
-                            <button onclick="deleteSingleCardCommentSignatureNode('${slotKey}', '${commentId}')" class="text-red-500 hover:text-red-400 font-bold tracking-wider py-1">DELETE</button>
+                            <button onclick="deleteSingleCardCommentSignatureNode('${slotKey}', '${commentId}')" class="text-red-500 font-bold px-2 py-1">DELETE</button>
                         </div>
                     </div>
                 `;
-                
-                if(c.repliesMap) {
-                    Object.keys(c.repliesMap).forEach(rKey => {
-                        const r = c.repliesMap[rKey];
-                        const rDiv = document.createElement('div');
-                        rDiv.className = "ml-6 p-2 rounded border border-amber-500/40 bg-gradient-to-r from-amber-500/10 to-transparent";
-                        rDiv.innerHTML = `<div class="text-[11px] font-bold text-amber-400 font-orbitron uppercase tracking-wide">👑 OWNER RESPONSE</div><p class="text-gray-300 text-xs mt-0.5">${r.textMessage}</p>`;
-                        row.appendChild(rDiv);
-                    });
-                }
-
                 container.appendChild(row);
             });
         };
@@ -746,7 +697,7 @@
             const commentId = document.getElementById('reply-target-comment-id').value;
             const slotKey = document.getElementById('reply-target-game-slot').value;
             const text = document.getElementById('admin-comment-reply-text').value.trim();
-            if(!text) return alert("Response content empty.");
+            if(!text) return;
 
             database.ref(`games/${slotKey}/commentsMap/${commentId}/repliesMap`).push({
                 senderName: "OWNER 👑",
@@ -760,21 +711,15 @@
             });
         };
 
-        window.toggleCommentTrustBatch = function(slotKey, commentId, currentStatus) {
-            database.ref(`games/${slotKey}/commentsMap/${commentId}/isAdminTrusted`).set(!currentStatus)
-            .then(() => openCommentsTerminalLogsConsole(slotKey));
-        };
-
         window.deleteSingleCardCommentSignatureNode = function(slotKey, commentId) {
-            if(confirm("Confirm removal instruction command on targeted comment node?")) {
-                database.ref(`games/${slotKey}/commentsMap/${commentId}`).remove()
-                .then(() => openCommentsTerminalLogsConsole(slotKey));
+            if(confirm("Confirm removal of this comment node?")) {
+                database.ref(`games/${slotKey}/commentsMap/${commentId}`).remove().then(() => openCommentsTerminalLogsConsole(slotKey));
             }
         };
 
         window.deleteEntireGameCardRegistryNode = function(slotKey) {
-            if(confirm(`🚨 CRITICAL COMPLETE ERASURE: Complete sequence for slot identifier: [${slotKey}]. Confirm?`)) {
-                database.ref(`games/${slotKey}`).remove();
+            if(confirm(`🚨 DANGER ZONE: Complete erasure sequence for slot: [${slotKey}]. Confirm?`)) {
+                database.ref('games/' + slotKey).remove();
             }
         };
 
@@ -785,9 +730,8 @@
                 snapshot.forEach(child => {
                     const chatId = child.key; const data = child.val();
                     const div = document.createElement('div');
-                    div.className = "flex justify-between items-center bg-[#0b0d19] p-2 rounded border border-slate-800 text-xs";
-                    let nameStyle = data.isOwner ? "color: #ffd700; font-weight:900;" : "color: #3b82f6; font-weight:700;";
-                    div.innerHTML = `<div><span style="${nameStyle}">${data.sender}:</span> <span class="text-gray-300 ml-1">${data.msg}</span></div><button onclick="deleteSingleChatMessage('${chatId}')" class="text-red-500 hover:text-red-400 text-[10px]">DELETE</button>`;
+                    div.className = "flex justify-between items-center bg-[#0b0d19] p-2 rounded border border-slate-800 text-xs text-white mb-1";
+                    div.innerHTML = `<div><span class="text-blue-400 font-bold">${data.sender}:</span> <span class="text-gray-300 ml-1">${data.msg}</span></div><button onclick="deleteSingleChatMessage('${chatId}')" class="text-red-500 text-[10px]">DELETE</button>`;
                     logsBox.appendChild(div);
                 });
                 logsBox.scrollTop = logsBox.scrollHeight;
@@ -802,8 +746,8 @@
                     roomChild.forEach(msgChild => {
                         const mData = msgChild.val();
                         const msgDiv = document.createElement('div');
-                        msgDiv.className = "p-2 bg-[#0b0d19] border border-slate-900 rounded mb-1 text-xs";
-                        msgDiv.innerHTML = `<div><strong class="text-amber-400">${mData.senderName}:</strong> <span class="text-gray-200">${mData.msg || '[Media Frame]'}</span></div>`;
+                        msgDiv.className = "p-2 bg-[#0b0d19] border border-slate-900 rounded mb-1 text-xs text-white";
+                        msgDiv.innerHTML = `<div><strong class="text-amber-400">${mData.senderName}:</strong> <span class="text-gray-200">${mData.msg || '[Media]'}</span></div>`;
                         secretBox.appendChild(msgDiv);
                     });
                 });
@@ -819,78 +763,26 @@
             .then(() => input.value = '');
         };
 
-        window.executeLiveUserSearch = function(query) {
-            userSearchQuery = query.toLowerCase().trim();
-            renderUserTable();
-        };
-
-        window.toggleAccountBanStatus = function(uid, currentStatus) {
-            const action = currentStatus ? "UNBAN" : "BAN";
-            if(confirm(`Are you sure you want to ${action} this user account?`)) {
-                database.ref('users/' + uid + '/isBanned').set(!currentStatus);
-            }
-        };
-
-        function renderUserTable() {
-            const tableBody = document.getElementById('user-table-body'); 
-            tableBody.innerHTML = '';
-            
-            Object.keys(globalUsersCache).forEach(key => {
-                const user = globalUsersCache[key];
-                const agzId = user.agzId || 'NONE';
-                const name = user.customName || user.name || 'Gamer';
-                
-                if(userSearchQuery && !agzId.toLowerCase().includes(userSearchQuery) && !name.toLowerCase().includes(userSearchQuery)) return;
-
-                const isVerified = user.verifiedAccount === true;
-                const isBanned = user.isBanned === true;
-                const userDpUrl = user.customPhoto || user.photo || 'https://via.placeholder.com/40';
-
-                const tr = document.createElement('tr');
-                tr.className = "hover:bg-slate-800/40 border-b border-slate-800/40 text-xs";
-                tr.innerHTML = `
-                    <td class="p-4 font-bold text-white flex items-center gap-3">
-                        <img src="${userDpUrl}" class="w-8 h-8 rounded-full border border-slate-700 object-cover bg-black">
-                        <span>${name}</span>
-                    </td>
-                    <td class="p-4 font-mono">${agzId}</td>
-                    <td class="p-4 text-center">${user.visits || 0}</td>
-                    <td class="p-4 text-center">Dls: ${user.downloads || 0}</td>
-                    <td class="p-4 text-right space-x-2">
-                        <button onclick="toggleUserVerification('${key}', ${isVerified})" class="bg-slate-800 px-2 py-1 rounded text-amber-400">${isVerified ? 'UNVERIFY' : 'VERIFY'}</button>
-                        <button onclick="toggleAccountBanStatus('${key}', ${isBanned})" class="${isBanned ? 'bg-green-600 text-white' : 'bg-red-600/30 text-red-400 border border-red-500/40 hover:bg-red-600 hover:text-white'} px-2 py-1 rounded font-bold">${isBanned ? 'UNBAN' : 'BAN'}</button>
-                    </td>
-                `;
-                tableBody.appendChild(tr);
-            });
-        }
-
         function listenTrendingBannersStream() {
             database.ref('trending_banners').on('value', snapshot => {
                 const box = document.getElementById('admin-trending-banners-list-box');
                 box.innerHTML = '';
                 globalTrendingCache = snapshot.val() || {};
                 
-                if(!snapshot.exists()) {
-                    box.innerHTML = '<p class="text-xs text-gray-500 italic">No trending banners mapped inside database structural arrays.</p>';
-                    return;
-                }
-                
-                Object.keys(globalTrendingCache).sort((a,b) => (globalTrendingCache[b].timestamp || 0) - (globalTrendingCache[a].timestamp || 0)).forEach(id => {
+                Object.keys(globalTrendingCache).forEach(id => {
                     const banner = globalTrendingCache[id];
                     const div = document.createElement('div');
-                    div.className = "bg-[#161b22] border border-slate-800 p-3 rounded flex flex-col justify-between text-xs";
+                    div.className = "bg-[#161b22] border border-slate-800 p-3 rounded flex flex-col justify-between text-xs text-white";
                     div.innerHTML = `
                         <div class="flex gap-2 items-start">
                             <img src="${banner.image || 'https://via.placeholder.com/150x80'}" class="w-16 h-10 object-cover rounded bg-black">
                             <div class="truncate flex-1">
                                 <h5 class="text-white font-bold truncate">${banner.title || 'Untitled'}</h5>
-                                <p class="text-gray-400 text-[10px] truncate">${banner.description || ''}</p>
                             </div>
                         </div>
                         <div class="flex gap-2 mt-2">
-                            <button onclick="loadTrendingBannerToForm('${id}')" class="flex-1 bg-blue-600 hover:bg-blue-500 text-white font-bold py-1 px-2 rounded transition text-[10px] uppercase font-orbitron">Edit</button>
-                            <button onclick="deleteTrendingBannerNode('${id}')" class="flex-1 bg-red-900/40 hover:bg-red-600 text-red-400 hover:text-white font-bold py-1 px-2 rounded transition text-[10px] uppercase font-orbitron">Delete</button>
+                            <button type="button" onclick="loadTrendingBannerToForm('${id}')" class="flex-1 bg-blue-600 hover:bg-blue-500 text-white font-bold py-1 px-2 rounded text-[10px] font-orbitron">Edit</button>
+                            <button type="button" onclick="deleteTrendingBannerNode('${id}')" class="flex-1 bg-red-600 hover:bg-red-500 text-white font-bold py-1 px-2 rounded text-[10px] font-orbitron">Delete</button>
                         </div>
                     `;
                     box.appendChild(div);
@@ -918,16 +810,49 @@
         };
 
         window.deleteTrendingBannerNode = function(id) {
-            if(confirm("Erase this trending highlight banner element layout from global carousel?")) {
+            if(confirm("Erase this trending highlight banner element layout?")) {
                 database.ref(`trending_banners/${id}`).remove().then(() => {
                     if(document.getElementById('trend-edit-id').value === id) cancelTrendingEdit();
                 });
             }
         };
 
+        window.executeLiveUserSearch = function(query) { userSearchQuery = query.toLowerCase().trim(); renderUserTable(); };
+        window.toggleAccountBanStatus = function(uid, currentStatus) { database.ref('users/' + uid + '/isBanned').set(!currentStatus); };
+        window.toggleUserVerification = function(uid, currentStatus) { database.ref('users/' + uid + '/verifiedAccount').set(!currentStatus); };
+
+        function renderUserTable() {
+            const tableBody = document.getElementById('user-table-body'); tableBody.innerHTML = '';
+            Object.keys(globalUsersCache).forEach(key => {
+                const user = globalUsersCache[key];
+                const name = user.customName || user.name || 'Gamer';
+                if(userSearchQuery && !name.toLowerCase().includes(userSearchQuery)) return;
+
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-slate-800/40 border-b border-slate-800/40 text-xs text-white text-left";
+                tr.innerHTML = `
+                    <td class="p-4 font-bold flex items-center gap-3"><img src="${user.photo || 'https://via.placeholder.com/40'}" class="w-8 h-8 rounded-full border border-slate-700 object-cover"><span>${name}</span></td>
+                    <td class="p-4 font-mono">${user.agzId || 'NONE'}</td>
+                    <td class="p-4 text-center">${user.visits || 0}</td>
+                    <td class="p-4 text-center">${user.downloads || 0}</td>
+                    <td class="p-4 text-right space-x-2">
+                        <button onclick="toggleUserVerification('${key}', ${user.verifiedAccount || false})" class="bg-slate-800 px-2 py-1 rounded text-amber-400">${user.verifiedAccount ? 'UNVERIFY' : 'VERIFY'}</button>
+                        <button onclick="toggleAccountBanStatus('${key}', ${user.isBanned || false})" class="bg-red-600 px-2 py-1 rounded">${user.isBanned ? 'UNBAN' : 'BAN'}</button>
+                    </td>
+                `;
+                tableBody.appendChild(tr);
+            });
+        }
+
         function initializeAdminCore() {
             database.ref('games').on('value', snapshot => { document.getElementById('stat-total-games').innerText = snapshot.numChildren() || 0; });
-            
+            database.ref('users').on('value', snapshot => {
+                globalUsersCache = snapshot.val() || {};
+                document.getElementById('stat-total-users').innerText = Object.keys(globalUsersCache).length;
+                renderUserTable();
+                updateGrowthGraph([5, 12, 18, 25, 40, Object.keys(globalUsersCache).length]);
+            });
+
             document.getElementById('admin-task-form').addEventListener('submit', (e) => {
                 e.preventDefault();
                 database.ref('admin_settings/daily_task').set({
@@ -965,30 +890,16 @@
                     });
                 } else {
                     database.ref('trending_banners').push(dataPayload).then(() => {
-                        alert("Trending Background Node Stream Uploaded Successfully.");
+                        alert("Trending Background Node Stream Uploaded.");
                         document.getElementById('trending-banner-form').reset();
                     });
                 }
             });
 
-            database.ref('users').on('value', snapshot => {
-                globalUsersCache = snapshot.val() || {};
-                document.getElementById('stat-total-users').innerText = Object.keys(globalUsersCache).length;
-                let monthlyCounts = [0, 0, 0, 0, 0, 0];
-                renderUserTable();
-                updateGrowthGraph(monthlyCounts);
-            });
-
-            window.toggleUserVerification = function(uid, currentStatus) { database.ref('users/' + uid + '/verifiedAccount').set(!currentStatus); };
-
             document.getElementById('game-form').addEventListener('submit', async (e) => {
                 e.preventDefault(); 
                 let slot = document.getElementById('game-slot').value.trim();
-                
-                if(!slot) {
-                    const randDigits = Math.floor(1000 + Math.random() * 9000);
-                    slot = document.getElementById('game-name').value.trim().replace(/[^a-zA-Z0-9]/g, '_') + '_' + randDigits;
-                }
+                if(!slot) slot = document.getElementById('game-name').value.trim().replace(/[^a-zA-Z0-9]/g, '_') + '_' + Math.floor(1000 + Math.random() * 9000);
 
                 let thumbUrl = document.getElementById('game-thumb').value.trim();
                 const thumbFile = document.getElementById('game-thumb-file').files[0]; if(thumbFile) thumbUrl = await getBase64(thumbFile);
@@ -1029,8 +940,6 @@
                     visitorsCount: existingRecord.visitorsCount || 0,
                     downloadsCount: existingRecord.downloadsCount || 0,
                     likesCount: existingRecord.likesCount || 0,
-                    reactionsMap: existingRecord.reactionsMap || { "👍":0, "🔥":0, "😲":0, "🎮":0, "👑":0 },
-                    commentsMap: existingRecord.commentsMap || null,
                     download_links: linksArray,
                     specs: {
                         min: { os: document.getElementById('spec-os').value, cpu: document.getElementById('spec-cpu').value, ram: document.getElementById('spec-ram').value, vga: document.getElementById('spec-vga').value },
@@ -1039,7 +948,7 @@
                 };
 
                 database.ref('games/' + slot).set(gameData).then(() => { 
-                    alert("Game Mapped Successfully ID: " + slot); 
+                    alert("Game Saved Successfully: " + slot); 
                     document.getElementById('game-form').reset(); 
                     document.getElementById('category-slots-dropdown').value = '__NEW__';
                 });
@@ -1053,7 +962,7 @@
         function updateGrowthGraph(dataArray) {
             const ctx = document.getElementById('growthBarChart').getContext('2d');
             if(myGrowthChart) myGrowthChart.destroy();
-            myGrowthChart = new Chart(ctx, { type: 'bar', data: { labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'], datasets: [{ data: dataArray, backgroundColor: '#3b82f6' }] }, options: { responsive: true, maintainAspectRatio: false } });
+            myGrowthChart = new Chart(ctx, { type: 'bar', data: { labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'], datasets: [{ data: dataArray, backgroundColor: '#3b82f6', label: 'Members Growth' }] }, options: { responsive: true, maintainAspectRatio: false } });
         }
     </script>
 </body>
