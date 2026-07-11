@@ -354,6 +354,7 @@
                 <div id="admin-private-logs-box" class="bg-[#161b22] border border-slate-800 p-4 rounded-xl h-72 overflow-y-auto space-y-2 font-sans text-xs"></div>
             </div>
 
+            <!-- Trending Slider Manager & Deletion Matrix Section -->
             <div id="trending-section" class="bg-[#0b0d19] border border-slate-800 p-6 rounded-xl shadow-lg space-y-4">
                 <h3 class="font-orbitron text-lg font-bold text-white flex items-center gap-2"><i class="fas fa-fire text-red-500"></i> Manage Trending Slider Interface Display</h3>
                 <form id="trending-banner-form" class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -380,6 +381,14 @@
                         <button type="submit" class="w-full bg-red-600 hover:bg-red-500 text-white font-bold py-2 px-4 rounded font-orbitron transition text-sm">UPDATE TRENDING BACKGROUND STREAM</button>
                     </div>
                 </form>
+
+                <!-- Dynamic Realtime Trending Banners List Layout Grid -->
+                <div class="border-t border-slate-800/80 pt-4">
+                    <h4 class="text-xs font-bold font-orbitron text-red-400 uppercase mb-3 tracking-wider">Active Trending Banners Stream Registry</h4>
+                    <div id="admin-trending-banners-list-box" class="grid grid-cols-1 md:grid-cols-3 gap-4 max-h-64 overflow-y-auto pr-1">
+                        <p class="text-xs text-gray-500 italic">Reading slider network matrix paths...</p>
+                    </div>
+                </div>
             </div>
 
             <div class="bg-[#0b0d19] border border-slate-800 p-6 rounded-xl shadow-lg">
@@ -478,6 +487,7 @@
                     listenLobbyChats();
                     listenPrivateSecretChats();
                     cacheAndListenGamesRegistry();
+                    listenTrendingBannersStream();
                 } else {
                     document.getElementById('auth-error').classList.remove('hidden');
                     auth.signOut();
@@ -561,6 +571,7 @@
                 const downloaders = game.downloadsCount || 0;
                 const likes = game.likesCount || 0;
                 const manualRating = game.manualRatingOverride || 0;
+                const isLocked = game.isLocked === true;
                 
                 let calculatedRating = manualRating > 0 ? manualRating : 3.5;
                 if(manualRating === 0 && (visitors > 0 || downloaders > 0)) {
@@ -572,8 +583,9 @@
                 if(game.reactionsMap) Object.values(game.reactionsMap).forEach(v => reactionSum += v);
 
                 const div = document.createElement('div');
-                div.className = "bg-[#161b22] p-4 rounded-xl border border-slate-800 flex flex-col justify-between space-y-3";
+                div.className = `bg-[#161b22] p-4 rounded-xl border ${isLocked ? 'border-red-600/50' : 'border-slate-800'} flex flex-col justify-between space-y-3 relative`;
                 div.innerHTML = `
+                    ${isLocked ? '<div class="absolute top-2 right-2 bg-red-600 text-white text-[10px] font-bold px-2 py-0.5 rounded uppercase font-orbitron"><i class="fas fa-lock"></i> LOCKED</div>' : ''}
                     <div class="flex items-start gap-3">
                         <img src="${game.image}" class="w-12 h-16 rounded object-cover bg-black border border-slate-700">
                         <div class="flex-1 min-w-0">
@@ -589,14 +601,22 @@
                         <div class="bg-[#0b0d19] p-1 rounded"><i class="fas fa-smile text-amber-400"></i> Reacts: ${reactionSum}</div>
                         <div class="bg-[#0b0d19] p-1 rounded col-span-2 text-amber-400"><i class="fas fa-star"></i> Rating: ${calculatedRating}★</div>
                     </div>
-                    <div class="flex gap-2 text-xs pt-1">
+                    <div class="flex gap-2 text-xs pt-1 flex-wrap">
                         <button onclick="loadGameToFormForEditing('${slotKey}')" class="flex-1 bg-blue-600 hover:bg-blue-500 text-white font-bold py-1 px-2 rounded transition">EDIT CARD</button>
                         <button onclick="openCommentsTerminalLogsConsole('${slotKey}')" class="flex-1 bg-amber-600 hover:bg-amber-500 text-white font-bold py-1 px-2 rounded transition">MOD COMMENTS</button>
+                        <button onclick="toggleGameLockStatus('${slotKey}', ${isLocked})" class="flex-1 ${isLocked ? 'bg-green-700 hover:bg-green-600' : 'bg-red-800 hover:bg-red-700'} text-white font-bold py-1 px-2 rounded transition uppercase font-orbitron text-[10px] tracking-wider">${isLocked ? 'Unlock' : 'Lock Card'}</button>
                         <button onclick="deleteEntireGameCardRegistryNode('${slotKey}')" class="bg-red-900/40 hover:bg-red-600 text-red-400 hover:text-white px-2 rounded transition"><i class="fas fa-trash"></i></button>
                     </div>
                 `;
                 container.appendChild(div);
             });
+        };
+
+        window.toggleGameLockStatus = function(slotKey, currentStatus) {
+            const confirmationMsg = currentStatus ? "Unlock this game card node registry?" : "Lock this game card node? Users will be blocked from accessing details.";
+            if(confirm(confirmationMsg)) {
+                database.ref(`games/${slotKey}/isLocked`).set(!currentStatus);
+            }
         };
 
         window.loadGameToFormForEditing = function(slotKey) {
@@ -840,6 +860,40 @@
             });
         }
 
+        function listenTrendingBannersStream() {
+            database.ref('trending_banners').on('value', snapshot => {
+                const box = document.getElementById('admin-trending-banners-list-box');
+                box.innerHTML = '';
+                if(!snapshot.exists()) {
+                    box.innerHTML = '<p class="text-xs text-gray-500 italic">No trending banners mapped inside database structural arrays.</p>';
+                    return;
+                }
+                snapshot.forEach(child => {
+                    const id = child.key;
+                    const banner = child.val();
+                    const div = document.createElement('div');
+                    div.className = "bg-[#161b22] border border-slate-800 p-2 rounded flex flex-col justify-between text-xs";
+                    div.innerHTML = `
+                        <div class="flex gap-2 items-start">
+                            <img src="${banner.image || 'https://via.placeholder.com/150x80'}" class="w-16 h-10 object-cover rounded bg-black">
+                            <div class="truncate flex-1">
+                                <h5 class="text-white font-bold truncate">${banner.title || 'Untitled'}</h5>
+                                <p class="text-gray-400 text-[10px] truncate">${banner.description || ''}</p>
+                            </div>
+                        </div>
+                        <button onclick="deleteTrendingBannerNode('${id}')" class="w-full bg-red-900/40 hover:bg-red-600 text-red-400 hover:text-white font-bold py-1 px-2 rounded mt-2 transition text-[10px] uppercase font-orbitron">Delete Banner</button>
+                    `;
+                    box.appendChild(div);
+                });
+            });
+        }
+
+        window.deleteTrendingBannerNode = function(id) {
+            if(confirm("Erase this trending highlight banner element layout from global carousel?")) {
+                database.ref(`trending_banners/${id}`).remove();
+            }
+        };
+
         function initializeAdminCore() {
             database.ref('games').on('value', snapshot => { document.getElementById('stat-total-games').innerText = snapshot.numChildren() || 0; });
             
@@ -851,6 +905,25 @@
                     taskRedirectUrl: document.getElementById('task-link-input').value.trim(),
                     timestamp: firebase.database.ServerValue.TIMESTAMP
                 }).then(() => { alert("Controlled task node metrics updated."); document.getElementById('admin-task-form').reset(); });
+            });
+
+            // Trending Banner Form Core Execution Module
+            document.getElementById('trending-banner-form').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                let imgUrl = document.getElementById('trend-image-url').value.trim();
+                const imgFile = document.getElementById('trend-image-file').files[0];
+                if(imgFile) imgUrl = await getBase64(imgFile);
+
+                database.ref('trending_banners').push({
+                    title: document.getElementById('trend-title').value.trim(),
+                    description: document.getElementById('trend-desc').value.trim(),
+                    note: document.getElementById('trend-note').value.trim(),
+                    image: imgUrl || 'https://via.placeholder.com/1920x1080',
+                    timestamp: firebase.database.ServerValue.TIMESTAMP
+                }).then(() => {
+                    alert("Trending Background Node Stream Uploaded Successfully.");
+                    document.getElementById('trending-banner-form').reset();
+                });
             });
 
             database.ref('users').on('value', snapshot => {
@@ -877,6 +950,19 @@
                 let bannerUrl = document.getElementById('game-banner-url').value.trim();
                 const bannerFile = document.getElementById('game-banner-file').files[0]; if(bannerFile) bannerUrl = await getBase64(bannerFile);
 
+                // FIXED: Capture Extended Media Screenshots Array (Maximum 3 Snapshots Allocated)
+                let scr1 = document.getElementById('screenshot-1-url').value.trim();
+                const scr1File = document.getElementById('screenshot-1-file').files[0]; if(scr1File) scr1 = await getBase64(scr1File);
+                let scr2 = document.getElementById('screenshot-2-url').value.trim();
+                const scr2File = document.getElementById('screenshot-2-file').files[0]; if(scr2File) scr2 = await getBase64(scr2File);
+                let scr3 = document.getElementById('screenshot-3-url').value.trim();
+                const scr3File = document.getElementById('screenshot-3-file').files[0]; if(scr3File) scr3 = await getBase64(scr3File);
+
+                const screenshotsArray = [];
+                if(scr1) screenshotsArray.push(scr1);
+                if(scr2) screenshotsArray.push(scr2);
+                if(scr3) screenshotsArray.push(scr3);
+
                 const linksArray = [];
                 document.querySelectorAll('.link-entry-row').forEach((row, index) => {
                     const type = row.querySelector('.link-type').value; const url = row.querySelector('.link-url').value.trim();
@@ -891,9 +977,11 @@
                     description: document.getElementById('game-desc').value.trim(),
                     image: thumbUrl || existingRecord.image || 'https://via.placeholder.com/300x400',
                     banner: bannerUrl || existingRecord.banner || 'https://via.placeholder.com/1920x1080',
+                    screenshots: screenshotsArray.length > 0 ? screenshotsArray : (existingRecord.screenshots || []),
                     trailerYoutubeId: document.getElementById('game-trailer').value.trim(),
                     manualRatingOverride: parseFloat(document.getElementById('game-manual-rating').value) || 0,
                     alertNewsMessage: document.getElementById('game-alert-message').value.trim(),
+                    isLocked: existingRecord.isLocked || false,
                     visitorsCount: existingRecord.visitorsCount || 0,
                     downloadsCount: existingRecord.downloadsCount || 0,
                     likesCount: existingRecord.likesCount || 0,
