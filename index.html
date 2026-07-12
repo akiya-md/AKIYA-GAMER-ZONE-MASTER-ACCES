@@ -472,12 +472,10 @@
         });
 
         function setupRealtimeVisitors() {
-            // Admin වත් online ලිස්ට් එකට එකතු කරනවා
             const activeUserRef = database.ref('status/usersOnline/' + auth.currentUser.uid);
             activeUserRef.onDisconnect().remove();
             activeUserRef.set({ timestamp: firebase.database.ServerValue.TIMESTAMP });
             
-            // මුළු සයිට් එකේම Live ඉන්න සියලුම දෙනාගේ ගණන (Snapshot එකෙන්) real-time අප්ඩේට් කරනවා
             database.ref('status/usersOnline').on('value', snapshot => {
                 document.getElementById('stat-live-users').innerText = snapshot.numChildren() || 1;
             });
@@ -552,9 +550,6 @@
                     let weight = (downloaders * 3) + likes;
                     calculatedRating = Math.min(5, Math.max(1, 3.0 + (weight / visitors))).toFixed(1);
                 }
-
-                let reactionSum = 0;
-                if(game.reactionsMap) Object.values(game.reactionsMap).forEach(v => reactionSum += v);
 
                 const div = document.createElement('div');
                 div.className = `bg-[#161b22] p-4 rounded-xl border ${isLocked ? 'border-red-600' : 'border-slate-800'} flex flex-col justify-between space-y-3 relative`;
@@ -886,17 +881,11 @@
                     timestamp: firebase.database.ServerValue.TIMESTAMP
                 };
 
-                if(editId) {
-                    database.ref(`trending_banners/${editId}`).set(dataPayload).then(() => {
-                        alert("Trending Banner Node updated successfully.");
-                        cancelTrendingEdit();
-                    });
-                } else {
-                    database.ref('trending_banners').push(dataPayload).then(() => {
-                        alert("Trending Background Node Stream Uploaded.");
-                        document.getElementById('trending-banner-form').reset();
-                    });
-                }
+                // FIXED TRENDING BANNER: Push කරනවා වෙනුවට static 'main_banner' node එකටම ලියනවා.
+                database.ref('trending_banners/main_banner').set(dataPayload).then(() => {
+                    alert("Trending Banner Updated Successfully under static node structure!");
+                    cancelTrendingEdit();
+                }).catch(err => alert("Error updating banner structure: " + err.message));
             });
 
             document.getElementById('game-form').addEventListener('submit', async (e) => {
@@ -939,7 +928,7 @@
                     trailerYoutubeId: document.getElementById('game-trailer').value.trim(),
                     manualRatingOverride: parseFloat(document.getElementById('game-manual-rating').value) || 0,
                     alertNewsMessage: document.getElementById('game-alert-message').value.trim(),
-                    isLocked: existingRecord.isLocked || false,
+                    isLocked: typeof existingRecord.isLocked !== 'undefined' ? existingRecord.isLocked : false, // Game Edit කරද්දී Lock state එක නැතිවීම වැළැක්වීම
                     visitorsCount: existingRecord.visitorsCount || 0,
                     downloadsCount: existingRecord.downloadsCount || 0,
                     likesCount: existingRecord.likesCount || 0,
