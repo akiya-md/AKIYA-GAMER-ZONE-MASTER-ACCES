@@ -762,7 +762,7 @@
         };
 
         function listenTrendingBannersStream() {
-            database.ref('trending_banners').on('value', snapshot => {
+            database.ref('trendingBanners').on('value', snapshot => {
                 const box = document.getElementById('admin-trending-banners-list-box');
                 box.innerHTML = '';
                 globalTrendingCache = snapshot.val() || {};
@@ -809,7 +809,7 @@
 
         window.deleteTrendingBannerNode = function(id) {
             if(confirm("Erase this trending highlight banner element layout?")) {
-                database.ref(`trending_banners/${id}`).remove().then(() => {
+                database.ref(`trendingBanners/${id}`).remove().then(() => {
                     if(document.getElementById('trend-edit-id').value === id) cancelTrendingEdit();
                 });
             }
@@ -882,7 +882,7 @@
                 };
 
                 // FIXED TRENDING BANNER: Push කරනවා වෙනුවට static 'main_banner' node එකටම ලියනවා.
-                database.ref('trending_banners/main_banner').set(dataPayload).then(() => {
+                database.ref('trendingBanners/main_banner').set(dataPayload).then(() => {
                     alert("Trending Banner Updated Successfully under static node structure!");
                     cancelTrendingEdit();
                 }).catch(err => alert("Error updating banner structure: " + err.message));
