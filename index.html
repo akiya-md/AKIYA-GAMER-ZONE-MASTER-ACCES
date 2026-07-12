@@ -769,7 +769,7 @@
         };
 
         function listenTrendingBannersStream() {
-            database.ref('trandingBanner').on('value', snapshot => {
+            database.ref('trendingBanner').on('value', snapshot => {
                 const box = document.getElementById('admin-trending-banners-list-box');
                 box.innerHTML = '';
                 globalTrendingCache = snapshot.val() || {};
@@ -801,7 +801,7 @@
             if(!banner) return;
             document.getElementById('trend-edit-id').value = id;
             document.getElementById('trend-title').value = banner.title || '';
-            document.getElementById('trend-desc').value = banner.description || '';
+            document.getElementById('trend-desc').value = banner.description || banner.desc || '';
             document.getElementById('trend-note').value = banner.note || '';
             document.getElementById('trend-image-url').value = (!banner.image || banner.image.startsWith('data:')) ? '' : banner.image;
             document.getElementById('btn-trend-submit').innerText = "SAVE CHANGED BANNER NODE";
@@ -817,7 +817,7 @@
 
         window.deleteTrendingBannerNode = function(id) {
             if(confirm("Erase this trending highlight banner element layout?")) {
-                database.ref(`trandingBanner/${id}`).remove().then(() => {
+                database.ref(`trendingBanner/${id}`).remove().then(() => {
                     if(document.getElementById('trend-edit-id').value === id) cancelTrendingEdit();
                 });
             }
@@ -889,9 +889,9 @@
                     timestamp: firebase.database.ServerValue.TIMESTAMP
                 };
 
-                const targetNode = editId ? editId : database.ref('trandingBanner').push().key;
+                const targetNode = editId ? editId : database.ref('trendingBanner').push().key;
 
-                database.ref('trandingBanner/' + targetNode).set(dataPayload).then(() => {
+                database.ref('trendingBanner/' + targetNode).set(dataPayload).then(() => {
                     alert("Trending Banner Node Updated Successfully!");
                     cancelTrendingEdit();
                 }).catch(err => alert("Error: " + err.message));
