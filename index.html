@@ -882,7 +882,7 @@
                 };
 
                 // FIXED TRENDING BANNER: Push කරනවා වෙනුවට static 'main_banner' node එකටම ලියනවා.
-                database.ref('trendingBanners/main_banner').set(dataPayload).then(() => {
+                database.ref('trendingBanners').set(dataPayload).then(() => {
                     alert("Trending Banner Updated Successfully under static node structure!");
                     cancelTrendingEdit();
                 }).catch(err => alert("Error updating banner structure: " + err.message));
