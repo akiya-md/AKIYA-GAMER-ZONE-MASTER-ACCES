@@ -958,6 +958,13 @@
                 });
 
                 const existingRecord = globalGamesCache[slot] || {};
+                
+                // FIXED: isLocked fallback definition check to avoid auto-locking
+                let isLockedState = false;
+                if (typeof existingRecord.isLocked !== 'undefined') {
+                    isLockedState = (existingRecord.isLocked === true || existingRecord.isLocked === "true");
+                }
+
                 const gameData = {
                     category: document.getElementById('game-category').value.trim(),
                     name: document.getElementById('game-name').value.trim(),
@@ -969,7 +976,7 @@
                     trailerYoutubeId: document.getElementById('game-trailer').value.trim(),
                     manualRatingOverride: parseFloat(document.getElementById('game-manual-rating').value) || 0,
                     alertNewsMessage: document.getElementById('game-alert-message').value.trim(),
-                    isLocked: typeof existingRecord.isLocked !== 'undefined' ? existingRecord.isLocked : false,
+                    isLocked: isLockedState,
                     visitorsCount: existingRecord.visitorsCount || 0,
                     downloadsCount: existingRecord.downloadsCount || 0,
                     likesCount: existingRecord.likesCount || 0,
