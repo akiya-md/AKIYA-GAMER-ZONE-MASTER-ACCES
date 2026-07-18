@@ -3,315 +3,1007 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AGZ Terminal | Admin Matrix Center</title>
+    <title>AGZ Control Center - Admin Dashboard</title>
     <link class="rounded-full" rel="icon" type="image/jpeg" href="MY GAMING SITE OFFICIAL LOGO.jpg">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body { font-family: 'Rajdhani', sans-serif; background-color: #040612; color: #e2e8f0; }
+        body { font-family: 'Rajdhani', sans-serif; background-color: #060814; color: #e2e8f0; }
         .font-orbitron { font-family: 'Orbitron', sans-serif; }
-        .terminal-glass { background: rgba(11, 13, 25, 0.8); border: 1px solid #1e293b; backdrop-filter: blur(10px); }
-        .neon-border-cyan:focus { border-color: #00f0ff; box-shadow: 0 0 10px rgba(0, 240, 255, 0.2); outline: none; }
+        .neon-glow { box-shadow: 0 0 20px rgba(59, 130, 246, 0.3); }
+        .neon-glow-red { box-shadow: 0 0 20px rgba(239, 68, 68, 0.2); }
+        .neon-text-green { text-shadow: 0 0 8px rgba(34, 197, 94, 0.6); }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #060814; }
+        ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 10px; }
     </style>
 </head>
-<body class="p-4 md:p-8">
+<body class="bg-[#060814] min-h-screen flex flex-col">
 
-    <div class="max-w-7xl mx-auto">
-        <!-- Dashboard Header -->
-        <header class="terminal-glass rounded-xl p-6 mb-8 flex flex-col md:flex-row justify-between items-center gap-4 border-b-2 border-[#ff0055]">
-            <div class="flex items-center gap-4">
-                <img src="MY GAMING SITE OFFICIAL LOGO.jpg" class="w-14 h-14 rounded-lg border-2 border-[#00f0ff] object-cover">
-                <div>
-                    <h1 class="font-orbitron text-2xl font-bold tracking-wider text-white">AGZ CENTRAL TERMINAL</h1>
-                    <p class="text-xs text-gray-400 font-mono">Status: Connected to Secure Realtime Clusters</p>
-                </div>
-            </div>
-            <div class="flex gap-4">
-                <a href="home.html" class="font-orbitron bg-slate-800 hover:bg-slate-700 text-[#00f0ff] border border-[#00f0ff] px-4 py-2 rounded font-bold text-sm transition">VIEW ARENA</a>
-            </div>
-        </header>
-
-        <!-- System Adjustments Row -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-            <!-- Monetization Adjuster -->
-            <div class="terminal-glass p-6 rounded-xl border border-slate-800">
-                <h3 class="font-orbitron text-sm font-bold text-[#00f0ff] mb-4 tracking-wider uppercase"><i class="fas fa-ad mr-2"></i> Monetization Ad-Tab Controller</h3>
-                <label class="block text-xs text-gray-400 font-mono mb-2">MAXIMUM NEW-TAB POP ADS PER CLICK ON DOWNLOADS:</label>
-                <div class="flex gap-3">
-                    <input type="number" id="adsLimitInput" class="w-full bg-[#0d1117] border border-slate-700 rounded p-3 text-white neon-border-cyan font-mono" value="3" min="0" max="10">
-                    <button onclick="updateSystemAdsLimit()" class="font-orbitron bg-[#ff0055] hover:bg-[#b3003b] text-white px-6 rounded font-bold text-sm tracking-wider transition">DEPLOY</button>
-                </div>
-            </div>
-
-            <!-- Dynamic Live Notice Bar Dispatcher -->
-            <div class="terminal-glass p-6 rounded-xl border border-slate-800">
-                <h3 class="font-orbitron text-sm font-bold text-amber-400 mb-4 tracking-wider uppercase"><i class="fas fa-broadcast-tower mr-2"></i> Live Micro-Announcement Dispatcher</h3>
-                <label class="block text-xs text-gray-400 font-mono mb-2">ALERT BAR NOTICE (SHOWN OVER DOWNLOAD BOX):</label>
-                <div class="flex gap-3">
-                    <input type="text" id="liveNoticeInput" class="w-full bg-[#0d1117] border border-slate-700 rounded p-3 text-white neon-border-cyan text-sm" placeholder="e.g., Extract with WinRAR v6.20+. Parts are fully interchangeable!">
-                    <button onclick="dispatchLiveNoticeText()" class="font-orbitron bg-amber-500 hover:bg-amber-600 text-black px-6 rounded font-bold text-sm tracking-wider transition">DISPATCH</button>
-                </div>
-            </div>
+    <!-- Auth Protection Overlay -->
+    <div id="auth-overlay" class="fixed inset-0 bg-[#0d1117] z-50 flex flex-col justify-center items-center p-4">
+        <div class="bg-[#161b22] border border-blue-500/30 p-8 rounded-xl max-w-md w-full text-center neon-glow">
+            <h1 class="font-orbitron text-2xl text-blue-400 font-bold mb-2">AGZ SYSTEM ACCESS</h1>
+            <p class="text-gray-400 text-sm mb-6">This terminal is restricted to authorized administrative units only.</p>
+            <button id="btn-login" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 px-4 rounded-lg font-orbitron transition flex items-center justify-center gap-2">
+                <i class="fab fa-google"></i> AUTHENTICATE WITH GOOGLE
+            </button>
+            <p id="auth-error" class="text-red-500 text-sm mt-4 hidden">Access Denied: Unauthorized Personnel.</p>
         </div>
+    </div>
 
-        <main class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            <!-- Left Side: App Form -->
-            <div class="lg:col-span-1 terminal-glass p-6 rounded-xl border border-slate-800 h-fit">
-                <h2 class="font-orbitron text-lg font-bold text-white mb-6 border-b border-slate-800 pb-2 tracking-wide text-center">GENERATE PAYLOAD CORE</h2>
-                
-                <div class="space-y-4">
+    <!-- Main Dashboard UI -->
+    <div id="admin-dashboard" class="hidden flex-1 flex flex-col lg:flex-row">
+        <!-- Sidebar Navigation -->
+        <aside class="w-full lg:w-64 bg-[#0b0d19] border-r border-slate-800/60 p-6 flex flex-col justify-between">
+            <div>
+                <div class="flex items-center gap-3 mb-8">
+                    <div class="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center text-white text-xl font-bold font-orbitron">A</div>
                     <div>
-                        <label class="block text-xs font-mono text-gray-400 mb-1">TARGET COINCIDENCE SLOT CATEGORY:</label>
-                        <select id="gameCategorySelect" class="w-full bg-[#0d1117] border border-slate-700 rounded p-2.5 text-white neon-border-cyan text-sm" onchange="autoFetchNextAvailableSlotIndex()">
-                            <option value="Adventure">Adventure</option>
-                            <option value="Racing">Racing</option>
-                            <option value="Horror">Horror</option>
-                            <option value="Multiplayer">Multiplayer</option>
-                            <option value="Advance">Advance</option>
-                            <option value="Shooter">Shooter</option>
-                            <option value="Open World">Open World</option>
-                            <option value="Online">Online</option>
-                            <option value="Puzzle">Puzzle</option>
-                        </select>
+                        <h2 class="font-orbitron font-bold text-lg text-white leading-none">AGZ PANEL</h2>
+                        <span class="text-xs text-green-400 font-bold neon-text-green">● SECURE CORE v3.0</span>
                     </div>
+                </div>
+                <nav class="space-y-2">
+                    <button class="w-full text-left bg-slate-800 text-white font-semibold py-3 px-4 rounded-lg flex items-center gap-3 transition"><i class="fas fa-chart-pie text-blue-500"></i> Dashboard Overview</button>
+                    <a href="#games-section" class="w-full text-left text-gray-400 hover:bg-slate-800/50 hover:text-white py-3 px-4 rounded-lg flex items-center gap-3 transition"><i class="fas fa-gamepad"></i> Game Catalog Control</a>
+                    <a href="#games-lookup-section" class="w-full text-left text-gray-400 hover:bg-slate-800/50 hover:text-white py-3 px-4 rounded-lg flex items-center gap-3 transition"><i class="fas fa-search"></i> Card Editor & Mod Bar</a>
+                    <a href="#daily-task-section" class="w-full text-left text-gray-400 hover:bg-slate-800/50 hover:text-white py-3 px-4 rounded-lg flex items-center gap-3 transition"><i class="fas fa-tasks text-green-400"></i> Admin Tasks Control</a>
+                    <a href="#chat-section" class="w-full text-left text-gray-400 hover:bg-slate-800/50 hover:text-white py-3 px-4 rounded-lg flex items-center gap-3 transition"><i class="fas fa-comments text-amber-500"></i> Live Chat Matrix</a>
+                    <a href="#secret-chats-section" class="w-full text-left text-gray-400 hover:bg-slate-800/50 hover:text-white py-3 px-4 rounded-lg flex items-center gap-3 transition"><i class="fas fa-user-secret text-red-400"></i> Private Chats Monitor</a>
+                    <a href="#trending-section" class="w-full text-left text-gray-400 hover:bg-slate-800/50 hover:text-white py-3 px-4 rounded-lg flex items-center gap-3 transition"><i class="fas fa-fire text-red-500"></i> Trending Banners</a>
+                    <a href="#users-section" class="w-full text-left text-gray-400 hover:bg-slate-800/50 hover:text-white py-3 px-4 rounded-lg flex items-center gap-3 transition"><i class="fas fa-users"></i> Users & Analytics</a>
+                </nav>
+            </div>
+            <div class="pt-6 border-t border-slate-800 flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                    <img id="admin-avatar" class="w-8 h-8 rounded-full border border-blue-500" src="" alt="Admin">
+                    <span id="admin-name" class="text-sm font-semibold text-gray-300 truncate max-w-[110px]">Admin</span>
+                </div>
+                <button id="btn-logout" class="text-gray-500 hover:text-red-400 transition text-lg"><i class="fas fa-sign-out-alt"></i></button>
+            </div>
+        </aside>
 
+        <!-- Main Content Area -->
+        <main class="flex-1 p-6 lg:p-10 space-y-8 overflow-y-auto max-h-screen">
+            <!-- Metrics Panels -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="bg-[#0b0d19] border border-green-500/20 p-6 rounded-xl flex items-center justify-between shadow-lg">
                     <div>
-                        <label class="block text-xs font-mono text-gray-400 mb-1">TARGET DATA SLOT INDEX:</label>
-                        <input type="text" id="gameSlotIdInput" class="w-full bg-[#0d1117] border border-slate-700 rounded p-2.5 text-white neon-border-cyan font-mono text-sm" placeholder="e.g., 001">
+                        <p class="text-sm font-semibold text-gray-400 uppercase tracking-wider">Live Active Users</p>
+                        <h3 id="stat-live-users" class="font-orbitron text-4xl font-bold text-green-400 mt-1 neon-text-green">1</h3>
                     </div>
-
+                    <div class="w-12 h-12 bg-green-500/10 rounded-lg flex items-center justify-center text-green-400 text-xl animate-pulse"><i class="fas fa-broadcast-tower"></i></div>
+                </div>
+                <div class="bg-[#0b0d19] border border-blue-500/20 p-6 rounded-xl flex items-center justify-between shadow-lg">
                     <div>
-                        <label class="block text-xs font-mono text-gray-400 mb-1">GAME CORE TITLE:</label>
-                        <input type="text" id="gameTitleInput" class="w-full bg-[#0d1117] border border-slate-700 rounded p-2.5 text-white neon-border-cyan text-sm">
+                        <p class="text-sm font-semibold text-gray-400 uppercase tracking-wider">Total Members</p>
+                        <h3 id="stat-total-users" class="font-orbitron text-4xl font-bold text-blue-400 mt-1">0</h3>
                     </div>
-
+                    <div class="w-12 h-12 bg-blue-500/10 rounded-lg flex items-center justify-center text-blue-400 text-xl"><i class="fas fa-users"></i></div>
+                </div>
+                <div class="bg-[#0b0d19] border border-purple-500/20 p-6 rounded-xl flex items-center justify-between shadow-lg">
                     <div>
-                        <label class="block text-xs font-mono text-gray-400 mb-1">PAYLOAD COMPRESSION SIZE:</label>
-                        <input type="text" id="gameSizeInput" class="w-full bg-[#0d1117] border border-slate-700 rounded p-2.5 text-white neon-border-cyan text-sm" placeholder="e.g., 45.2 GB">
+                        <p class="text-sm font-semibold text-gray-400 uppercase tracking-wider">Total Games Loaded</p>
+                        <h3 id="stat-total-games" class="font-orbitron text-4xl font-bold text-purple-400 mt-1">0</h3>
                     </div>
-
+                    <div class="w-12 h-12 bg-purple-500/10 rounded-lg flex items-center justify-center text-purple-400 text-xl"><i class="fas fa-database"></i></div>
+                </div>
+                <div class="bg-[#0b0d19] border border-amber-500/20 p-6 rounded-xl flex items-center justify-between shadow-lg">
                     <div>
-                        <label class="block text-xs font-mono text-gray-400 mb-1">THUMBNAIL IMAGE CLOUD URL:</label>
-                        <input type="url" id="gameImageInput" class="w-full bg-[#0d1117] border border-slate-700 rounded p-2.5 text-white neon-border-cyan text-sm">
+                        <p class="text-sm font-semibold text-gray-400 uppercase tracking-wider">Database Status</p>
+                        <h3 class="font-orbitron text-2xl font-bold text-amber-400 mt-2 flex items-center gap-2">ONLINE</h3>
                     </div>
-
-                    <div>
-                        <label class="block text-xs font-mono text-gray-400 mb-1">HERO BANNER BACKGROUND URL:</label>
-                        <input type="url" id="gameBannerInput" class="w-full bg-[#0d1117] border border-slate-700 rounded p-2.5 text-white neon-border-cyan text-sm">
-                    </div>
-
-                    <div>
-                        <label class="block text-xs font-mono text-gray-400 mb-1">TRAILER YOUTUBE LINK/ID:</label>
-                        <input type="text" id="gameTrailerInput" class="w-full bg-[#0d1117] border border-slate-700 rounded p-2.5 text-white neon-border-cyan text-sm">
-                    </div>
-
-                    <div>
-                        <label class="block text-xs font-mono text-gray-400 mb-1">GAME OVERVIEW / DESCRIPTION:</label>
-                        <textarea id="gameDescInput" class="w-full bg-[#0d1117] border border-slate-700 rounded p-2.5 text-white neon-border-cyan text-sm h-24 resize-none"></textarea>
-                    </div>
-
-                    <!-- Setup Links Storage Matrix Arrays -->
-                    <div class="border-t border-slate-800 pt-3">
-                        <label class="block text-xs font-mono text-[#00f0ff] mb-2">PAYLOAD MIRROR PATH LINK ENGINES:</label>
-                        <div class="space-y-2 max-h-48 overflow-y-auto pr-1" id="linksInputContainer">
-                            <!-- Injected Dynamically via Script Core -->
-                        </div>
-                        <button onclick="addNewLinkInputRowFields()" class="w-full mt-2 bg-slate-800 hover:bg-slate-700 text-xs text-gray-300 font-mono p-2 rounded border border-slate-700 transition">+ ADD CLOUD MIRROR NODE</button>
-                    </div>
-
-                    <button onclick="commitGameMetadataToDatabase()" class="font-orbitron w-full bg-[#00f0ff] hover:bg-[#00c8d4] text-black p-3 rounded font-bold tracking-wider transition shadow-lg shadow-cyan-500/10 mt-2">WRITE TO CLUSTER DATA</button>
+                    <div class="w-12 h-12 bg-amber-500/10 rounded-lg flex items-center justify-center text-amber-400 text-xl"><i class="fas fa-shield-alt"></i></div>
                 </div>
             </div>
 
-            <!-- Right Side: Analytics List -->
-            <div class="lg:col-span-2 space-y-6">
-                <div class="terminal-glass p-6 rounded-xl border border-slate-800">
-                    <h2 class="font-orbitron text-base font-bold text-white mb-4 tracking-wide"><i class="fas fa-server text-[#ff0055] mr-2"></i> REPOSITORY DIRECTORY INDICES</h2>
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-left font-mono text-xs text-gray-400">
-                            <thead>
-                                <tr class="border-b border-slate-800 text-gray-500">
-                                    <th class="pb-3">SLOT KEY</th>
-                                    <th class="pb-3">CORE IDENTITY NAME</th>
-                                    <th class="pb-3 text-center">VISITS</th>
-                                    <th class="pb-3 text-center">DL_COUNT</th>
-                                    <th class="pb-3 text-right">OPERATIONS</th>
-                                </tr>
-                            </thead>
-                            <tbody id="gamesTerminalTableBody">
-                                <!-- Appended dynamically -->
-                            </tbody>
-                        </table>
+            <!-- LIVE VISITORS DETAILED LIST -->
+            <div class="bg-[#0b0d19] border border-green-500/30 p-6 rounded-xl shadow-lg">
+                <h3 class="font-orbitron text-lg font-bold text-green-400 mb-2 flex items-center gap-2"><i class="fas fa-users text-green-400"></i> Realtime Active Visitor Stream</h3>
+                <p class="text-xs text-gray-400 mb-4">Tracking dynamic user navigation logs inside the terminal network.</p>
+                <div id="live-visitors-list" class="grid grid-cols-2 md:grid-cols-4 gap-3 max-h-40 overflow-y-auto pr-1">
+                    <p class="text-xs text-gray-500 italic">Listening for active network nodes...</p>
+                </div>
+            </div>
+
+            <!-- Game Card Form Section -->
+            <div id="games-section" class="grid grid-cols-1 gap-8">
+                <div class="bg-[#0b0d19] border border-slate-800 p-6 rounded-xl shadow-lg">
+                    <h3 class="font-orbitron text-lg font-bold text-white mb-4 flex items-center gap-2"><i class="fas fa-plus-circle text-blue-500"></i> Deploy / Edit Game Card Registry Node</h3>
+                    <form id="game-form" class="space-y-4">
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div>
+                                <label class="block text-xs text-gray-400 mb-1">Game Category</label>
+                                <select id="game-category" onchange="updateCategorySlotsDropdown(this.value)" class="w-full bg-[#161b22] border border-slate-700 rounded p-2 text-white focus:outline-none focus:border-blue-500" required>
+                                    <option value="Adventure">Adventure</option>
+                                    <option value="Racing">Racing</option>
+                                    <option value="Horror">Horror</option>
+                                    <option value="Multiplayer">Multiplayer</option>
+                                    <option value="Advance">Advance</option>
+                                    <option value="Shooter">Shooter</option>
+                                    <option value="Open World">Open World</option>
+                                    <option value="Online">Online</option>
+                                    <option value="Puzzle">Puzzle</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-xs text-gray-400 mb-1">Select Existing Slot</label>
+                                <select id="category-slots-dropdown" onchange="handleSlotSelectionChange(this.value)" class="w-full bg-[#161b22] border border-slate-700 rounded p-2 text-white focus:outline-none focus:border-blue-500">
+                                    <option value="__NEW__">-- Auto Generate New Slot --</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-xs text-gray-400 mb-1">Target Slot Key (Unique ID)</label>
+                                <input id="game-slot" type="text" class="w-full bg-[#161b22] border border-slate-700 rounded p-2 text-white focus:outline-none focus:border-blue-500" placeholder="Cyberpunk_2077" required>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div>
+                                <label class="block text-xs text-gray-400 mb-1">Game Name</label>
+                                <input id="game-name" type="text" class="w-full bg-[#161b22] border border-slate-700 rounded p-2 text-white focus:outline-none focus:border-blue-500" placeholder="Grand Theft Auto V" required>
+                            </div>
+                            <div>
+                                <label class="block text-xs text-gray-400 mb-1">File Size String</label>
+                                <input id="game-size" type="text" class="w-full bg-[#161b22] border border-slate-700 rounded p-2 text-white focus:outline-none focus:border-blue-500" placeholder="65 GB" required>
+                            </div>
+                            <div>
+                                <label class="block text-xs text-gray-400 mb-1">YouTube Trailer ID or URL</label>
+                                <input id="game-trailer" type="text" class="w-full bg-[#161b22] border border-slate-700 rounded p-2 text-white focus:outline-none focus:border-blue-500" placeholder="e.g., dQw4w9WgXcQ">
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs text-gray-400 mb-1">Manual Rating Override (1-5)</label>
+                                <input id="game-manual-rating" type="number" step="0.1" min="0" max="5" class="w-full bg-[#161b22] border border-slate-700 rounded p-2 text-white focus:outline-none focus:border-blue-500" value="0">
+                            </div>
+                            <div>
+                                <label class="block text-xs text-amber-400 font-bold mb-1">Card Micro-Announcements Alert Banner Text</label>
+                                <input id="game-alert-message" type="text" class="w-full bg-[#161b22] border border-slate-700 rounded p-2 text-white text-xs focus:outline-none focus:border-amber-500" placeholder="Type micro-announcements...">
+                            </div>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="bg-[#161b22] p-3 rounded border border-slate-700 space-y-2">
+                                <label class="block text-xs font-bold text-blue-400">Game Thumbnail Image URL</label>
+                                <input id="game-thumb" type="url" class="w-full bg-[#0b0d19] border border-slate-700 rounded p-2 text-white text-xs focus:outline-none" placeholder="Paste Thumbnail Link">
+                                <input id="game-thumb-file" type="file" accept="image/*" class="w-full text-xs text-gray-400">
+                            </div>
+                            <div class="bg-[#161b22] p-3 rounded border border-slate-700 space-y-2">
+                                <label class="block text-xs font-bold text-red-400">Hero Banner Background Image URL</label>
+                                <input id="game-banner-url" type="url" class="w-full bg-[#0b0d19] border border-slate-700 rounded p-2 text-white text-xs focus:outline-none" placeholder="Paste Banner Link">
+                                <input id="game-banner-file" type="file" accept="image/*" class="w-full text-xs text-gray-400">
+                            </div>
+                        </div>
+
+                        <div class="bg-[#111424] p-4 rounded-xl border border-purple-900/40 space-y-3">
+                            <label class="block text-xs font-bold text-purple-400 uppercase font-orbitron tracking-wider">Extended Media Screenshots Array (Max 3)</label>
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                                <div class="p-2 bg-[#161b22] rounded border border-slate-700">
+                                    <span class="block text-[10px] text-gray-400 mb-1">Screenshot 1 (URL/File)</span>
+                                    <input id="screenshot-1-url" type="url" class="w-full bg-[#0b0d19] text-white text-xs p-1 rounded border border-slate-800 mb-1" placeholder="URL Link">
+                                    <input id="screenshot-1-file" type="file" accept="image/*" class="text-[10px] text-slate-500 w-full">
+                                </div>
+                                <div class="p-2 bg-[#161b22] rounded border border-slate-700">
+                                    <span class="block text-[10px] text-gray-400 mb-1">Screenshot 2 (URL/File)</span>
+                                    <input id="screenshot-2-url" type="url" class="w-full bg-[#0b0d19] text-white text-xs p-1 rounded border border-slate-800 mb-1" placeholder="URL Link">
+                                    <input id="screenshot-2-file" type="file" accept="image/*" class="text-[10px] text-slate-500 w-full">
+                                </div>
+                                <div class="p-2 bg-[#161b22] rounded border border-slate-700">
+                                    <span class="block text-[10px] text-gray-400 mb-1">Screenshot 3 (URL/File)</span>
+                                    <input id="screenshot-3-url" type="url" class="w-full bg-[#0b0d19] text-white text-xs p-1 rounded border border-slate-800 mb-1" placeholder="URL Link">
+                                    <input id="screenshot-3-file" type="file" accept="image/*" class="text-[10px] text-slate-500 w-full">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <div class="flex justify-between items-center mb-1">
+                                <label class="text-xs text-gray-400">Game Main Description Context</label>
+                                <span id="description-char-counter" class="text-[10px] font-mono text-blue-400">0 / 5000</span>
+                            </div>
+                            <textarea id="game-desc" maxlength="5000" oninput="document.getElementById('description-char-counter').innerText = this.value.length + ' / 5000'" class="w-full bg-[#161b22] border border-slate-700 rounded p-2.5 text-white text-xs h-36 focus:outline-none focus:border-blue-500" placeholder="Write comprehensive description..." required></textarea>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="bg-[#161b22] p-4 rounded-xl border border-slate-800 space-y-2 text-xs">
+                                <div class="font-bold text-green-400 mb-1 uppercase font-orbitron">System Requirements (Minimum)</div>
+                                <input id="spec-os" type="text" placeholder="OS" class="w-full bg-[#0b0d19] p-2 border border-slate-700 rounded text-white focus:outline-none mb-1">
+                                <input id="spec-cpu" type="text" placeholder="CPU" class="w-full bg-[#0b0d19] p-2 border border-slate-700 rounded text-white focus:outline-none mb-1">
+                                <input id="spec-ram" type="text" placeholder="RAM" class="w-full bg-[#0b0d19] p-2 border border-slate-700 rounded text-white focus:outline-none mb-1">
+                                <input id="spec-vga" type="text" placeholder="VGA" class="w-full bg-[#0b0d19] p-2 border border-slate-700 rounded text-white focus:outline-none">
+                            </div>
+                            <div class="bg-[#161b22] p-4 rounded-xl border border-slate-800 space-y-2 text-xs">
+                                <div class="font-bold text-blue-400 mb-1 uppercase font-orbitron">System Requirements (Recommended)</div>
+                                <input id="spec-rec-os" type="text" placeholder="OS" class="w-full bg-[#0b0d19] p-2 border border-slate-700 rounded text-white focus:outline-none mb-1">
+                                <input id="spec-rec-cpu" type="text" placeholder="CPU" class="w-full bg-[#0b0d19] p-2 border border-slate-700 rounded text-white focus:outline-none mb-1">
+                                <input id="spec-rec-ram" type="text" placeholder="RAM" class="w-full bg-[#0b0d19] p-2 border border-slate-700 rounded text-white focus:outline-none mb-1">
+                                <input id="spec-rec-vga" type="text" placeholder="VGA" class="w-full bg-[#0b0d19] p-2 border border-slate-700 rounded text-white focus:outline-none">
+                            </div>
+                        </div>
+
+                        <div class="bg-[#161b22] p-4 rounded border border-slate-700 space-y-3">
+                            <div class="flex justify-between items-center">
+                                <label class="block text-xs font-bold text-purple-400">Download Nodes Configurations Grid Links Engine</label>
+                                <button type="button" onclick="addNewDownloadLinkField()" class="bg-purple-600/30 text-purple-300 hover:bg-purple-600 text-xs py-1 px-2 rounded transition font-bold">+ Add Link Node</button>
+                            </div>
+                            <div id="dynamic-links-container" class="space-y-2 max-h-48 overflow-y-auto pr-1">
+                                <div class="flex gap-2 items-center link-entry-row">
+                                    <select class="link-type bg-[#0b0d19] text-white border border-slate-700 rounded text-xs p-2">
+                                        <option value="direct">Direct Download</option>
+                                        <option value="torrent">Torrent</option>
+                                        <option value="cloud">Cloud Extra</option>
+                                    </select>
+                                    <input type="url" class="link-url flex-1 bg-[#0b0d19] border border-slate-700 rounded text-xs p-2 text-white" placeholder="https://download-link.com" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 px-4 rounded font-orbitron tracking-wider transition">PUBLISH INTEGRATED MATRIX CARD LAYER</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Game Matrix Roster Search Engine -->
+            <div id="games-lookup-section" class="bg-[#0b0d19] border border-slate-800 p-6 rounded-xl shadow-lg space-y-4">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                    <div>
+                        <h3 class="font-orbitron text-lg font-bold text-white flex items-center gap-2"><i class="fas fa-search text-purple-500"></i> Game Roster Terminal Lookup</h3>
+                        <p class="text-xs text-gray-400">Search game items, status, reaction logs data stream nodes.</p>
                     </div>
+                    <div class="w-full md:w-72 relative">
+                        <input id="game-matrix-search-bar" type="text" oninput="executeLiveGameSearch(this.value)" class="w-full bg-[#161b22] text-xs p-2.5 rounded-lg border border-slate-700 focus:outline-none focus:border-purple-500 pl-8 text-white" placeholder="Type game profile name...">
+                        <i class="fas fa-search absolute left-2.5 top-3.5 text-gray-500 text-xs"></i>
+                    </div>
+                </div>
+
+                <div id="game-search-results-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4 max-h-96 overflow-y-auto p-1">
+                    <p class="text-xs text-gray-500 italic">Awakening database indexing modules...</p>
+                </div>
+
+                <!-- Comment Mod Terminal Frame Layer -->
+                <div id="target-game-comments-panel" class="hidden border-t border-slate-800/80 pt-4 space-y-3">
+                    <div class="flex justify-between items-center">
+                        <h4 id="comments-panel-title-string" class="text-xs font-bold font-orbitron text-amber-400 uppercase tracking-widest">Active Moderation Logs Box Target:</h4>
+                        <div class="flex gap-2">
+                            <button id="btn-wipe-all-comments" class="bg-red-700 hover:bg-red-600 text-white font-bold font-orbitron px-2 py-1 text-[10px] rounded transition">🚨 WIPE ALL CARD COMMENTS</button>
+                            <button onclick="document.getElementById('target-game-comments-panel').classList.add('hidden')" class="text-gray-500 hover:text-white text-xs font-bold font-orbitron">X CLOSE</button>
+                        </div>
+                    </div>
+                    <div id="card-comments-terminal-logs-box" class="bg-[#060814] rounded-lg p-3 max-h-64 overflow-y-auto space-y-2 border border-slate-800 text-xs"></div>
+                    
+                    <div id="admin-comment-reply-container" class="hidden bg-[#121622] p-3 rounded-lg border border-slate-700 mt-2 space-y-2">
+                        <span class="text-xs font-bold text-amber-400 font-orbitron"><i class="fas fa-reply"></i> Submit Certified Reply</span>
+                        <input type="hidden" id="reply-target-comment-id">
+                        <input type="hidden" id="reply-target-game-slot">
+                        <textarea id="admin-comment-reply-text" class="w-full bg-[#060814] p-2 text-white border border-slate-700 rounded text-xs focus:outline-none" placeholder="Type administrative response node content here..."></textarea>
+                        <div class="flex justify-end gap-2">
+                            <button onclick="document.getElementById('admin-comment-reply-container').classList.add('hidden')" class="bg-slate-700 text-white px-3 py-1 rounded text-xs font-bold">Cancel</button>
+                            <button onclick="dispatchAdminCommentReplyNode()" class="bg-amber-600 hover:bg-amber-500 text-white px-3 py-1 rounded text-xs font-bold">Transmit Reply</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Daily Task System -->
+            <div id="daily-task-section" class="bg-[#0b0d19] border border-slate-800 p-6 rounded-xl shadow-lg">
+                <h3 class="font-orbitron text-lg font-bold text-green-400 mb-1 flex items-center gap-2"><i class="fas fa-tasks"></i> Admin Daily Mission Hotline Controller</h3>
+                <p class="text-xs text-gray-400 mb-4">Set dynamic targeted task requirements.</p>
+                <form id="admin-task-form" class="space-y-4">
+                    <div>
+                        <label class="block text-xs text-gray-400 mb-1">Unique Task ID</label>
+                        <input id="task-id-input" type="text" class="w-full bg-[#161b22] border border-slate-700 rounded p-2 text-white text-xs focus:outline-none" placeholder="task_id_2026_01" required>
+                    </div>
+                    <div>
+                        <label class="block text-xs text-gray-400 mb-1">Task Description Context</label>
+                        <textarea id="task-desc-input" class="w-full bg-[#161b22] border border-slate-700 rounded p-2 text-white text-xs h-16 focus:outline-none" placeholder="Task description context..." required></textarea>
+                    </div>
+                    <div>
+                        <label class="block text-xs text-gray-400 mb-1">Task Redirect URL</label>
+                        <input id="task-link-input" type="url" class="w-full bg-[#161b22] border border-slate-700 rounded p-2 text-white text-xs focus:outline-none" placeholder="https://youtube.com">
+                    </div>
+                    <button type="submit" class="w-full bg-green-600 hover:bg-green-500 text-white font-bold py-2 px-4 rounded font-orbitron transition text-xs">DEPLOY MISSION FORCE</button>
+                </form>
+            </div>
+
+            <!-- Lobby Chat Management Block -->
+            <div id="chat-section" class="bg-[#0b0d19] border border-slate-800 p-6 rounded-xl shadow-lg space-y-4">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-slate-800 pb-4">
+                    <div>
+                        <h3 class="font-orbitron text-lg font-bold text-amber-400 flex items-center gap-2"><i class="fas fa-comments"></i> Gamer Lobby Chat Management</h3>
+                    </div>
+                    <div class="flex gap-2 flex-wrap">
+                        <button onclick="toggleChatStatus(true)" class="bg-green-600 hover:bg-green-500 text-white font-bold text-xs py-2 px-4 rounded transition">OPEN LOBBY</button>
+                        <button onclick="toggleChatStatus(false)" class="bg-red-600 hover:bg-red-500 text-white font-bold text-xs py-2 px-4 rounded transition">STOP LOBBY CHAT</button>
+                        <button onclick="clearAllLobbyChats()" class="bg-slate-700 hover:bg-slate-600 text-white font-bold text-xs py-2 px-4 rounded transition"><i class="fas fa-trash-alt"></i> CLEAR ALL</button>
+                    </div>
+                </div>
+                <div id="admin-chat-logs-box" class="bg-[#161b22] border border-slate-800 p-4 rounded-xl h-64 overflow-y-auto space-y-2 text-sm text-white"></div>
+                <div class="flex gap-3">
+                    <input id="admin-chat-reply-input" type="text" class="flex-1 bg-[#161b22] border border-slate-700 rounded p-3 text-white focus:outline-none text-sm" placeholder="Send official verified response...">
+                    <button onclick="sendAdminLobbyMessage()" class="bg-amber-600 hover:bg-amber-500 text-white font-bold py-3 px-6 rounded font-orbitron text-sm transition">POST AS OWNER</button>
+                </div>
+            </div>
+
+            <!-- Secret Chats Monitor Matrix -->
+            <div id="secret-chats-section" class="bg-[#0b0d19] border border-slate-800 p-6 rounded-xl shadow-lg space-y-4">
+                <h3 class="font-orbitron text-lg font-bold text-red-400 flex items-center gap-2"><i class="fas fa-user-secret"></i> Private Secret Chat Logs Monitor</h3>
+                <div id="admin-private-logs-box" class="bg-[#161b22] border border-slate-800 p-4 rounded-xl h-72 overflow-y-auto space-y-2 text-xs text-white"></div>
+            </div>
+
+            <!-- Trending Banners Form & Stream Box -->
+            <div id="trending-section" class="bg-[#0b0d19] border border-slate-800 p-6 rounded-xl shadow-lg space-y-6 neon-glow-red">
+                <div class="border-b border-slate-800 pb-3">
+                    <h3 class="font-orbitron text-lg font-bold text-red-500 flex items-center gap-2"><i class="fas fa-fire"></i> Trending Display Matrix Configuration</h3>
+                    <p class="text-xs text-gray-400">Add or synchronize dynamic custom sliding banners on the frontend network.</p>
+                </div>
+                
+                <form id="trending-banner-form" class="grid grid-cols-1 lg:grid-cols-12 gap-6 bg-[#111424] p-5 rounded-xl border border-red-950/40">
+                    <div class="lg:col-span-7 space-y-4">
+                        <div class="hidden"><input type="text" id="trend-edit-id"></div>
+                        <div>
+                            <label class="block text-xs font-bold font-orbitron text-gray-300 uppercase mb-1 tracking-wider">Epic Game Banner Title</label>
+                            <input id="trend-title" type="text" class="w-full bg-[#161b22] border border-slate-700 rounded-lg p-3 text-white text-sm focus:outline-none focus:border-red-500 transition shadow-inner" placeholder="Cyberpunk 2077" required>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold font-orbitron text-gray-300 uppercase mb-1 tracking-wider">Banner Description Context Details</label>
+                            <textarea id="trend-desc" class="w-full bg-[#161b22] border border-slate-700 rounded-lg p-3 text-white text-sm h-24 focus:outline-none focus:border-red-500 transition resize-none shadow-inner" placeholder="Enter custom context data details..."></textarea>
+                        </div>
+                    </div>
+                    <div class="lg:col-span-5 flex flex-col justify-between space-y-4 lg:space-y-0">
+                        <div>
+                            <label class="block text-xs font-bold font-orbitron text-gray-300 uppercase mb-1 tracking-wider">Special Highlight Tag Note</label>
+                            <input id="trend-note" type="text" class="w-full bg-[#161b22] border border-slate-700 rounded-lg p-3 text-white text-sm focus:outline-none focus:border-red-500 transition shadow-inner" placeholder="📥 Direct Fast Download Configuration Enabled">
+                        </div>
+                        <div class="bg-[#161b22] p-3 rounded-lg border border-slate-700 space-y-2">
+                            <label class="block text-xs font-bold text-red-400 font-orbitron uppercase tracking-wide">Graphic Background Media Option Link</label>
+                            <input id="trend-image-url" type="url" class="w-full bg-[#0b0d19] border border-slate-700 rounded p-2 text-white text-xs focus:outline-none focus:border-red-500" placeholder="Paste structural image URL path">
+                            <div class="relative flex items-center justify-center bg-[#070913] rounded border border-dashed border-slate-700 p-2 text-center hover:border-red-500 transition">
+                                <input id="trend-image-file" type="file" accept="image/*" class="w-full text-xs text-gray-400 cursor-pointer">
+                            </div>
+                        </div>
+                        <div class="flex gap-2 pt-2">
+                            <button type="submit" id="btn-trend-submit" class="flex-1 bg-red-600 hover:bg-red-500 text-white font-bold py-3 px-4 rounded-lg font-orbitron transition text-xs uppercase tracking-widest shadow-md">UPDATE TRENDING NODE</button>
+                            <button type="button" id="btn-trend-cancel" onclick="cancelTrendingEdit()" class="hidden bg-slate-700 hover:bg-slate-600 text-white font-bold py-3 px-4 rounded-lg font-orbitron transition text-xs uppercase tracking-widest">CANCEL</button>
+                        </div>
+                    </div>
+                </form>
+
+                <div class="border-t border-slate-800/80 pt-4">
+                    <h4 class="text-xs font-bold font-orbitron text-red-400 uppercase mb-3 tracking-widest flex items-center gap-2"><i class="fas fa-layer-group"></i> Active Trending Registry Core Storage</h4>
+                    <div id="admin-trending-banners-list-box" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 max-h-72 overflow-y-auto pr-1"></div>
+                </div>
+            </div>
+
+            <!-- Broadcast Section Layout -->
+            <div class="bg-[#0b0d19] border border-slate-800 p-6 rounded-xl shadow-lg">
+                <h3 class="font-orbitron text-lg font-bold text-white mb-4 flex items-center gap-2"><i class="fas fa-bullhorn text-amber-500"></i> Broadcast System Announcement</h3>
+                <div class="flex flex-col sm:flex-row gap-4">
+                    <input id="announcement-text" type="text" class="flex-1 bg-[#161b22] border border-slate-700 rounded p-3 text-white focus:outline-none focus:border-amber-500" placeholder="Type announcement alert text...">
+                    <button id="btn-update-announcement" class="bg-amber-600 hover:bg-amber-500 text-white font-bold py-3 px-6 rounded font-orbitron transition">BROADCAST LIVE</button>
+                </div>
+            </div>
+
+            <div class="bg-[#0b0d19] border border-slate-800 p-6 rounded-xl shadow-lg">
+                <div class="relative h-64 md:h-80 w-full"><canvas id="growthBarChart"></canvas></div>
+            </div>
+
+            <!-- User Matrix Analytics Grid Node -->
+            <div id="users-section" class="bg-[#0b0d19] border border-slate-800 rounded-xl shadow-lg overflow-hidden">
+                <div class="p-6 border-b border-slate-800/80 bg-[#0e1122] flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                    <h3 class="font-orbitron text-lg font-bold text-white flex items-center gap-2"><i class="fas fa-users-cog text-emerald-400"></i> Registered Gamer Node Management</h3>
+                    <div class="w-full md:w-72 relative">
+                        <input id="user-matrix-search-bar" type="text" oninput="executeLiveUserSearch(this.value)" class="w-full bg-[#161b22] text-xs p-2 rounded border border-slate-700 focus:outline-none focus:border-emerald-500 pl-8 text-white" placeholder="Search by AGZ ID or Profile Name...">
+                        <i class="fas fa-search absolute left-2.5 top-2.5 text-gray-500 text-xs"></i>
+                    </div>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-[#12162b] text-xs text-gray-300 uppercase tracking-wider font-orbitron border-b border-slate-800">
+                                <th class="p-4">Gamer Profile</th>
+                                <th class="p-4">AGZ ID</th>
+                                <th class="p-4 text-center">Visits</th>
+                                <th class="p-4 text-center">Downloads Node</th>
+                                <th class="p-4 text-right">Moderation Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="user-table-body" class="text-sm divide-y divide-slate-800/60"></tbody>
+                    </table>
                 </div>
             </div>
         </main>
     </div>
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getDatabase, ref, onValue, set, get } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
+    <script>
         const firebaseConfig = {
             apiKey: "AIzaSyD1SRJ0O2OcZRYafgJ0uABolb9TgBiAA3I",
             authDomain: "akiya-gamer-zone.firebaseapp.com",
+            databaseURL: "https://akiya-gamer-zone-default-rtdb.asia-southeast1.firebasedatabase.app/",
             projectId: "akiya-gamer-zone",
             storageBucket: "akiya-gamer-zone.firebasestorage.app",
-            databaseURL: "https://akiya-gamer-zone-default-rtdb.asia-southeast1.firebasedatabase.app/"
+            messagingSenderId: "392261776362",
+            appId: "1:392261776362:web:e0b5bbfe267465af70f893"
         };
 
-        const app = initializeApp(firebaseConfig);
-        const database = getDatabase(app);
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+        const auth = firebase.auth();
 
-        window.addNewLinkInputRowFields = function(url = '', type = 'direct') {
-            const container = document.getElementById('linksInputContainer');
-            const row = document.createElement('div');
-            row.className = 'flex gap-2 link-entry-row items-center bg-[#070913] p-2 rounded border border-slate-900';
-            row.innerHTML = `
-                <select class="link-type-select bg-[#0d1117] border border-slate-700 text-white rounded text-xs p-1">
-                    <option value="direct" ${type==='direct'?'selected':''}>Direct</option>
-                    <option value="torrent" ${type==='torrent'?'selected':''}>Torrent</option>
-                    <option value="cloud" ${type==='cloud'?'selected':''}>Cloud</option>
-                </select>
-                <input type="url" class="link-href-input w-full bg-[#0d1117] border border-slate-700 text-white rounded text-xs p-1" value="${url}" placeholder="Mirror https:// URL...">
-                <button onclick="this.parentElement.remove()" class="text-[#ff0055] text-xs px-1 hover:scale-110 transition"><i class="fas fa-trash"></i></button>
-            `;
-            container.appendChild(row);
-        };
+        const ALLOWED_ADMIN_EMAIL = "kaviakiya@gmail.com"; 
+        let myGrowthChart;
+        let globalGamesCache = {};
+        let globalUsersCache = {};
+        let globalTrendingCache = {};
+        let userSearchQuery = "";
 
-        window.autoFetchNextAvailableSlotIndex = function() {
-            const cat = document.getElementById('gameCategorySelect').value;
-            get(ref(database, 'games')).then((snap) => {
-                let max = 0;
-                if(snap.exists()) {
-                    Object.keys(snap.val()).forEach(key => {
-                        if(key.startsWith(cat + "_")) {
-                            let num = parseInt(key.split('_')[1]);
-                            if(num > max) max = num;
-                        }
-                    });
-                }
-                document.getElementById('gameSlotIdInput').value = String(max + 1).padStart(3, '0');
+        function getBase64(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = error => reject(error);
             });
-        };
-
-        window.updateSystemAdsLimit = function() {
-            const val = parseInt(document.getElementById('adsLimitInput').value) || 0;
-            set(ref(database, 'system_controls/maxAdsCount'), val).then(() => alert("Ad matrix configured safely."));
-        };
-
-        window.dispatchLiveNoticeText = function() {
-            const txt = document.getElementById('liveNoticeInput').value.trim();
-            set(ref(database, 'system_controls/downloadNoticeText'), txt).then(() => alert("Live announcement text dispatched."));
-        };
-
-        window.commitGameMetadataToDatabase = function() {
-            const cat = document.getElementById('gameCategorySelect').value;
-            const slot = document.getElementById('gameSlotIdInput').value.trim();
-            if(!slot) { alert("Missing encryption target code index!"); return; }
-            
-            const targetKey = `${cat}_${slot}`;
-            const linkRows = document.querySelectorAll('.link-entry-row');
-            const linksArray = [];
-            
-            // Link array reset structure mapped to force continuous sequential iterations inside the template structure
-            linkRows.forEach(row => {
-                const type = row.querySelector('.link-type-select').value;
-                const href = row.querySelector('.link-href-input').value.trim();
-                if(href) linksArray.push({ platformType: type, href: href });
-            });
-
-            const updatedPayload = {
-                name: document.getElementById('gameTitleInput').value.trim(),
-                category: cat,
-                size: document.getElementById('gameSizeInput').value.trim(),
-                image: document.getElementById('gameImageInput').value.trim(),
-                banner: document.getElementById('gameBannerInput').value.trim(),
-                trailerYoutubeId: document.getElementById('gameTrailerInput').value.trim(),
-                description: document.getElementById('gameDescInput').value.trim(),
-                download_links: linksArray
-            };
-
-            set(ref(database, `games/${targetKey}`), updatedPayload).then(() => {
-                alert(`Data structural integrity synced to target node: ${targetKey}`);
-                clearAdminFormCanvas();
-            });
-        };
-
-        function clearAdminFormCanvas() {
-            document.getElementById('gameTitleInput').value = '';
-            document.getElementById('gameSizeInput').value = '';
-            document.getElementById('gameImageInput').value = '';
-            document.getElementById('gameBannerInput').value = '';
-            document.getElementById('gameTrailerInput').value = '';
-            document.getElementById('gameDescInput').value = '';
-            document.getElementById('linksInputContainer').innerHTML = '';
-            autoFetchNextAvailableSlotIndex();
         }
 
-        window.triggerTargetNodeDeletion = function(key) {
-            if(confirm(`Execute total erasure protocol on node: ${key}?`)) {
-                set(ref(database, `games/${key}`), null);
+        document.getElementById('btn-login').addEventListener('click', () => {
+            const provider = new firebase.auth.GoogleAuthProvider();
+            auth.signInWithPopup(provider).catch(err => console.error(err));
+        });
+
+        document.getElementById('btn-logout').addEventListener('click', () => {
+            auth.signOut(); window.location.reload();
+        });
+
+        auth.onAuthStateChanged(user => {
+            if (user) {
+                if (user.email === ALLOWED_ADMIN_EMAIL) {
+                    document.getElementById('auth-overlay').classList.add('hidden');
+                    document.getElementById('admin-dashboard').classList.remove('hidden');
+                    document.getElementById('admin-avatar').src = user.photoURL;
+                    document.getElementById('admin-name').innerText = user.displayName;
+                    
+                    initializeAdminCore();
+                    setupRealtimeVisitors();
+                    listenLobbyChats();
+                    listenPrivateSecretChats();
+                    cacheAndListenGamesRegistry();
+                    listenTrendingBannersStream();
+                } else {
+                    document.getElementById('auth-error').classList.remove('hidden');
+                    auth.signOut();
+                }
+            } else {
+                document.getElementById('auth-overlay').classList.remove('hidden');
+                document.getElementById('admin-dashboard').classList.add('hidden');
+            }
+        });
+
+        function setupRealtimeVisitors() {
+            const activeUserRef = database.ref('status/usersOnline/' + auth.currentUser.uid);
+            activeUserRef.onDisconnect().remove();
+            activeUserRef.set({ 
+                name: auth.currentUser.displayName || "Admin",
+                photo: auth.currentUser.photoURL || "",
+                timestamp: firebase.database.ServerValue.TIMESTAMP 
+            });
+            
+            database.ref('status/usersOnline').on('value', snapshot => {
+                const currentOnlineCount = snapshot.numChildren() || 1;
+                document.getElementById('stat-live-users').innerText = currentOnlineCount;
+                
+                const streamBox = document.getElementById('live-visitors-list');
+                streamBox.innerHTML = '';
+                
+                if(snapshot.exists()) {
+                    snapshot.forEach(child => {
+                        const visitor = child.val();
+                        const div = document.createElement('div');
+                        div.className = "flex items-center gap-2 bg-[#161b22] border border-slate-800 p-2 rounded-lg text-xs";
+                        div.innerHTML = `
+                            <img src="${visitor.photo || 'https://via.placeholder.com/30'}" class="w-6 h-6 rounded-full object-cover border border-green-500">
+                            <span class="text-gray-300 truncate font-semibold">${visitor.name || 'Gamer'}</span>
+                        `;
+                        streamBox.appendChild(div);
+                    });
+                } else {
+                    streamBox.innerHTML = `<p class="text-gray-500 italic">No nodes streaming.</p>`;
+                }
+            });
+        }
+
+        window.addNewDownloadLinkField = function() {
+            const container = document.getElementById('dynamic-links-container');
+            const div = document.createElement('div');
+            div.className = "flex gap-2 items-center link-entry-row mt-2";
+            div.innerHTML = `
+                <select class="link-type bg-[#0b0d19] text-white border border-slate-700 rounded text-xs p-2">
+                    <option value="direct">Direct Download</option>
+                    <option value="torrent">Torrent</option>
+                    <option value="cloud">Cloud Extra</option>
+                </select>
+                <input type="url" class="link-url flex-1 bg-[#0b0d19] border border-slate-700 rounded text-xs p-2 text-white" placeholder="https://download-link.com" required>
+                <button type="button" onclick="this.parentElement.remove()" class="text-red-500 hover:text-red-400 font-bold px-1 text-xs">X</button>
+            `;
+            container.appendChild(div);
+        };
+
+        function cacheAndListenGamesRegistry() {
+            database.ref('games').on('value', snapshot => {
+                globalGamesCache = snapshot.val() || {};
+                executeLiveGameSearch(document.getElementById('game-matrix-search-bar').value);
+                updateCategorySlotsDropdown(document.getElementById('game-category').value);
+            });
+        }
+
+        window.updateCategorySlotsDropdown = function(category) {
+            const dropdown = document.getElementById('category-slots-dropdown');
+            dropdown.innerHTML = '<option value="__NEW__">-- Auto Generate New Slot --</option>';
+            Object.keys(globalGamesCache).forEach(slotKey => {
+                const game = globalGamesCache[slotKey];
+                if(game.category === category) {
+                    const opt = document.createElement('option');
+                    opt.value = slotKey;
+                    opt.innerText = `${game.name} (${slotKey})`;
+                    dropdown.appendChild(opt);
+                }
+            });
+        };
+
+        window.handleSlotSelectionChange = function(val) {
+            if(val === '__NEW__') {
+                document.getElementById('game-slot').value = '';
+                document.getElementById('game-form').reset();
+                document.getElementById('category-slots-dropdown').value = '__NEW__';
+            } else {
+                loadGameToFormForEditing(val);
+                document.getElementById('category-slots-dropdown').value = val;
             }
         };
 
-        window.editTargetClusterNode = function(key) {
-            get(ref(database, `games/${key}`)).then(snap => {
-                if(!snap.exists()) return;
-                const g = snap.val();
+        window.executeLiveGameSearch = function(query) {
+            const container = document.getElementById('game-search-results-grid');
+            container.innerHTML = '';
+            const lowerQuery = query.toLowerCase().trim();
+
+            Object.keys(globalGamesCache).forEach(slotKey => {
+                const game = globalGamesCache[slotKey];
+                if(lowerQuery && !slotKey.toLowerCase().includes(lowerQuery) && !game.name.toLowerCase().includes(lowerQuery)) return;
+
+                const visitors = game.visitorsCount || 0;
+                const downloaders = game.downloadsCount || 0;
+                const likes = game.likesCount || 0;
+                const manualRating = game.manualRatingOverride || 0;
+                const isLocked = game.isLocked === true;
                 
-                document.getElementById('gameCategorySelect').value = g.category || 'Adventure';
-                document.getElementById('gameSlotIdInput').value = key.split('_')[1];
-                document.getElementById('gameTitleInput').value = g.name || '';
-                document.getElementById('gameSizeInput').value = g.size || '';
-                document.getElementById('gameImageInput').value = g.image || '';
-                document.getElementById('gameBannerInput').value = g.banner || '';
-                document.getElementById('gameTrailerInput').value = g.trailerYoutubeId || '';
-                document.getElementById('gameDescInput').value = g.description || '';
-                
-                const container = document.getElementById('linksInputContainer');
-                container.innerHTML = '';
-                if(g.download_links) {
-                    g.download_links.forEach(l => addNewLinkInputRowFields(l.href, l.platformType));
+                let calculatedRating = manualRating > 0 ? manualRating : 3.5;
+                if(manualRating === 0 && (visitors > 0 || downloaders > 0)) {
+                    let weight = (downloaders * 3) + likes;
+                    calculatedRating = Math.min(5, Math.max(1, 3.0 + (weight / visitors))).toFixed(1);
                 }
-                window.scrollTo({ top: 0, behavior: 'smooth' });
+
+                const div = document.createElement('div');
+                div.className = `bg-[#161b22] p-4 rounded-xl border ${isLocked ? 'border-red-600' : 'border-slate-800'} flex flex-col justify-between space-y-3 relative`;
+                div.innerHTML = `
+                    ${isLocked ? '<div class="absolute top-2 right-2 bg-red-600 text-white text-[10px] font-bold px-2 py-0.5 rounded uppercase font-orbitron"><i class="fas fa-lock"></i> LOCKED</div>' : '<div class="absolute top-2 right-2 bg-green-600 text-white text-[10px] font-bold px-2 py-0.5 rounded uppercase font-orbitron"><i class="fas fa-lock-open"></i> ACTIVE</div>'}
+                    <div class="flex items-start gap-3">
+                        <img src="${game.image}" class="w-12 h-16 rounded object-cover bg-black border border-slate-700">
+                        <div class="flex-1 min-w-0">
+                            <h4 class="text-sm font-bold text-white truncate">${game.name}</h4>
+                            <p class="text-[11px] font-mono text-purple-400 font-bold">Slot: ${slotKey}</p>
+                            <p class="text-[11px] text-gray-400 truncate">${game.category} | ${game.size}</p>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-3 gap-1.5 text-[10px] text-center font-bold tracking-wide text-gray-300">
+                        <div class="bg-[#0b0d19] p-1 rounded"><i class="fas fa-eye text-blue-400"></i> Visits: ${visitors}</div>
+                        <div class="bg-[#0b0d19] p-1 rounded"><i class="fas fa-download text-green-400"></i> Dls: ${downloaders}</div>
+                        <div class="bg-[#0b0d19] p-1 rounded"><i class="fas fa-star text-amber-400"></i> Rating: ${calculatedRating}★</div>
+                    </div>
+                    <div class="flex gap-2 text-xs pt-1 flex-wrap">
+                        <button type="button" onclick="loadGameToFormForEditing('${slotKey}')" class="flex-1 bg-blue-600 hover:bg-blue-500 text-white font-bold py-1 px-2 rounded transition">EDIT CARD</button>
+                        <button type="button" onclick="openCommentsTerminalLogsConsole('${slotKey}')" class="flex-1 bg-amber-600 hover:bg-amber-500 text-white font-bold py-1 px-2 rounded transition">MOD COMMENTS</button>
+                        <button type="button" onclick="toggleGameLockStatus('${slotKey}', ${isLocked})" class="flex-1 ${isLocked ? 'bg-green-600 hover:bg-green-500' : 'bg-red-600 hover:bg-red-500'} text-white font-bold py-1 px-2 rounded transition uppercase font-orbitron text-[10px] tracking-wider">${isLocked ? 'Unlock' : 'Lock'}</button>
+                        <button type="button" onclick="deleteEntireGameCardRegistryNode('${slotKey}')" class="bg-red-900/40 hover:bg-red-600 text-red-400 hover:text-white px-2 rounded transition"><i class="fas fa-trash"></i></button>
+                    </div>
+                `;
+                container.appendChild(div);
             });
         };
 
-        window.addEventListener('DOMContentLoaded', () => {
-            autoFetchNextAvailableSlotIndex();
-            
-            get(ref(database, 'system_controls/maxAdsCount')).then(snap => {
-                if(snap.exists()) document.getElementById('adsLimitInput').value = snap.val();
-            });
-            get(ref(database, 'system_controls/downloadNoticeText')).then(snap => {
-                if(snap.exists()) document.getElementById('liveNoticeInput').value = snap.val();
-            });
+        window.toggleGameLockStatus = function(slotKey, currentStatus) {
+            const confirmationMsg = currentStatus ? "Unlock this game card node registry?" : "Lock this game card node? Users will be blocked from accessing download details.";
+            if(confirm(confirmationMsg)) {
+                database.ref('games/' + slotKey).update({ isLocked: !currentStatus }).then(() => {
+                    alert("Game lock state changed successfully.");
+                });
+            }
+        };
 
-            onValue(ref(database, 'games'), (snapshot) => {
-                const tbody = document.getElementById('gamesTerminalTableBody');
-                tbody.innerHTML = '';
-                if(!snapshot.exists()) return;
-                
-                Object.keys(snapshot.val()).forEach(key => {
-                    const g = snapshot.val()[key];
-                    const row = document.createElement('tr');
-                    row.className = 'border-b border-slate-900 hover:bg-slate-900/40 transition';
-                    row.innerHTML = `
-                        <td class="py-3 text-[#00f0ff] font-bold">${key}</td>
-                        <td class="py-3 text-white max-w-xs truncate">${g.name || 'Untitled'}</td>
-                        <td class="py-3 text-center font-bold text-slate-500">${g.visitorsCount || 0}</td>
-                        <td class="py-3 text-center font-bold text-emerald-500">${g.downloadsCount || 0}</td>
-                        <td class="py-3 text-right space-x-2">
-                            <button onclick="editTargetClusterNode('${key}')" class="text-amber-500 hover:underline"><i class="fas fa-edit"></i></button>
-                            <button onclick="triggerTargetNodeDeletion('${key}')" class="text-[#ff0055] hover:underline"><i class="fas fa-trash"></i></button>
-                        </td>
+        window.loadGameToFormForEditing = function(slotKey) {
+            const game = globalGamesCache[slotKey];
+            if(!game) return;
+
+            document.getElementById('game-slot').value = slotKey;
+            document.getElementById('game-name').value = game.name || '';
+            document.getElementById('game-category').value = game.category || 'Adventure';
+            document.getElementById('game-size').value = game.size || '';
+            document.getElementById('game-desc').value = game.description || '';
+            document.getElementById('game-trailer').value = game.trailerYoutubeId || '';
+            document.getElementById('game-manual-rating').value = game.manualRatingOverride || 0;
+            document.getElementById('game-alert-message').value = game.alertNewsMessage || '';
+            
+            document.getElementById('game-thumb').value = (game.image && !game.image.startsWith('data:')) ? game.image : '';
+            document.getElementById('game-banner-url').value = (game.banner && !game.banner.startsWith('data:')) ? game.banner : '';
+            
+            document.getElementById('screenshot-1-url').value = (game.screenshots && game.screenshots[0] && !game.screenshots[0].startsWith('data:')) ? game.screenshots[0] : '';
+            document.getElementById('screenshot-2-url').value = (game.screenshots && game.screenshots[1] && !game.screenshots[1].startsWith('data:')) ? game.screenshots[1] : '';
+            document.getElementById('screenshot-3-url').value = (game.screenshots && game.screenshots[2] && !game.screenshots[2].startsWith('data:')) ? game.screenshots[2] : '';
+
+            if(game.specs && game.specs.min) {
+                document.getElementById('spec-os').value = game.specs.min.os || '';
+                document.getElementById('spec-cpu').value = game.specs.min.cpu || '';
+                document.getElementById('spec-ram').value = game.specs.min.ram || '';
+                document.getElementById('spec-vga').value = game.specs.min.vga || '';
+            }
+            if(game.specs && game.specs.recommended) {
+                document.getElementById('spec-rec-os').value = game.specs.recommended.os || '';
+                document.getElementById('spec-rec-cpu').value = game.specs.recommended.cpu || '';
+                document.getElementById('spec-rec-ram').value = game.specs.recommended.ram || '';
+                document.getElementById('spec-rec-vga').value = game.specs.recommended.vga || '';
+            }
+
+            const container = document.getElementById('dynamic-links-container');
+            container.innerHTML = '';
+            if(game.download_links && game.download_links.length > 0) {
+                game.download_links.forEach((link, idx) => {
+                    const div = document.createElement('div');
+                    div.className = "flex gap-2 items-center link-entry-row" + (idx > 0 ? " mt-2" : "");
+                    div.innerHTML = `
+                        <select class="link-type bg-[#0b0d19] text-white border border-slate-700 rounded text-xs p-2">
+                            <option value="direct" ${link.platformType === 'direct' ? 'selected' : ''}>Direct Download</option>
+                            <option value="torrent" ${link.platformType === 'torrent' ? 'selected' : ''}>Torrent</option>
+                            <option value="cloud" ${link.platformType === 'cloud' ? 'selected' : ''}>Cloud Extra</option>
+                        </select>
+                        <input type="url" value="${link.href || ''}" class="link-url flex-1 bg-[#0b0d19] border border-slate-700 rounded text-xs p-2 text-white" required>
+                        ${idx > 0 ? `<button type="button" onclick="this.parentElement.remove()" class="text-red-500 hover:text-red-400 font-bold px-1 text-xs">X</button>` : ''}
                     `;
-                    tbody.appendChild(row);
+                    container.appendChild(div);
+                });
+            } else {
+                addNewDownloadLinkField();
+            }
+            location.hash = "#games-section";
+        };
+
+        window.openCommentsTerminalLogsConsole = function(slotKey) {
+            const game = globalGamesCache[slotKey];
+            if(!game) return;
+
+            document.getElementById('comments-panel-title-string').innerText = `Active Moderation Logs Box Target: ${game.name}`;
+            const container = document.getElementById('card-comments-terminal-logs-box');
+            container.innerHTML = '';
+            document.getElementById('target-game-comments-panel').classList.remove('hidden');
+
+            document.getElementById('btn-wipe-all-comments').onclick = function() {
+                if(confirm("🚨 CRITICAL ERASURE: Erase every single comment?")) {
+                    database.ref(`games/${slotKey}/commentsMap`).remove().then(() => openCommentsTerminalLogsConsole(slotKey));
+                }
+            };
+
+            if(!game.commentsMap) {
+                container.innerHTML = `<p class="text-gray-500 italic text-center py-4">No commentary entries captured.</p>`;
+                return;
+            }
+
+            Object.keys(game.commentsMap).forEach(commentId => {
+                const c = game.commentsMap[commentId];
+                const row = document.createElement('div');
+                row.className = "bg-[#0b0d19] p-3 border border-slate-800 rounded flex flex-col gap-2 text-white";
+                row.innerHTML = `
+                    <div class="flex justify-between items-center gap-4">
+                        <div class="truncate flex-1">
+                            <span class="text-blue-400 font-bold">${c.senderName || 'Anonymous'}:</span>
+                            <span class="text-gray-300 ml-1">${c.textMessage || ''}</span>
+                        </div>
+                        <div class="flex gap-2 shrink-0 text-[10px]">
+                            <button onclick="initiateAdminReplyField('${slotKey}', '${commentId}')" class="bg-amber-500 text-black font-bold px-2 py-1 rounded transition">REPLY</button>
+                            <button onclick="deleteSingleCardCommentSignatureNode('${slotKey}', '${commentId}')" class="text-red-500 font-bold px-2 py-1">DELETE</button>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(row);
+            });
+        };
+
+        window.initiateAdminReplyField = function(slotKey, commentId) {
+            document.getElementById('reply-target-comment-id').value = commentId;
+            document.getElementById('reply-target-game-slot').value = slotKey;
+            document.getElementById('admin-comment-reply-container').classList.remove('hidden');
+            document.getElementById('admin-comment-reply-text').focus();
+        };
+
+        window.dispatchAdminCommentReplyNode = function() {
+            const commentId = document.getElementById('reply-target-comment-id').value;
+            const slotKey = document.getElementById('reply-target-game-slot').value;
+            const text = document.getElementById('admin-comment-reply-text').value.trim();
+            if(!text) return;
+
+            database.ref(`games/${slotKey}/commentsMap/${commentId}/repliesMap`).push({
+                senderName: "OWNER 👑",
+                textMessage: text,
+                isOwnerReply: true,
+                timestamp: firebase.database.ServerValue.TIMESTAMP
+            }).then(() => {
+                document.getElementById('admin-comment-reply-text').value = '';
+                document.getElementById('admin-comment-reply-container').classList.add('hidden');
+                openCommentsTerminalLogsConsole(slotKey);
+            });
+        };
+
+        window.deleteSingleCardCommentSignatureNode = function(slotKey, commentId) {
+            if(confirm("Confirm removal of this comment node?")) {
+                database.ref(`games/${slotKey}/commentsMap/${commentId}`).remove().then(() => openCommentsTerminalLogsConsole(slotKey));
+            }
+        };
+
+        window.deleteEntireGameCardRegistryNode = function(slotKey) {
+            if(confirm(`🚨 DANGER ZONE: Complete erasure sequence for slot: [${slotKey}]. Confirm?`)) {
+                database.ref('games/' + slotKey).remove();
+            }
+        };
+
+        function listenLobbyChats() {
+            database.ref('lobby_chats').on('value', snapshot => {
+                const logsBox = document.getElementById('admin-chat-logs-box'); logsBox.innerHTML = '';
+                if(!snapshot.exists()) return;
+                snapshot.forEach(child => {
+                    const chatId = child.key; const data = child.val();
+                    const div = document.createElement('div');
+                    div.className = "flex justify-between items-center bg-[#0b0d19] p-2 rounded border border-slate-800 text-xs text-white mb-1";
+                    div.innerHTML = `<div><span class="text-blue-400 font-bold">${data.sender}:</span> <span class="text-gray-300 ml-1">${data.msg}</span></div><button onclick="deleteSingleChatMessage('${chatId}')" class="text-red-500 text-[10px]">DELETE</button>`;
+                    logsBox.appendChild(div);
+                });
+                logsBox.scrollTop = logsBox.scrollHeight;
+            });
+        }
+
+        function listenPrivateSecretChats() {
+            database.ref('private_chats').on('value', snapshot => {
+                const secretBox = document.getElementById('admin-private-logs-box'); secretBox.innerHTML = '';
+                if(!snapshot.exists()) return;
+                snapshot.forEach(roomChild => {
+                    roomChild.forEach(msgChild => {
+                        const mData = msgChild.val();
+                        const msgDiv = document.createElement('div');
+                        msgDiv.className = "p-2 bg-[#0b0d19] border border-slate-900 rounded mb-1 text-xs text-white";
+                        msgDiv.innerHTML = `<div><strong class="text-amber-400">${mData.senderName}:</strong> <span class="text-gray-200">${mData.msg || '[Media]'}</span></div>`;
+                        secretBox.appendChild(msgDiv);
+                    });
                 });
             });
-        });
+        }
+
+        window.deleteSingleChatMessage = function(id) { database.ref('lobby_chats/' + id).remove(); };
+        window.clearAllLobbyChats = function() { database.ref('lobby_chats').remove(); };
+        window.toggleChatStatus = function(isOpen) { database.ref('system_controls/lobby_chat_enabled').set(isOpen); };
+        window.sendAdminLobbyMessage = function() {
+            const input = document.getElementById('admin-chat-reply-input'); if(!input.value.trim()) return;
+            database.ref('lobby_chats').push({ sender: "OWNER 👑", msg: input.value.trim(), isOwner: true, isVerified: true, timestamp: firebase.database.ServerValue.TIMESTAMP })
+            .then(() => input.value = '');
+        };
+
+        function listenTrendingBannersStream() {
+            database.ref('trendingBanner').on('value', snapshot => {
+                const box = document.getElementById('admin-trending-banners-list-box');
+                box.innerHTML = '';
+                globalTrendingCache = snapshot.val() || {};
+                
+                Object.keys(globalTrendingCache).forEach(id => {
+                    const banner = globalTrendingCache[id];
+                    const div = document.createElement('div');
+                    div.className = "bg-[#161b22] border border-slate-800 p-3 rounded-lg flex flex-col justify-between text-xs text-white hover:border-red-500/50 transition duration-200 shadow-md";
+                    div.innerHTML = `
+                        <div class="flex gap-3 items-start">
+                            <img src="${banner.image || 'https://via.placeholder.com/150x80'}" class="w-20 h-12 object-cover rounded-md bg-black border border-slate-700 shrink-0 shadow-sm">
+                            <div class="truncate flex-1">
+                                <h5 class="text-white font-bold text-sm truncate mb-0.5">${banner.title || 'Untitled'}</h5>
+                                <p class="text-gray-400 text-[11px] truncate">${banner.note || 'No highlight tags'}</p>
+                            </div>
+                        </div>
+                        <div class="flex gap-2 mt-3 pt-2 border-t border-slate-800/80">
+                            <button type="button" onclick="loadTrendingBannerToForm('${id}')" class="flex-1 bg-blue-600/20 hover:bg-blue-600 text-blue-400 hover:text-white font-bold py-1.5 px-2 rounded font-orbitron text-[10px] uppercase transition tracking-wider">Edit</button>
+                            <button type="button" onclick="deleteTrendingBannerNode('${id}')" class="flex-1 bg-red-600/20 hover:bg-red-600 text-red-400 hover:text-white font-bold py-1.5 px-2 rounded font-orbitron text-[10px] uppercase transition tracking-wider">Delete</button>
+                        </div>
+                    `;
+                    box.appendChild(div);
+                });
+            });
+        }
+
+        window.loadTrendingBannerToForm = function(id) {
+            const banner = globalTrendingCache[id];
+            if(!banner) return;
+            document.getElementById('trend-edit-id').value = id;
+            document.getElementById('trend-title').value = banner.title || '';
+            document.getElementById('trend-desc').value = banner.description || banner.desc || '';
+            document.getElementById('trend-note').value = banner.note || '';
+            document.getElementById('trend-image-url').value = (!banner.image || banner.image.startsWith('data:')) ? '' : banner.image;
+            document.getElementById('btn-trend-submit').innerText = "SAVE CHANGED BANNER NODE";
+            document.getElementById('btn-trend-cancel').classList.remove('hidden');
+        };
+
+        window.cancelTrendingEdit = function() {
+            document.getElementById('trend-edit-id').value = '';
+            document.getElementById('trending-banner-form').reset();
+            document.getElementById('btn-trend-submit').innerText = "UPDATE TRENDING NODE";
+            document.getElementById('btn-trend-cancel').classList.add('hidden');
+        };
+
+        window.deleteTrendingBannerNode = function(id) {
+            if(confirm("Erase this trending highlight banner element layout?")) {
+                database.ref(`trendingBanner/${id}`).remove().then(() => {
+                    if(document.getElementById('trend-edit-id').value === id) cancelTrendingEdit();
+                });
+            }
+        };
+
+        window.executeLiveUserSearch = function(query) { userSearchQuery = query.toLowerCase().trim(); renderUserTable(); };
+        window.toggleAccountBanStatus = function(uid, currentStatus) { database.ref('users/' + uid + '/isBanned').set(!currentStatus); };
+        window.toggleUserVerification = function(uid, currentStatus) { database.ref('users/' + uid + '/verifiedAccount').set(!currentStatus); };
+
+        function renderUserTable() {
+            const tableBody = document.getElementById('user-table-body'); tableBody.innerHTML = '';
+            Object.keys(globalUsersCache).forEach(key => {
+                const user = globalUsersCache[key];
+                const name = user.customName || user.name || 'Gamer';
+                if(userSearchQuery && !name.toLowerCase().includes(userSearchQuery)) return;
+
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-slate-800/40 border-b border-slate-800/40 text-xs text-white text-left";
+                tr.innerHTML = `
+                    <td class="p-4 font-bold flex items-center gap-3"><img src="${user.photo || 'https://via.placeholder.com/40'}" class="w-8 h-8 rounded-full border border-slate-700 object-cover"><span>${name}</span></td>
+                    <td class="p-4 font-mono">${user.agzId || 'NONE'}</td>
+                    <td class="p-4 text-center">${user.visits || 0}</td>
+                    <td class="p-4 text-center">${user.downloads || 0}</td>
+                    <td class="p-4 text-right space-x-2">
+                        <button onclick="toggleUserVerification('${key}', ${user.verifiedAccount || false})" class="bg-slate-800 px-2 py-1 rounded text-amber-400">${user.verifiedAccount ? 'UNVERIFY' : 'VERIFY'}</button>
+                        <button onclick="toggleAccountBanStatus('${key}', ${user.isBanned || false})" class="bg-red-600 px-2 py-1 rounded">${user.isBanned ? 'UNBAN' : 'BAN'}</button>
+                    </td>
+                `;
+                tableBody.appendChild(tr);
+            });
+        }
+
+        function initializeAdminCore() {
+            database.ref('games').on('value', snapshot => { document.getElementById('stat-total-games').innerText = snapshot.numChildren() || 0; });
+            database.ref('users').on('value', snapshot => {
+                globalUsersCache = snapshot.val() || {};
+                document.getElementById('stat-total-users').innerText = Object.keys(globalUsersCache).length;
+                renderUserTable();
+                updateGrowthGraph([5, 12, 18, 25, 40, Object.keys(globalUsersCache).length]);
+            });
+
+            document.getElementById('admin-task-form').addEventListener('submit', (e) => {
+                e.preventDefault();
+                database.ref('admin_settings/daily_task').set({
+                    taskId: document.getElementById('task-id-input').value.trim(),
+                    taskDescription: document.getElementById('task-desc-input').value.trim(),
+                    taskRedirectUrl: document.getElementById('task-link-input').value.trim(),
+                    timestamp: firebase.database.ServerValue.TIMESTAMP
+                }).then(() => { alert("Controlled task node metrics updated."); document.getElementById('admin-task-form').reset(); });
+            });
+
+            document.getElementById('trending-banner-form').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const editId = document.getElementById('trend-edit-id').value;
+                let imgUrl = document.getElementById('trend-image-url').value.trim();
+                const imgFile = document.getElementById('trend-image-file').files[0];
+                
+                if(imgFile) {
+                    imgUrl = await getBase64(imgFile);
+                } else if(editId && !imgUrl && globalTrendingCache[editId]) {
+                    imgUrl = globalTrendingCache[editId].image;
+                }
+
+                const dataPayload = {
+                    title: document.getElementById('trend-title').value.trim(),
+                    description: document.getElementById('trend-desc').value.trim(),
+                    note: document.getElementById('trend-note').value.trim(),
+                    image: imgUrl || 'https://via.placeholder.com/1920x1080',
+                    timestamp: firebase.database.ServerValue.TIMESTAMP
+                };
+
+                const targetNode = editId ? editId : database.ref('trendingBanner').push().key;
+
+                database.ref('trendingBanner/' + targetNode).set(dataPayload).then(() => {
+                    alert("Trending Banner Node Updated Successfully!");
+                    cancelTrendingEdit();
+                }).catch(err => alert("Error: " + err.message));
+            });
+
+            document.getElementById('game-form').addEventListener('submit', async (e) => {
+                e.preventDefault(); 
+                let slot = document.getElementById('game-slot').value.trim();
+                if(!slot) slot = document.getElementById('game-name').value.trim().replace(/[^a-zA-Z0-9]/g, '_') + '_' + Math.floor(1000 + Math.random() * 9000);
+
+                let thumbUrl = document.getElementById('game-thumb').value.trim();
+                const thumbFile = document.getElementById('game-thumb-file').files[0]; if(thumbFile) thumbUrl = await getBase64(thumbFile);
+                let bannerUrl = document.getElementById('game-banner-url').value.trim();
+                const bannerFile = document.getElementById('game-banner-file').files[0]; if(bannerFile) bannerUrl = await getBase64(bannerFile);
+
+                let scr1 = document.getElementById('screenshot-1-url').value.trim();
+                const scr1File = document.getElementById('screenshot-1-file').files[0]; if(scr1File) scr1 = await getBase64(scr1File);
+                let scr2 = document.getElementById('screenshot-2-url').value.trim();
+                const scr2File = document.getElementById('screenshot-2-file').files[0]; if(scr2File) scr2 = await getBase64(scr2File);
+                let scr3 = document.getElementById('screenshot-3-url').value.trim();
+                const scr3File = document.getElementById('screenshot-3-file').files[0]; if(scr3File) scr3 = await getBase64(scr3File);
+
+                const screenshotsArray = [];
+                if(scr1) screenshotsArray.push(scr1);
+                if(scr2) screenshotsArray.push(scr2);
+                if(scr3) screenshotsArray.push(scr3);
+
+                const linksArray = [];
+                document.querySelectorAll('.link-entry-row').forEach((row, index) => {
+                    const type = row.querySelector('.link-type').value; const url = row.querySelector('.link-url').value.trim();
+                    if(url) linksArray.push({ platformType: type, href: url, part: `Part 0${index + 1}` });
+                });
+
+                const existingRecord = globalGamesCache[slot] || {};
+                
+                // FIXED: isLocked fallback definition check to avoid auto-locking
+                let isLockedState = false;
+                if (typeof existingRecord.isLocked !== 'undefined') {
+                    isLockedState = (existingRecord.isLocked === true || existingRecord.isLocked === "true");
+                }
+
+                const gameData = {
+                    category: document.getElementById('game-category').value.trim(),
+                    name: document.getElementById('game-name').value.trim(),
+                    size: document.getElementById('game-size').value.trim(),
+                    description: document.getElementById('game-desc').value.trim(),
+                    image: thumbUrl || existingRecord.image || 'https://via.placeholder.com/300x400',
+                    banner: bannerUrl || existingRecord.banner || 'https://via.placeholder.com/1920x1080',
+                    screenshots: screenshotsArray.length > 0 ? screenshotsArray : (existingRecord.screenshots || []),
+                    trailerYoutubeId: document.getElementById('game-trailer').value.trim(),
+                    manualRatingOverride: parseFloat(document.getElementById('game-manual-rating').value) || 0,
+                    alertNewsMessage: document.getElementById('game-alert-message').value.trim(),
+                    isLocked: isLockedState,
+                    visitorsCount: existingRecord.visitorsCount || 0,
+                    downloadsCount: existingRecord.downloadsCount || 0,
+                    likesCount: existingRecord.likesCount || 0,
+                    download_links: linksArray,
+                    specs: {
+                        min: { os: document.getElementById('spec-os').value, cpu: document.getElementById('spec-cpu').value, ram: document.getElementById('spec-ram').value, vga: document.getElementById('spec-vga').value },
+                        recommended: { os: document.getElementById('spec-rec-os').value, cpu: document.getElementById('spec-rec-cpu').value, ram: document.getElementById('spec-rec-ram').value, vga: document.getElementById('spec-rec-vga').value }
+                    }
+                };
+
+                database.ref('games/' + slot).set(gameData).then(() => { 
+                    alert("Game Saved Successfully: " + slot); 
+                    document.getElementById('game-form').reset(); 
+                    document.getElementById('category-slots-dropdown').value = '__NEW__';
+                });
+            });
+
+            document.getElementById('btn-update-announcement').addEventListener('click', () => {
+                database.ref('announcements/latest').set(document.getElementById('announcement-text').value.trim());
+            });
+        }
+
+        function updateGrowthGraph(dataArray) {
+            const ctx = document.getElementById('growthBarChart').getContext('2d');
+            if(myGrowthChart) myGrowthChart.destroy();
+            myGrowthChart = new Chart(ctx, { type: 'bar', data: { labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'], datasets: [{ data: dataArray, backgroundColor: '#3b82f6', label: 'Members Growth' }] }, options: { responsive: true, maintainAspectRatio: false } });
+        }
     </script>
 </body>
 </html>
