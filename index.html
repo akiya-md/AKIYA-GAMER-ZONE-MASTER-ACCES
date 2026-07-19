@@ -51,6 +51,7 @@
                     <a href="#games-section" class="w-full text-left text-gray-400 hover:bg-slate-800/50 hover:text-white py-3 px-4 rounded-lg flex items-center gap-3 transition"><i class="fas fa-gamepad"></i> Game Catalog Control</a>
                     <a href="#games-lookup-section" class="w-full text-left text-gray-400 hover:bg-slate-800/50 hover:text-white py-3 px-4 rounded-lg flex items-center gap-3 transition"><i class="fas fa-search"></i> Card Editor & Mod Bar</a>
                     <a href="#daily-task-section" class="w-full text-left text-gray-400 hover:bg-slate-800/50 hover:text-white py-3 px-4 rounded-lg flex items-center gap-3 transition"><i class="fas fa-tasks text-green-400"></i> Admin Tasks Control</a>
+                    <a href="#monetag-section" class="w-full text-left text-gray-400 hover:bg-slate-800/50 hover:text-white py-3 px-4 rounded-lg flex items-center gap-3 transition"><i class="fas fa-ad text-cyan-400"></i> Monetag & Notices</a>
                     <a href="#chat-section" class="w-full text-left text-gray-400 hover:bg-slate-800/50 hover:text-white py-3 px-4 rounded-lg flex items-center gap-3 transition"><i class="fas fa-comments text-amber-500"></i> Live Chat Matrix</a>
                     <a href="#secret-chats-section" class="w-full text-left text-gray-400 hover:bg-slate-800/50 hover:text-white py-3 px-4 rounded-lg flex items-center gap-3 transition"><i class="fas fa-user-secret text-red-400"></i> Private Chats Monitor</a>
                     <a href="#trending-section" class="w-full text-left text-gray-400 hover:bg-slate-800/50 hover:text-white py-3 px-4 rounded-lg flex items-center gap-3 transition"><i class="fas fa-fire text-red-500"></i> Trending Banners</a>
@@ -310,6 +311,25 @@
                 </form>
             </div>
 
+            <!-- Monetag & Notice Controls -->
+            <div id="monetag-section" class="bg-[#0b0d19] border border-slate-800 p-6 rounded-xl shadow-lg space-y-6">
+                <div class="border-b border-slate-800 pb-3">
+                    <h3 class="font-orbitron text-lg font-bold text-cyan-400 flex items-center gap-2"><i class="fas fa-ad"></i> Monetag Settings Terminal</h3>
+                    <p class="text-xs text-gray-400">Configure core in-app advertising triggers and download notice alerts.</p>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="space-y-2">
+                        <label class="block text-xs text-gray-400 uppercase font-mono">Maximum New-Tab Ads Limit Per Click</label>
+                        <input type="number" id="ads-limit-input" min="0" max="10" class="w-full bg-[#161b22] border border-slate-700 rounded p-2.5 text-white font-mono text-sm focus:outline-none focus:border-cyan-500" value="3">
+                    </div>
+                    <div class="space-y-2">
+                        <label class="block text-xs text-gray-400 uppercase font-mono">Download Dynamic Notice Text Alert</label>
+                        <input type="text" id="ads-notice-input" class="w-full bg-[#161b22] border border-slate-700 rounded p-2.5 text-white text-xs focus:outline-none focus:border-cyan-500" placeholder="e.g., බටන් එකක් ක්ලික් කළ විට ඇඩ්ස් 3 ක් ප්ලේ වේ">
+                    </div>
+                </div>
+                <button onclick="saveMonetagSettingsConfig()" class="w-full bg-cyan-600 hover:bg-cyan-500 text-black font-bold py-2.5 px-4 rounded font-orbitron tracking-wider transition text-xs uppercase shadow-md shadow-cyan-500/10">SYNC MONETIZATION PARAMS</button>
+            </div>
+
             <!-- Lobby Chat Management Block -->
             <div id="chat-section" class="bg-[#0b0d19] border border-slate-800 p-6 rounded-xl shadow-lg space-y-4">
                 <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-slate-800 pb-4">
@@ -477,6 +497,7 @@
                     listenPrivateSecretChats();
                     cacheAndListenGamesRegistry();
                     listenTrendingBannersStream();
+                    loadMonetagConfigurationSettings();
                 } else {
                     document.getElementById('auth-error').classList.remove('hidden');
                     auth.signOut();
@@ -486,6 +507,25 @@
                 document.getElementById('admin-dashboard').classList.add('hidden');
             }
         });
+
+        function loadMonetagConfigurationSettings() {
+            database.ref('system_controls/maxAdsCount').on('value', snap => {
+                if(snap.exists()) document.getElementById('ads-limit-input').value = snap.val();
+            });
+            database.ref('system_controls/downloadNoticeText').on('value', snap => {
+                if(snap.exists()) document.getElementById('ads-notice-input').value = snap.val();
+            });
+        }
+
+        window.saveMonetagSettingsConfig = function() {
+            const maxAds = parseInt(document.getElementById('ads-limit-input').value) || 0;
+            const noticeTxt = document.getElementById('ads-notice-input').value.trim();
+            
+            database.ref('system_controls').update({
+                maxAdsCount: maxAds,
+                downloadNoticeText: noticeTxt
+            }).then(() => alert("Monetag Ads parameters and notice configuration synchronized successfully."));
+        };
 
         function setupRealtimeVisitors() {
             const activeUserRef = database.ref('status/usersOnline/' + auth.currentUser.uid);
@@ -959,7 +999,6 @@
 
                 const existingRecord = globalGamesCache[slot] || {};
                 
-                // FIXED: isLocked fallback definition check to avoid auto-locking
                 let isLockedState = false;
                 if (typeof existingRecord.isLocked !== 'undefined') {
                     isLockedState = (existingRecord.isLocked === true || existingRecord.isLocked === "true");
