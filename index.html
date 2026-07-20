@@ -50,6 +50,7 @@
                     <button class="w-full text-left bg-slate-800 text-white font-semibold py-3 px-4 rounded-lg flex items-center gap-3 transition"><i class="fas fa-chart-pie text-blue-500"></i> Dashboard Overview</button>
                     <a href="#games-section" class="w-full text-left text-gray-400 hover:bg-slate-800/50 hover:text-white py-3 px-4 rounded-lg flex items-center gap-3 transition"><i class="fas fa-gamepad"></i> Game Catalog Control</a>
                     <a href="#games-lookup-section" class="w-full text-left text-gray-400 hover:bg-slate-800/50 hover:text-white py-3 px-4 rounded-lg flex items-center gap-3 transition"><i class="fas fa-search"></i> Card Editor & Mod Bar</a>
+                    <a href="#reviews-moderation-section" class="w-full text-left text-gray-400 hover:bg-slate-800/50 hover:text-white py-3 px-4 rounded-lg flex items-center gap-3 transition"><i class="fas fa-star text-amber-400"></i> Review Matrix Mod</a>
                     <a href="#daily-task-section" class="w-full text-left text-gray-400 hover:bg-slate-800/50 hover:text-white py-3 px-4 rounded-lg flex items-center gap-3 transition"><i class="fas fa-tasks text-green-400"></i> Admin Tasks Control</a>
                     <a href="#monetag-section" class="w-full text-left text-gray-400 hover:bg-slate-800/50 hover:text-white py-3 px-4 rounded-lg flex items-center gap-3 transition"><i class="fas fa-ad text-cyan-400"></i> Monetag & Notices</a>
                     <a href="#chat-section" class="w-full text-left text-gray-400 hover:bg-slate-800/50 hover:text-white py-3 px-4 rounded-lg flex items-center gap-3 transition"><i class="fas fa-comments text-amber-500"></i> Live Chat Matrix</a>
@@ -290,6 +291,17 @@
                 </div>
             </div>
 
+            <!-- 🌟 NEW SECTION ADDED SAFELY: SITE EXPERIENCES REVIEWS MODERATION CORE MATRIX -->
+            <div id="reviews-moderation-section" class="bg-[#0b0d19] border border-amber-500/20 p-6 rounded-xl shadow-lg space-y-4">
+                <div>
+                    <h3 class="font-orbitron text-lg font-bold text-amber-400 flex items-center gap-2"><i class="fas fa-star"></i> Site Experience Reviews Mod Panel</h3>
+                    <p class="text-xs text-gray-400">Manage real-time user sliding reviews and deploy Certified Gold Owner Trust badges.</p>
+                </div>
+                <div id="adminLiveReviewsGridBox" class="grid grid-cols-1 md:grid-cols-2 gap-4 max-h-80 overflow-y-auto pr-1">
+                    <p class="text-xs text-gray-500 italic">Listening for user feedback node data strings...</p>
+                </div>
+            </div>
+
             <!-- Daily Task System -->
             <div id="daily-task-section" class="bg-[#0b0d19] border border-slate-800 p-6 rounded-xl shadow-lg">
                 <h3 class="font-orbitron text-lg font-bold text-green-400 mb-1 flex items-center gap-2"><i class="fas fa-tasks"></i> Admin Daily Mission Hotline Controller</h3>
@@ -327,7 +339,7 @@
                         <input type="text" id="ads-notice-input" class="w-full bg-[#161b22] border border-slate-700 rounded p-2.5 text-white text-xs focus:outline-none focus:border-cyan-500" placeholder="e.g., බටන් එකක් ක්ලික් කළ විට ඇඩ්ස් 3 ක් ප්ලේ වේ">
                     </div>
                 </div>
-                <button onclick="saveMonetagSettingsConfig()" class="w-full bg-cyan-600 hover:bg-cyan-500 text-black font-bold py-2.5 px-4 rounded font-orbitron tracking-wider transition text-xs uppercase shadow-md shadow-cyan-500/10">SYNC MONETIZATION PARAMS</button>
+                <div onclick="saveMonetagSettingsConfig()" class="w-full bg-cyan-600 hover:bg-cyan-500 text-black font-bold py-2.5 px-4 rounded font-orbitron text-center cursor-pointer tracking-wider transition text-xs uppercase shadow-md shadow-cyan-500/10">SYNC MONETIZATION PARAMS</div>
             </div>
 
             <!-- Lobby Chat Management Block -->
@@ -498,6 +510,7 @@
                     cacheAndListenGamesRegistry();
                     listenTrendingBannersStream();
                     loadMonetagConfigurationSettings();
+                    listenToSiteReviewsConsole();
                 } else {
                     document.getElementById('auth-error').classList.remove('hidden');
                     auth.signOut();
@@ -507,6 +520,51 @@
                 document.getElementById('admin-dashboard').classList.add('hidden');
             }
         });
+
+        // 🌟 NEW ADMIN REVIEW STREAM CONTROLLER MODULE LOGIC
+        function listenToSiteReviewsConsole() {
+            database.ref('site_reviews').on('value', snapshot => {
+                const box = document.getElementById('adminLiveReviewsGridBox');
+                box.innerHTML = '';
+                if(!snapshot.exists()) {
+                    box.innerHTML = `<p class="text-xs text-gray-500 italic">No user experience review records found.</p>`;
+                    return;
+                }
+                snapshot.forEach(child => {
+                    const rev = child.val();
+                    const isTrust = rev.isGoldTrust === true || rev.isGoldTrust === "true";
+                    const div = document.createElement('div');
+                    div.className = "bg-[#161b22] p-3 border border-slate-800 rounded-lg flex flex-col justify-between text-xs text-white space-y-2";
+                    div.innerHTML = `
+                        <div class="flex items-center gap-2">
+                            <img src="${rev.photo || 'https://via.placeholder.com/30'}" class="w-6 h-6 rounded-full object-cover">
+                            <span class="font-bold text-gray-300">${rev.name}</span>
+                            ${isTrust ? '<span class="bg-amber-500 text-black px-1.5 py-0.5 rounded text-[9px] font-bold">👑 GOLD TRUST</span>' : ''}
+                        </div>
+                        <p class="text-gray-400 italic font-sans text-xs">"${rev.comment}"</p>
+                        <div class="flex gap-2 border-t border-slate-800 pt-2 mt-1">
+                            <button onclick="toggleGoldTrustBadgeStatus('${rev.uid}', ${isTrust})" class="bg-amber-600/20 text-amber-400 font-bold px-2 py-1 rounded hover:bg-amber-600 hover:text-black transition duration-200">
+                                ${isTrust ? '⚡ STRIP GOLD' : '🏆 GIVE GOLD TRUST'}
+                            </button>
+                            <button onclick="purgeSingleSiteReviewNode('${rev.uid}')" class="bg-red-600/20 text-red-400 font-bold px-2 py-1 rounded hover:bg-red-600 hover:text-white transition duration-200">
+                                <i class="fas fa-trash"></i> DELETE
+                            </button>
+                        </div>
+                    `;
+                    box.appendChild(div);
+                });
+            });
+        }
+
+        window.toggleGoldTrustBadgeStatus = function(uid, currentStatus) {
+            database.ref(`site_reviews/${uid}`).update({ isGoldTrust: !currentStatus });
+        }
+
+        window.purgeSingleSiteReviewNode = function(uid) {
+            if(confirm("Confirm destructive teardown protocol on selected site review log data matrix?")) {
+                database.ref(`site_reviews/${uid}`).remove();
+            }
+        }
 
         function loadMonetagConfigurationSettings() {
             database.ref('system_controls/maxAdsCount').on('value', snap => {
@@ -621,7 +679,6 @@
                 const visitors = game.visitorsCount || 0;
                 const downloaders = game.downloadsCount || 0;
                 
-                // Unified Like/Reaction logic calculation count
                 let totalLikesCalculated = game.likesCount || 0;
                 if (game.reactions && game.reactions.like) {
                     totalLikesCalculated = game.reactions.like;
