@@ -228,12 +228,35 @@
                             </div>
                         </div>
 
+                        <!-- DOWNLOAD NODES ENGINE WITH MASS/BULK UPLOADER -->
                         <div class="bg-[#161b22] p-4 rounded border border-slate-700 space-y-3">
                             <div class="flex justify-between items-center">
                                 <label class="block text-xs font-bold text-purple-400">Download Nodes Configurations Grid Links Engine</label>
-                                <button type="button" onclick="addNewDownloadLinkField()" class="bg-purple-600/30 text-purple-300 hover:bg-purple-600 text-xs py-1 px-2 rounded transition font-bold">+ Add Link Node</button>
+                                <button type="button" onclick="addNewDownloadLinkField()" class="bg-purple-600/30 text-purple-300 hover:bg-purple-600 text-xs py-1 px-2 rounded transition font-bold">+ Add Single Link Node</button>
                             </div>
-                            <div id="dynamic-links-container" class="space-y-2 max-h-48 overflow-y-auto pr-1">
+
+                            <!-- 🚀 MASS/BULK MULTI-LINK PASTE SECTION (NEW FEATURE) -->
+                            <div class="bg-[#0b0d19] p-3 rounded-lg border border-purple-500/30 space-y-2">
+                                <div class="flex justify-between items-center">
+                                    <span class="text-xs font-bold text-cyan-400 font-orbitron">⚡ MASS/BULK PASTE LINKS (500+ Links Support)</span>
+                                    <div class="flex items-center gap-2">
+                                        <span class="text-[10px] text-gray-400">Target Option:</span>
+                                        <select id="bulk-link-type-select" class="bg-[#161b22] text-xs text-cyan-300 border border-slate-700 rounded p-1">
+                                            <option value="direct">Direct Download</option>
+                                            <option value="torrent">Torrent</option>
+                                            <option value="cloud">Cloud Extra</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <textarea id="bulk-links-input" rows="3" class="w-full bg-[#161b22] text-xs text-white p-2 rounded border border-slate-800 focus:outline-none focus:border-cyan-500 font-mono" placeholder="Paste links line by line (up to 500+ links):&#10;https://download.com/part1.rar&#10;https://download.com/part2.rar&#10;https://download.com/part3.rar"></textarea>
+                                <div class="flex justify-end gap-2">
+                                    <button type="button" onclick="clearAllLinkNodes()" class="bg-red-900/40 text-red-400 hover:bg-red-800 hover:text-white text-xs px-3 py-1 rounded transition">Clear All Nodes</button>
+                                    <button type="button" onclick="parseAndInsertBulkLinks()" class="bg-cyan-600 hover:bg-cyan-500 text-black font-bold text-xs px-3 py-1 rounded font-orbitron transition">GENERATE ALL LINKS</button>
+                                </div>
+                            </div>
+
+                            <!-- DYNAMIC LINKS CONTAINER (UNLIMITED LINKS AREA) -->
+                            <div id="dynamic-links-container" class="space-y-2 max-h-64 overflow-y-auto pr-1">
                                 <div class="flex gap-2 items-center link-entry-row">
                                     <select class="link-type bg-[#0b0d19] text-white border border-slate-700 rounded text-xs p-2">
                                         <option value="direct">Direct Download</option>
@@ -618,20 +641,56 @@
             });
         }
 
-        window.addNewDownloadLinkField = function() {
+        /* 🚀 NEW & ENHANCED DOWNLOAD LINK FUNCTIONS (BULK + SINGLE NODES) */
+        window.addNewDownloadLinkField = function(linkType = 'direct', urlValue = '') {
             const container = document.getElementById('dynamic-links-container');
+            const rowCount = container.querySelectorAll('.link-entry-row').length;
             const div = document.createElement('div');
-            div.className = "flex gap-2 items-center link-entry-row mt-2";
+            div.className = "flex gap-2 items-center link-entry-row" + (rowCount > 0 ? " mt-2" : "");
             div.innerHTML = `
                 <select class="link-type bg-[#0b0d19] text-white border border-slate-700 rounded text-xs p-2">
-                    <option value="direct">Direct Download</option>
-                    <option value="torrent">Torrent</option>
-                    <option value="cloud">Cloud Extra</option>
+                    <option value="direct" ${linkType === 'direct' ? 'selected' : ''}>Direct Download</option>
+                    <option value="torrent" ${linkType === 'torrent' ? 'selected' : ''}>Torrent</option>
+                    <option value="cloud" ${linkType === 'cloud' ? 'selected' : ''}>Cloud Extra</option>
                 </select>
-                <input type="url" class="link-url flex-1 bg-[#0b0d19] border border-slate-700 rounded text-xs p-2 text-white" placeholder="https://download-link.com" required>
-                <button type="button" onclick="this.parentElement.remove()" class="text-red-500 hover:text-red-400 font-bold px-1 text-xs">X</button>
+                <input type="url" value="${urlValue}" class="link-url flex-1 bg-[#0b0d19] border border-slate-700 rounded text-xs p-2 text-white" placeholder="https://download-link.com" required>
+                ${rowCount > 0 ? `<button type="button" onclick="this.parentElement.remove()" class="text-red-500 hover:text-red-400 font-bold px-1 text-xs">X</button>` : ''}
             `;
             container.appendChild(div);
+        };
+
+        window.clearAllLinkNodes = function() {
+            if(confirm("Erase all current link fields from the editor?")) {
+                document.getElementById('dynamic-links-container').innerHTML = '';
+                document.getElementById('bulk-links-input').value = '';
+                addNewDownloadLinkField();
+            }
+        };
+
+        window.parseAndInsertBulkLinks = function() {
+            const rawText = document.getElementById('bulk-links-input').value;
+            const linkType = document.getElementById('bulk-link-type-select').value;
+            if(!rawText.trim()) {
+                alert("Please paste link text line by line!");
+                return;
+            }
+
+            const linksArr = rawText.split('\n').map(line => line.trim()).filter(line => line.length > 0);
+            if(linksArr.length === 0) return;
+
+            const container = document.getElementById('dynamic-links-container');
+            // Check if current empty single field exists
+            const existingRows = container.querySelectorAll('.link-entry-row');
+            if(existingRows.length === 1 && !existingRows[0].querySelector('.link-url').value.trim()) {
+                container.innerHTML = '';
+            }
+
+            linksArr.forEach(linkUrl => {
+                addNewDownloadLinkField(linkType, linkUrl);
+            });
+
+            document.getElementById('bulk-links-input').value = '';
+            alert(`⚡ Successfully generated ${linksArr.length} download node(s)!`);
         };
 
         function cacheAndListenGamesRegistry() {
@@ -661,6 +720,8 @@
                 document.getElementById('game-slot').value = '';
                 document.getElementById('game-form').reset();
                 document.getElementById('category-slots-dropdown').value = '__NEW__';
+                document.getElementById('dynamic-links-container').innerHTML = '';
+                addNewDownloadLinkField();
             } else {
                 loadGameToFormForEditing(val);
                 document.getElementById('category-slots-dropdown').value = val;
@@ -766,19 +827,8 @@
             const container = document.getElementById('dynamic-links-container');
             container.innerHTML = '';
             if(game.download_links && game.download_links.length > 0) {
-                game.download_links.forEach((link, idx) => {
-                    const div = document.createElement('div');
-                    div.className = "flex gap-2 items-center link-entry-row" + (idx > 0 ? " mt-2" : "");
-                    div.innerHTML = `
-                        <select class="link-type bg-[#0b0d19] text-white border border-slate-700 rounded text-xs p-2">
-                            <option value="direct" ${link.platformType === 'direct' ? 'selected' : ''}>Direct Download</option>
-                            <option value="torrent" ${link.platformType === 'torrent' ? 'selected' : ''}>Torrent</option>
-                            <option value="cloud" ${link.platformType === 'cloud' ? 'selected' : ''}>Cloud Extra</option>
-                        </select>
-                        <input type="url" value="${link.href || ''}" class="link-url flex-1 bg-[#0b0d19] border border-slate-700 rounded text-xs p-2 text-white" required>
-                        ${idx > 0 ? `<button type="button" onclick="this.parentElement.remove()" class="text-red-500 hover:text-red-400 font-bold px-1 text-xs">X</button>` : ''}
-                    `;
-                    container.appendChild(div);
+                game.download_links.forEach((link) => {
+                    addNewDownloadLinkField(link.platformType || 'direct', link.href || '');
                 });
             } else {
                 addNewDownloadLinkField();
@@ -1056,8 +1106,9 @@
 
                 const linksArray = [];
                 document.querySelectorAll('.link-entry-row').forEach((row, index) => {
-                    const type = row.querySelector('.link-type').value; const url = row.querySelector('.link-url').value.trim();
-                    if(url) linksArray.push({ platformType: type, href: url, part: `Part 0${index + 1}` });
+                    const type = row.querySelector('.link-type').value; 
+                    const url = row.querySelector('.link-url').value.trim();
+                    if(url) linksArray.push({ platformType: type, href: url, part: `Part ${String(index + 1).padStart(2, '0')}` });
                 });
 
                 const existingRecord = globalGamesCache[slot] || {};
@@ -1095,6 +1146,8 @@
                     alert("Game Saved Successfully: " + slot); 
                     document.getElementById('game-form').reset(); 
                     document.getElementById('category-slots-dropdown').value = '__NEW__';
+                    document.getElementById('dynamic-links-container').innerHTML = '';
+                    addNewDownloadLinkField();
                 });
             });
 
